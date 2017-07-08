@@ -36,7 +36,9 @@ lpt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
 lpc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
 ml()   {xbacklight -set 3}
-mL()   {xbacklight -set 4}
+mL()   {xbacklight -set 6}
+mlp()  {xbacklight -inc 1}
+mlm()  {xbacklight -dec 1}
 # Package
 p()    {yaourt -S --noconfirm --needed $@}
 pf()   {yaourt -S --noconfirm --needed --force $@}

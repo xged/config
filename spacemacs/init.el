@@ -55,7 +55,6 @@ values."
        haskell
      ranger
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
-     ycmd
      theming
      colors
      )
@@ -287,7 +286,7 @@ values."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters nil
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server nil
@@ -320,19 +319,20 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq theming-modifications
         '((darktooth
-           (default :foreground "grey88" :background "black")
+           (default :foreground "grey85" :background "black")
            (font-lock-comment-face :foreground "grey50")
-           (font-lock-keyword-face :foreground "#9f9fdf")
-           (font-lock-string-face :foreground "#00a8a8")
-           (font-lock-function-name-face :foreground "#c2c200") (font-lock-variable-name-face :foreground "#c2c200")
-           (font-lock-builtin-face :foreground "#ff8080" :background "#140000") (font-lock-type-face :foreground "#ff8080")
-           (font-lock-constant-face :foreground "#9f609f" :weight bold) (highlight-numbers-number :foreground "#9f609f" :weight bold)
-           (font-lock-doc-face :foreground "#609f60") (link :foreground "#609f60")
+           (font-lock-keyword-face :foreground "#9191b1")
+           (font-lock-string-face :foreground "#55aa55")
+           (font-lock-function-name-face :foreground "#ff8fff") (font-lock-variable-name-face :foreground "#ff8fff")
+           (font-lock-builtin-face :foreground "#ff7070") (font-lock-type-face :foreground "#ff7070")
+           (font-lock-constant-face :foreground "#cccc00" ) (highlight-numbers-number :foreground "#d4d42b")
+           (font-lock-doc-face :foreground "#609f9f") (link :foreground "#609f9f")
            ;; modes
            (hl-line :background "black" :weight bold)
            (avy-lead-face :foreground "white") (avy-lead-face-0 :foreground "white") (avy-lead-face-1 :foreground "white") (avy-lead-face-2 :foreground "white")
            (magit-section-highlight :background "black")
-    )))
+           ))
+        )
   )
 
 (defun dotspacemacs/user-config ()
@@ -343,37 +343,35 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'avy)
+  (load-file "/home/xged/src/config/spacemacs/temp-fns.el")
 
   ;;; Functions
-  (defun defkeyevil-nmv (key def)  ; xged/define-key-evil-nmv
-    (define-key evil-normal-state-map (kbd key) def)
-    (define-key evil-visual-state-map (kbd key) def)
-    (define-key evil-motion-state-map (kbd key) def))
-  (defun defkeyevil-nm (key def)
-    (define-key evil-normal-state-map (kbd key) def)
-    (define-key evil-motion-state-map (kbd key) def))
-  (defun defkeyevil-nv (key def)
-    (define-key evil-normal-state-map (kbd key) def)
-    (define-key evil-visual-state-map (kbd key) def))
-  (defun defkeyevil-n (key def) (define-key evil-normal-state-map (kbd key) def))
+  (defun defkeyevil-n (key def) (define-key evil-normal-state-map (kbd key) def))  ; xged/define-key-evil-n
   (defun defkeyevil-m (key def) (define-key evil-motion-state-map (kbd key) def))
   (defun defkeyevil-v (key def) (define-key evil-visual-state-map (kbd key) def))
+  (defun defkeyevil-i (key def) (define-key evil-insert-state-map (kbd key) def))
+  (defun defkeyevil-nm (key def)
+    (defkeyevil-n key def)
+    (defkeyevil-m key def))
+  (defun defkeyevil-nv (key def)
+    (defkeyevil-n key def)
+    (defkeyevil-v key def))
+  (defun defkeyevil-nmv (key def)
+    (defkeyevil-n key def)
+    (defkeyevil-m key def)
+    (defkeyevil-v key def))
   (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
     (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
   (defun xged/auto-save-on-switch ()
-    (defadvice spacemacs/alternate-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice switch-to-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice other-frame (before other-frame-now activate) (when buffer-file-name (save-buffer)))  ;\
+    ;; specific
     (defadvice next-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
     (defadvice previous-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice ivy-switch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
     (defadvice spacemacs/kill-this-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
     (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice remember-notes (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice org-projectile/goto-todos (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/switch-to-scratch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/default-pop-shell (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/find-dotfile (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
     )
 
   ;;; Commands
@@ -398,14 +396,13 @@ you should place your code here."
                ((equal (following-char) ?z) (progn (delete-char 1) (insert-char ?ž) (backward-char)))
                )
          )
-  (defun xged/forward-paragraph () (interactive) (next-line) (forward-paragraph) (previous-line) (evil-first-non-blank))
-  (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (evil-first-non-blank))
+  (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
+  (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
+  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/evil-mc-paste-after) (spacemacs/evil-mc-paste-before)))
   (defun xged/paste-primary-selection () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
-  (defun xged/paste () (interactive) (when (not (bolp)) (evil-backward-char)) (spacemacs/evil-mc-paste-after))
-  (defun xged/forward-word-mid () (interactive) (evil-forward-end 'word) (evil-forward-char))
   (defun xged/goto-word-0-line-and-below (arg) (interactive "P")
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
@@ -415,10 +412,10 @@ you should place your code here."
   (defkeyevil-nmv "t" nil)
   ;;; Key Bindings
   (defkeyevil-nmv "c" 'avy-goto-word-or-subword-1)
-  ;; (defkeyevil-nmv "c" 'xged/goto-word-0-line-and-below)
-  (defkeyevil-nm "C-c" 'ace-link)
-  (defkeyevil-nmv "f" 'er/expand-region)
-  (defkeyevil-nmv "F" 'er/contract-region)
+  (defkeyevil-nm "SPC c" 'ace-link)
+  (defkeyevil-v "f" 'er/expand-region)
+  (defkeyevil-nm "f" 'evil-visual-char)
+  (defkeyevil-v "F" 'er/contract-region)
   (defkeyevil-n ":" 'sp-splice-sexp)
   (defkeyevil-v ":" 'evil-surround-region)
   (defkeyevil-nmv "SPC ;" 'evilmi-jump-items)
@@ -430,18 +427,22 @@ you should place your code here."
   (defkeyevil-v "v" 'evil-exchange)
   (defkeyevil-nm "<escape>" 'spacemacs/alternate-buffer)
   (defkeyevil-nm "d" 'evil-visual-line)
-  (defkeyevil-v "d" 'evil-delete)
   (defkeyevil-nmv "SPC v" 'mark-paragraph)
-  (defkeyevil-nmv "e" 'xged/forward-word-mid)
+  (defkeyevil-nmv "e" 'subword-forward)
+  (defkeyevil-nmv "E" 'subword-backward)
+  (defkeyevil-nv "w" (kbd "i SPC <escape>"))
+  (defkeyevil-nmv "SPC w" 'xged/window-next)
   (defkeyevil-v "i" 'evil-change)
   (defkeyevil-n "I" 'evil-append-line)
+  (defkeyevil-nv "SPC i" 'evil-invert-char)
+  (defkeyevil-nv "SPC I" 'upcase-dwim)
+  (defkeyevil-nmv "SPC n" 'git-gutter+-next-hunk)
   (defkeyevil-nmv "m" 'magit-status)
-  (defkeyevil-nmv "SPC m" 'git-gutter+-revert-hunk)
-  (defkeyevil-nmv "SPC M" 'git-gutter+-revert-hunks)
-  (defkeyevil-nmv "SPC SPC m" 'spacemacs/git-blame-micro-state)
-  (defkeyevil-nmv "w" 'ethio-insert-space)
-  (defkeyevil-n "p" 'xged/paste)
-  (defkeyevil-v "p" 'spacemacs/evil-mc-paste-after)
+  (defkeyevil-nmv "SPC m" 'git-gutter+-stage-hunks)
+  (defkeyevil-nmv "SPC SPC m" 'magit-commit)
+  (defkeyevil-nmv "SPC SPC M" 'magit-commit-extend)
+  (defkeyevil-nmv "M-m" 'spacemacs/git-blame-micro-state)
+  (defkeyevil-nv "p" 'xged/paste)
   (defkeyevil-nv "SPC p" 'xged/paste-primary-selection)
   (defkeyevil-n "C-p" 'counsel-yank-pop)
   (defkeyevil-nmv "r" 'evil-iedit-state/iedit-mode)
@@ -455,22 +456,23 @@ you should place your code here."
   (defkeyevil-nv "U" 'undo-tree-redo)
   (defkeyevil-v "y" 'evil-yank)
   (defkeyevil-nm "C-y" 'ace-swap-window)
+  (defkeyevil-v "d" 'evil-delete)
   (defkeyevil-nm "SPC d" 'spacemacs/kill-this-buffer)
   (defkeyevil-nm "SPC D" 'spacemacs/delete-current-buffer-file)
+  (defkeyevil-nm "SPC SPC d" 'git-gutter+-revert-hunk)
+  (defkeyevil-nm "SPC SPC D" 'git-gutter+-revert-hunks)
   (defkeyevil-nm "C-d" 'spacemacs/delete-window)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
   (defkeyevil-nm "C-f" 'spacemacs/show-and-copy-buffer-filename)
   (defkeyevil-nm "C-S-f" 'spacemacs/rename-current-buffer-file )
-  (defkeyevil-nv "SPC c" 'evil-invert-char)
-  (defkeyevil-nv "SPC C" 'upcase-dwim)
-  (defkeyevil-nmv "SPC h" 'evil-first-non-blank)
+  (defkeyevil-nmv "SPC h" 'back-to-indentation)
   (defkeyevil-nm "SPC l" 'end-of-line)
   (defkeyevil-v "SPC l" 'evil-last-non-blank)
-  (defkeyevil-nmv "SPC j" 'xged/forward-paragraph)  ;\ visual line
-  (defkeyevil-nmv "SPC k" 'xged/backward-paragraph)
-  (defkeyevil-nmv "C-j" 'evil-scroll-page-down)
-  (defkeyevil-nmv "C-k" 'evil-scroll-page-up)
+  (defkeyevil-nmv "SPC j" 'evil-scroll-page-down)
+  (defkeyevil-nmv "SPC k" 'evil-scroll-page-up)
+  (defkeyevil-nmv "C-j" 'xged/forward-paragraph)  ;\ visual line
+  (defkeyevil-nmv "C-k" 'xged/backward-paragraph)  ;\ visual line
   (defkeyevil-nm "b" 'ivy-switch-buffer)
   (defkeyevil-nm "SPC b" 'previous-buffer)
   (defkeyevil-nm "SPC B" 'next-buffer)
@@ -483,53 +485,51 @@ you should place your code here."
   (defkeyevil-nm "gj" 'xged/goto-j)
   (defkeyevil-nm "gf" 'xged/goto-f)
   (defkeyevil-nm "gk" 'xged/goto-k)
-  (defkeyevil-nm "C-h t" 'which-key-show-top-level)
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
-  (defkeyevil-nm "q" 'xged/window-next)
-  (defkeyevil-nm "SPC q" 'spacemacs/restart-emacs-resume-layouts)
-  (defkeyevil-nm "SPC Q" 'spacemacs/prompt-kill-emacs)
+  (defkeyevil-nm "q" 'spacemacs/restart-emacs-resume-layouts)
+  (defkeyevil-nm "SPC q" 'spacemacs/prompt-kill-emacs)
   (defkeyevil-nm "C-q" 'configuration-layer/update-packages)
   (defkeyevil-nm "x" 'counsel-M-x)
-  (defkeyevil-nm "ta" '(lambda () (interactive) (insert "0")))
-  (defkeyevil-nm "ts" '(lambda () (interactive) (insert "1")))
-  (defkeyevil-nm "td" '(lambda () (interactive) (insert "2")))
-  (defkeyevil-nm "tf" '(lambda () (interactive) (insert "3")))
-  (defkeyevil-nm "tg" '(lambda () (interactive) (insert "4")))
-  (defkeyevil-nm "th" '(lambda () (interactive) (insert "5")))
-  (defkeyevil-nm "tj" '(lambda () (interactive) (insert "6")))
-  (defkeyevil-nm "tk" '(lambda () (interactive) (insert "7")))
-  (defkeyevil-nm "tl" '(lambda () (interactive) (insert "8")))
-  (defkeyevil-nm "t:" '(lambda () (interactive) (insert "9")))
+  (defkeyevil-i "M-a" (kbd "1"))
+  (defkeyevil-i "M-s" (kbd "2"))
+  (defkeyevil-i "M-d" (kbd "3"))
+  (defkeyevil-i "M-f" (kbd "4"))
+  (defkeyevil-i "M-g" (kbd "5"))
+  (defkeyevil-i "M-h" (kbd "6"))
+  (defkeyevil-i "M-j" (kbd "7"))
+  (defkeyevil-i "M-k" (kbd "8"))
+  (defkeyevil-i "M-l" (kbd "9"))
+  (defkeyevil-i "M-:" (kbd "0"))
   (defkeyevil-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
   (defkeyevil-n "RET" 'xged/insert-line-below)
   (defkeyevil-n "S-<return>" 'xged/insert-line-above)
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
+  (defkeyevil-n "<" 'evil-shift-left-line)
+  (defkeyevil-n ">" 'evil-shift-right-line)
+  (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)  ;\ needs dotspacemacs/sync-configuration-layers
 
   ;;; Settings
   (setq-default ac-ignore-case nil)  ;!
-  (setq-default evil-move-cursor-back nil)
   (setq-default scroll-conservatively 101 scroll-margin 16 scroll-preserve-screen-position 't)
   (spacemacs/toggle-camel-case-motion-on)  ;!
   (spacemacs/toggle-golden-ratio-on)
-  (setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
   (setq-default evil-escape-key-sequence "fj")
   (setq-default ivy-initial-inputs-alist nil)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (xged/auto-save-on-switch)
   (spacemacs/toggle-display-time-on) (setq-default display-time-24hr-format t)
   (setq-default git-magit-status-fullscreen t)
-  (setq-default evil-normal-state-cursor "#b2b2b2")
   (setq-default evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist))
   (setq-default evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist))
   (setq-default evil-surround-pairs-alist (cons '(?k "{" . "}") evil-surround-pairs-alist))
   (setq-default evil-surround-pairs-alist (cons '(?d "<" . ">") evil-surround-pairs-alist))
-  (setq-default expand-region-reset-fast-key nil)  ;! needs sync-configuration
   (setq-default avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
                                  (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)))
   (setq-default avy-case-fold-search t)
-  ;; (add-hook 'magit-status-sections-hook 'magit-insert-tags-header)
-
-  (load-file "/home/xged/src/config/spacemacs/goto-file-shortcuts.el")
+  (setq-default word-wrap t)
+  (setq-default evil-ex-search-highlight-all nil)
+  (setq-default evil-normal-state-cursor "white")
+  (setq-default expand-region-fast-keys-enabled nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -539,20 +539,4 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(avy-all-windows (quote all-frames) t)
- '(avy-background t t)
- '(package-selected-packages
-   (quote
-    (psc-ide org-brain evil-org let-alist password-generator evil-lion editorconfig dante ghub+ apiwrap ghub browse-at-remote helm intero hlint-refactor hindent haskell-snippets flycheck-haskell company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode tide typescript-mode flycheck-ycmd company-ycmd ycmd request-deferred deferred wgrep smex ivy-purpose ivy-hydra counsel-projectile counsel swiper ivy powerline spinner alert log4e gntp hydra parent-mode window-purpose imenu-list request gitignore-mode fringe-helper git-gutter+ git-gutter gh marshal logito pcache ht pos-tip pkg-info epl flx magit-popup with-editor iedit anzu goto-chg undo-tree highlight diminish bind-map bind-key pythonic f dash s avy async auto-complete popup geeknote meghanada groovy-mode groovy-imports gradle-mode sbt-mode scala-mode company-emacs-eclim eclim packed anaconda-mode smartparens evil flycheck yasnippet company helm-core markdown-mode projectile magit git-commit ranger zenburn-theme yapfify xterm-color ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline solarized-theme smeargle shell-pop restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file noflet neotree mwim multi-term move-text monokai-theme mmm-mode markdown-toc magithub magit-gitflow magit-gh-pulls macrostep lorem-ipsum live-py-mode linum-relative link-hint info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime elisp-slime-nav dumb-jump diff-hl define-word cython-mode company-statistics company-anaconda column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(avy-lead-face ((t (:background "#293239" :foreground "#b2b2b2")))))
-)
+  )
