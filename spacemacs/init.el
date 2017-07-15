@@ -317,22 +317,32 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setq theming-modifications
-        '((darktooth
-           (default :foreground "grey85" :background "black")
-           (font-lock-comment-face :foreground "grey50")
-           (font-lock-keyword-face :foreground "#9191b1")
-           (font-lock-string-face :foreground "#55aa55")
-           (font-lock-function-name-face :foreground "#ff8fff") (font-lock-variable-name-face :foreground "#ff8fff")
-           (font-lock-builtin-face :foreground "#ff7070") (font-lock-type-face :foreground "#ff7070")
-           (font-lock-constant-face :foreground "#cccc00" ) (highlight-numbers-number :foreground "#d4d42b")
-           (font-lock-doc-face :foreground "#609f9f") (link :foreground "#609f9f")
-           ;; modes
-           (hl-line :background "black" :weight bold)
-           (avy-lead-face :foreground "white") (avy-lead-face-0 :foreground "white") (avy-lead-face-1 :foreground "white") (avy-lead-face-2 :foreground "white")
-           (magit-section-highlight :background "black")
-           ))
-        )
+  (setq-default theming-modifications
+   '((darktooth
+      ;; default
+      (default :foreground "grey85" :background "black")
+      ;; comments
+      (font-lock-comment-face :foreground "grey50")
+      (font-lock-doc-face :foreground "grey50")
+      (link :foreground "grey50")
+      ;; keywords
+      (font-lock-keyword-face :foreground "grey50" :weight bold)
+      ;; strings
+      (font-lock-string-face :foreground "#a8a800")
+      ;; variables
+      (font-lock-function-name-face :foreground "#00bd7e")
+      (font-lock-variable-name-face :foreground "#00bd7e")
+      ;; builtins
+      (font-lock-builtin-face :foreground "#e26fe2")
+      (font-lock-type-face :foreground "#e26fe2")
+      (font-lock-constant-face :foreground "#e26fe2")
+      (highlight-numbers-number :foreground "#e26fe2")
+      ;; modes
+      (hl-line :background "black" :weight bold)
+      (avy-lead-face :foreground "grey85") (avy-lead-face-0 :foreground "grey85") (avy-lead-face-1 :foreground "grey85") (avy-lead-face-2 :foreground "grey85")
+      (magit-section-highlight :background "black")
+      ))
+   )
   )
 
 (defun dotspacemacs/user-config ()
