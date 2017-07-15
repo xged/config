@@ -363,15 +363,19 @@ you should place your code here."
   (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
     (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
   (defun xged/auto-save-on-switch ()
-    (defadvice switch-to-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice other-frame (before other-frame-now activate) (when buffer-file-name (save-buffer)))  ;\
-    ;; specific
+    (defadvice spacemacs/alternate-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
     (defadvice next-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
     (defadvice previous-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice ivy-switch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
     (defadvice spacemacs/kill-this-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
     (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
+    (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice remember-notes (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice org-projectile/goto-todos (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice spacemacs/switch-to-scratch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice spacemacs/default-pop-shell (before other-window-now activate) (when buffer-file-name (save-buffer)))
+    (defadvice spacemacs/find-dotfile (before other-window-now activate) (when buffer-file-name (save-buffer)))
     )
 
   ;;; Commands
@@ -416,10 +420,12 @@ you should place your code here."
   (defkeyevil-v "f" 'er/expand-region)
   (defkeyevil-nm "f" 'evil-visual-char)
   (defkeyevil-v "F" 'er/contract-region)
-  (defkeyevil-n ":" 'sp-splice-sexp)
-  (defkeyevil-v ":" 'evil-surround-region)
-  (defkeyevil-nmv "SPC ;" 'evilmi-jump-items)
-  (defkeyevil-nmv "SPC :" 'evil-jump-item)
+  (defkeyevil-nv ":" 'xged/paste)
+  (defkeyevil-nv "SPC :" 'xged/paste-primary-selection)
+  (defkeyevil-n "C-:" 'counsel-yank-pop)
+  (defkeyevil-n "p" 'sp-splice-sexp)
+  (defkeyevil-v "p" 'evil-surround-region)
+  (defkeyevil-nmv "SPC p" 'evil-jump-item)  ;| 'evilmi-jump-items
   (defkeyevil-nmv "a" 'evil-jump-backward)
   (defkeyevil-nmv "A" 'evil-jump-forward)
   (defkeyevil-nmv "C-a" 'goto-last-change)
@@ -428,9 +434,11 @@ you should place your code here."
   (defkeyevil-nm "<escape>" 'spacemacs/alternate-buffer)
   (defkeyevil-nm "d" 'evil-visual-line)
   (defkeyevil-nmv "SPC v" 'mark-paragraph)
-  (defkeyevil-nmv "e" 'subword-forward)
-  (defkeyevil-nmv "E" 'subword-backward)
-  (defkeyevil-nv "w" (kbd "i SPC <escape>"))
+  (defkeyevil-nmv "e" 'sp-end-of-sexp)
+  (defkeyevil-nmv "E" 'sp-beginning-of-sexp)
+  (defkeyevil-nmv "w" 'subword-forward)
+  (defkeyevil-nmv "W" 'subword-backward)
+  (defkeyevil-nv "t" (kbd "i SPC <escape>"))
   (defkeyevil-nmv "SPC w" 'xged/window-next)
   (defkeyevil-v "i" 'evil-change)
   (defkeyevil-n "I" 'evil-append-line)
@@ -442,9 +450,6 @@ you should place your code here."
   (defkeyevil-nmv "SPC SPC m" 'magit-commit)
   (defkeyevil-nmv "SPC SPC M" 'magit-commit-extend)
   (defkeyevil-nmv "M-m" 'spacemacs/git-blame-micro-state)
-  (defkeyevil-nv "p" 'xged/paste)
-  (defkeyevil-nv "SPC p" 'xged/paste-primary-selection)
-  (defkeyevil-n "C-p" 'counsel-yank-pop)
   (defkeyevil-nmv "r" 'evil-iedit-state/iedit-mode)
   (defkeyevil-nv "SPC r" 'replace-regexp)
   (defkeyevil-nm "s" 'swiper)
@@ -506,11 +511,11 @@ you should place your code here."
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (defkeyevil-n "<" 'evil-shift-left-line)
   (defkeyevil-n ">" 'evil-shift-right-line)
-  (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)  ;\ needs dotspacemacs/sync-configuration-layers
+  (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)
 
   ;;; Settings
   (setq-default ac-ignore-case nil)  ;!
-  (setq-default scroll-conservatively 101 scroll-margin 16 scroll-preserve-screen-position 't)
+  (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
   (spacemacs/toggle-camel-case-motion-on)  ;!
   (spacemacs/toggle-golden-ratio-on)
   (setq-default evil-escape-key-sequence "fj")
