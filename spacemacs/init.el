@@ -320,7 +320,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-default theming-modifications
    '((darktooth
       ;; default
-      (default :foreground "grey85" :background "black")
+      (default :foreground "grey87" :background "black")
       ;; comments
       (font-lock-comment-face :foreground "grey50")
       (font-lock-doc-face :foreground "grey50")
@@ -328,18 +328,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
       ;; keywords
       (font-lock-keyword-face :foreground "grey50" :weight bold)
       ;; strings
-      (font-lock-string-face :foreground "#a8a800")
+      (font-lock-string-face :foreground "#62b300")
       ;; variables
-      (font-lock-function-name-face :foreground "#00bd7e")
-      (font-lock-variable-name-face :foreground "#00bd7e")
+      (font-lock-function-name-face :foreground "#ff66ba")
+      (font-lock-variable-name-face :foreground "#ff66ba")
       ;; builtins
-      (font-lock-builtin-face :foreground "#e26fe2")
-      (font-lock-type-face :foreground "#e26fe2")
-      (font-lock-constant-face :foreground "#e26fe2")
-      (highlight-numbers-number :foreground "#e26fe2")
+      (font-lock-builtin-face :foreground "#66baff")
+      (font-lock-type-face :foreground "#66baff")
+      (font-lock-constant-face :foreground "#66baff")
+      (highlight-numbers-number :foreground "#66baff")
       ;; modes
       (hl-line :background "black" :weight bold)
-      (avy-lead-face :foreground "grey85") (avy-lead-face-0 :foreground "grey85") (avy-lead-face-1 :foreground "grey85") (avy-lead-face-2 :foreground "grey85")
+      (avy-lead-face :foreground "grey87") (avy-lead-face-0 :foreground "grey87") (avy-lead-face-1 :foreground "grey87") (avy-lead-face-2 :foreground "grey87")
       (magit-section-highlight :background "black")
       ))
    )
