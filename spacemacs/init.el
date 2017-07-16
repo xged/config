@@ -46,9 +46,9 @@ values."
      shell (shell :variables shell-default-height 100 shell-default-full-span nil)
      syntax-checking (syntax-checking :variables syntax-checking-enable-by-default nil)
      version-control
+     github
      ;;; langs
        python
-       github
        scala
        typescript
        purescript
@@ -417,7 +417,6 @@ you should place your code here."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
 
-  (defkeyevil-nmv "t" nil)
   ;;; Key Bindings
   (defkeyevil-nmv "SPC" nil)
   (defkeyevil-nmv "m" nil)
@@ -456,15 +455,15 @@ you should place your code here."
   (defkeyevil-nmv "A" 'evil-jump-forward)
   (defkeyevil-nmv "C-a" 'goto-last-change)
   (defkeyevil-nmv "C-S-a" 'goto-last-change-reverse)
-  (defkeyevil-v "v" 'evil-exchange)
   (defkeyevil-nm "<escape>" 'spacemacs/alternate-buffer)
   (defkeyevil-nm "d" 'evil-visual-line)
-  (defkeyevil-nmv "SPC v" 'mark-paragraph)
+  (defkeyevil-nmv "SPC v" 'evil-visual-block)
+  (defkeyevil-nmv "v" 'mark-paragraph)
   (defkeyevil-nmv "e" 'sp-end-of-sexp)
   (defkeyevil-nmv "E" 'sp-beginning-of-sexp)
   (defkeyevil-nmv "w" 'subword-forward)
   (defkeyevil-nmv "W" 'subword-backward)
-  (defkeyevil-nv "t" (kbd "i SPC <escape>"))
+  (defkeyevil-nv "y" (kbd "i SPC <escape>"))
   (defkeyevil-nmv "SPC w" 'xged/window-next)
   (defkeyevil-v "i" 'evil-change)
   (defkeyevil-n "I" 'evil-append-line)
@@ -492,10 +491,10 @@ you should place your code here."
   (defkeyevil-nmv "SPC h" 'back-to-indentation)
   (defkeyevil-nm "SPC l" 'end-of-line)
   (defkeyevil-v "SPC l" 'evil-last-non-blank)
-  (defkeyevil-nmv "SPC j" 'evil-scroll-page-down)
-  (defkeyevil-nmv "SPC k" 'evil-scroll-page-up)
-  (defkeyevil-nmv "C-j" 'xged/forward-paragraph)  ;\ visual line
-  (defkeyevil-nmv "C-k" 'xged/backward-paragraph)  ;\ visual line
+  (defkeyevil-nmv "C-j" 'xged/forward-paragraph)
+  (defkeyevil-nmv "C-k" 'xged/backward-paragraph)
+  (defkeyevil-nmv "SPC j" 'xged/forward-paragraph)  ;\ visual line
+  (defkeyevil-nmv "SPC k" 'xged/backward-paragraph)  ;\ visual line
   (defkeyevil-nm "b" 'ivy-switch-buffer)
   (defkeyevil-nm "SPC b" 'previous-buffer)
   (defkeyevil-nm "SPC B" 'next-buffer)
@@ -525,6 +524,7 @@ you should place your code here."
   (defkeyevil-i "M-:" (kbd "0"))
   (defkeyevil-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
   (defkeyevil-n "RET" 'xged/insert-line-below)
+  (defkeyevil-v "RET" 'evil-exchange)
   (defkeyevil-n "S-<return>" 'xged/insert-line-above)
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (defkeyevil-n "<" 'evil-shift-left-line)
@@ -532,6 +532,8 @@ you should place your code here."
   (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)
 
   ;;; Settings
+  (setq-default avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
+                                 (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)))
   (setq-default ac-ignore-case nil)  ;!
   (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
   (spacemacs/toggle-camel-case-motion-on)  ;!
@@ -545,13 +547,13 @@ you should place your code here."
   (setq-default evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist))
   (setq-default evil-surround-pairs-alist (cons '(?k "{" . "}") evil-surround-pairs-alist))
   (setq-default evil-surround-pairs-alist (cons '(?d "<" . ">") evil-surround-pairs-alist))
-  (setq-default avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
-                                 (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)))
   (setq-default avy-case-fold-search t)
   (setq-default word-wrap t)
   (setq-default evil-ex-search-highlight-all nil)
   (setq-default evil-normal-state-cursor "white")
   (setq-default expand-region-fast-keys-enabled nil)
+  (setq-default evil-move-beyond-eol t)
+
   ;; Hooks
   (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
   (defadvice xged/goto-f (before other-window-now activate) (when buffer-file-name (save-buffer)))
@@ -578,4 +580,18 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (use-package tide typescript-mode psc-ide org-brain markdown-toc markdown-mode live-py-mode ivy-hydra intero groovy-mode google-translate evil-mc evil-matchit eshell-prompt-extras esh-help ensime sbt-mode diff-hl darktooth-theme dante ghc counsel highlight smartparens evil undo-tree haskell-mode helm helm-core avy ghub flycheck company org-plus-contrib magit magit-popup with-editor powerline ivy yapfify xterm-color ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen unfill toc-org symon swiper string-inflection spaceline smex smeargle shell-pop scala-mode restart-emacs ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort psci popwin pip-requirements persp-mode pcre2el password-generator paradox orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file noflet neotree mwim multi-term move-text mmm-mode meghanada magithub magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint ivy-purpose info+ indent-guide hy-mode hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-pydoc helm-make helm-hoogle helm-gitignore helm-company helm-c-yasnippet haskell-snippets groovy-imports gradle-mode goto-chg golden-ratio gnuplot github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z elisp-slime-nav editorconfig dumb-jump diminish define-word dash-functional cython-mode counsel-projectile company-statistics company-ghci company-ghc company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode browse-at-remote bind-key autothemer auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
