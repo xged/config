@@ -357,7 +357,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'avy)
   (require 'magit)
-  (load-file "/home/xged/src/config/spacemacs/temp-fns.el")
+  ;; Interim
+  (defvar xged/goto-j-fp)
+  (defvar xged/goto-f-fp)
+  (defvar xged/goto-k-fp)
+  (load-file "/home/xged/src/config/spacemacs/interim.el")
 
   ;;; Functions
   (defun defkeyevil-n (key def) (define-key evil-normal-state-map (kbd key) def))  ; xged/define-key-evil-n
@@ -376,21 +380,6 @@ you should place your code here."
     (defkeyevil-v key def))
   (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
     (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
-  (defun xged/auto-save-on-switch ()
-    (defadvice spacemacs/alternate-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice next-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice previous-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice ivy-switch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/kill-this-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
-    (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice remember-notes (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice org-projectile/goto-todos (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/switch-to-scratch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/default-pop-shell (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    (defadvice spacemacs/find-dotfile (before other-window-now activate) (when buffer-file-name (save-buffer)))
-    )
 
   ;;; Commands
   (defun xged/transform-into-foreign-letter-lt () (interactive)
@@ -414,6 +403,9 @@ you should place your code here."
                ((equal (following-char) ?z) (progn (delete-char 1) (insert-char ?ž) (backward-char)))
                )
          )
+  (defun xged/goto-j () (interactive) (find-file xged/goto-j-fp))
+  (defun xged/goto-f () (interactive) (find-file xged/goto-f-fp))
+  (defun xged/goto-k () (interactive) (find-file xged/goto-k-fp))
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
   (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/evil-mc-paste-after) (spacemacs/evil-mc-paste-before)))
@@ -547,7 +539,6 @@ you should place your code here."
   (setq-default evil-escape-key-sequence "fj")
   (setq-default ivy-initial-inputs-alist nil)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
-  (xged/auto-save-on-switch)
   (spacemacs/toggle-display-time-on) (setq-default display-time-24hr-format t)
   (setq-default git-magit-status-fullscreen t)
   (setq-default evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist))
@@ -561,6 +552,23 @@ you should place your code here."
   (setq-default evil-ex-search-highlight-all nil)
   (setq-default evil-normal-state-cursor "white")
   (setq-default expand-region-fast-keys-enabled nil)
+  ;; Hooks
+  (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice xged/goto-f (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice xged/goto-k (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice spacemacs/alternate-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice next-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice previous-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice ivy-switch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice spacemacs/kill-this-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
+  (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice remember-notes (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice org-projectile/goto-todos (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice spacemacs/switch-to-scratch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice spacemacs/default-pop-shell (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (defadvice spacemacs/find-dotfile (before other-window-now activate) (when buffer-file-name (save-buffer)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
