@@ -356,6 +356,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'avy)
+  (require 'magit)
   (load-file "/home/xged/src/config/spacemacs/temp-fns.el")
 
   ;;; Functions
@@ -424,10 +425,30 @@ you should place your code here."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
 
-  ;;; Key Bindings: prefix
-  (defkeyevil-nmv "SPC" nil)
   (defkeyevil-nmv "t" nil)
   ;;; Key Bindings
+  (defkeyevil-nmv "SPC" nil)
+  (defkeyevil-nmv "m" nil)
+  (defkeyevil-n "mm" 'magit-status)
+  (defkeyevil-nv "mj" 'git-gutter+-next-hunk)
+  (defkeyevil-nv "mk" 'git-gutter+-previous-hunk)
+  (defkeyevil-n "mh" 'git-gutter+-show-hunk-inline-at-point)
+  (defkeyevil-n "mH" 'git-gutter+-show-hunk)
+  (defkeyevil-nv "ms" 'git-gutter+-stage-hunks)
+  (defkeyevil-n "mS" 'magit-stage-file)  ; git-gutter+-stage-and-commit-whole-buffer
+  (defkeyevil-n "mu" 'git-gutter+-unstage-whole-buffer)
+  (defkeyevil-n "md" 'git-gutter+-revert-hunk)
+  (defkeyevil-n "mD" 'git-gutter+-revert-hunks)
+  (defkeyevil-n "mc" 'magit-commit)
+  (defkeyevil-n "me" 'magit-commit-extend)
+  (defkeyevil-n "mf" 'magit-commit-instant-fixup)
+  (defkeyevil-n "mF" 'magit-commit-instant-squash)
+  (defkeyevil-n "mr" 'magit-rebase-continue)
+  (defkeyevil-n "mb" 'spacemacs/git-blame-micro-state)
+  (defkeyevil-n "ml" 'magit-log-current)
+  (defkeyevil-n "mt" 'spacemacs/time-machine-transient-state/body)
+  (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
+  (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
   (defkeyevil-nmv "c" 'avy-goto-word-or-subword-1)
   (defkeyevil-nm "SPC c" 'ace-link)
   (defkeyevil-v "f" 'er/expand-region)
@@ -457,12 +478,6 @@ you should place your code here."
   (defkeyevil-n "I" 'evil-append-line)
   (defkeyevil-nv "SPC i" 'evil-invert-char)
   (defkeyevil-nv "SPC I" 'upcase-dwim)
-  (defkeyevil-nmv "SPC n" 'git-gutter+-next-hunk)
-  (defkeyevil-nmv "m" 'magit-status)
-  (defkeyevil-nmv "SPC m" 'git-gutter+-stage-hunks)
-  (defkeyevil-nmv "SPC SPC m" 'magit-commit)
-  (defkeyevil-nmv "SPC SPC M" 'magit-commit-extend)
-  (defkeyevil-nmv "M-m" 'spacemacs/git-blame-micro-state)
   (defkeyevil-nmv "r" 'evil-iedit-state/iedit-mode)
   (defkeyevil-nv "SPC r" 'replace-regexp)
   (defkeyevil-nm "s" 'swiper)
@@ -477,8 +492,6 @@ you should place your code here."
   (defkeyevil-v "d" 'evil-delete)
   (defkeyevil-nm "SPC d" 'spacemacs/kill-this-buffer)
   (defkeyevil-nm "SPC D" 'spacemacs/delete-current-buffer-file)
-  (defkeyevil-nm "SPC SPC d" 'git-gutter+-revert-hunk)
-  (defkeyevil-nm "SPC SPC D" 'git-gutter+-revert-hunks)
   (defkeyevil-nm "C-d" 'spacemacs/delete-window)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
