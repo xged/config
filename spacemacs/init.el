@@ -323,20 +323,20 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (default :foreground "white" :background "black")
       ;; comments
       (font-lock-comment-face :foreground "grey50")
-      (font-lock-doc-face :foreground "grey50")
-      (link :foreground "grey50")
+      (font-lock-doc-face :foreground "grey66")
+      (link :foreground "grey66")
       ;; keywords
-      (font-lock-keyword-face :foreground "grey50" :weight bold)
+      (font-lock-keyword-face :foreground "#ca7dd4")
       ;; strings
-      (font-lock-string-face :foreground "#89d47d")
+      (font-lock-string-face :foreground "#87d47d")
       ;; variables
-      (font-lock-function-name-face :foreground "#52bfff")
-      (font-lock-variable-name-face :foreground "#52bfff")
+      (font-lock-function-name-face :foreground "#52cbff")
+      (font-lock-variable-name-face :foreground "#52cbff")
       ;; builtins
-      (font-lock-builtin-face :foreground "#ff9152")
-      (font-lock-type-face :foreground "#ff9152")
-      (font-lock-constant-face :foreground "#ff9152")
-      (highlight-numbers-number :foreground "#ff9152")
+      (font-lock-builtin-face :foreground "#ffa352")
+      (font-lock-type-face :foreground "#ffa352")
+      (font-lock-constant-face :foreground "#ffa352")
+      (highlight-numbers-number :foreground "#ffa352")
       ;; modes
       (hl-line :background "black" :weight bold)
       (avy-lead-face :foreground "white")
