@@ -76,10 +76,10 @@ xged-init-git() {
   git config --global user.email "xged90@gmail.com"
   git config --global rebase.autoStash true
 }
-xged-startup() {xged-kb}
-
 xged-init() {xged-init-linux; xged-init-xfce; xged-init-git}
+xged-startup() {xged-kb}
 xged-startup-su() {
   xged-startup
   sudo ifconfig wlp2s0 down  # disable wireless
+  sudo sysctl -w vm.vfs_cache_pressure=100  # default 100
 }

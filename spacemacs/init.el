@@ -35,7 +35,7 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ivy
+     ivy (ivy :variables ivy-initial-inputs-alist nil)
      auto-completion
      better-defaults
      emacs-lisp
@@ -464,7 +464,6 @@ you should place your code here."
   (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
   (defkeyevil-nmv "c" 'avy-goto-word-or-subword-1)
-  (defkeyevil-nm "SPC c" 'ace-link)
   (defkeyevil-v "f" 'er/expand-region)
   (defkeyevil-nm "f" 'evil-visual-char)
   (defkeyevil-v "F" 'er/contract-region)
@@ -480,8 +479,8 @@ you should place your code here."
   (defkeyevil-nmv "C-S-a" 'goto-last-change-reverse)
   (defkeyevil-nm "<escape>" 'spacemacs/alternate-buffer)
   (defkeyevil-nm "d" 'evil-visual-line)
-  (defkeyevil-nmv "SPC v" 'evil-visual-block)
   (defkeyevil-nmv "v" 'mark-paragraph)
+  (defkeyevil-nmv "SPC v" 'evil-visual-block)
   (defkeyevil-nmv "e" 'sp-end-of-sexp)
   (defkeyevil-nmv "E" 'sp-beginning-of-sexp)
   (defkeyevil-nmv "w" 'subword-forward)
@@ -490,8 +489,8 @@ you should place your code here."
   (defkeyevil-nmv "SPC w" 'xged/window-next)
   (defkeyevil-v "i" 'evil-change)
   (defkeyevil-n "I" 'evil-append-line)
-  (defkeyevil-nv "SPC i" 'evil-invert-char)
-  (defkeyevil-nv "SPC I" 'upcase-dwim)
+  (defkeyevil-nv "SPC c" 'evil-invert-char)
+  (defkeyevil-nv "SPC C" 'upcase-dwim)
   (defkeyevil-nmv "r" 'evil-iedit-state/iedit-mode)
   (defkeyevil-nv "SPC r" 'replace-regexp)
   (defkeyevil-nm "s" 'swiper)
@@ -502,11 +501,11 @@ you should place your code here."
   (defkeyevil-v "u" 'undo)  ;\
   (defkeyevil-nv "U" 'undo-tree-redo)
   (defkeyevil-v "y" 'evil-yank)
-  (defkeyevil-nm "C-y" 'ace-swap-window)
   (defkeyevil-v "d" 'evil-delete)
   (defkeyevil-nm "SPC d" 'spacemacs/kill-this-buffer)
   (defkeyevil-nm "SPC D" 'spacemacs/delete-current-buffer-file)
-  (defkeyevil-nm "C-d" 'spacemacs/delete-window)
+  (defkeyevil-nm "C-d" 'spacemacs/ace-delete-window)
+  (defkeyevil-nm "C-D" 'spacemacs/delete-window)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
   (defkeyevil-nm "C-f" 'spacemacs/show-and-copy-buffer-filename)
@@ -531,10 +530,9 @@ you should place your code here."
   (defkeyevil-nm "gf" 'xged/goto-f)
   (defkeyevil-nm "gk" 'xged/goto-k)
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
-  (defkeyevil-nm "q" 'spacemacs/restart-emacs-resume-layouts)
-  (defkeyevil-nm "SPC q" 'spacemacs/prompt-kill-emacs)
-  (defkeyevil-nm "C-q" 'configuration-layer/update-packages)
-  (defkeyevil-nm "x" 'counsel-M-x)
+  (defkeyevil-nm "SPC q" 'spacemacs/restart-emacs-resume-layouts)
+  (defkeyevil-nm "C-q" 'spacemacs/kill-emacs)
+  (defkeyevil-nm "SPC SPC" 'counsel-M-x)
   (defkeyevil-i "M-a" (kbd "1"))
   (defkeyevil-i "M-s" (kbd "2"))
   (defkeyevil-i "M-d" (kbd "3"))
@@ -552,7 +550,8 @@ you should place your code here."
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (defkeyevil-n "<" 'evil-shift-left-line)
   (defkeyevil-n ">" 'evil-shift-right-line)
-  (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)
+  (defkeyevil-nmv "C-h SPC" 'ivy-spacemacs-help)
+  (defkeyevil-nv "t" 'spacemacs/duplicate-line-or-region)
 
   ;;; Settings: variables
   (setq-default
@@ -560,7 +559,6 @@ you should place your code here."
                     (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
    ac-ignore-case nil  ;!
    evil-escape-key-sequence "fj"
-   ivy-initial-inputs-alist nil
    git-magit-status-fullscreen t  ;\ needs dotspacemacs/sync-configuration-layers
    evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist)
    evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist)
@@ -573,12 +571,18 @@ you should place your code here."
    expand-region-fast-keys-enabled nil
    evil-move-beyond-eol t
    truncate-lines t
-   evil-move-cursor-back nil)
+   evil-move-cursor-back nil
+   display-time-24hr-format t
+   mouse-avoidance-banish-position
+    '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
+   )
+
   (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
-  (spacemacs/toggle-camel-case-motion-on)  ;!
+  (spacemacs/toggle-camel-case-motion-on)
   (spacemacs/toggle-golden-ratio-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
-  (spacemacs/toggle-display-time-on) (setq-default display-time-24hr-format t)
+  (spacemacs/toggle-display-time-on)
+  (mouse-avoidance-mode)
 
   ;; Hooks
   (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
@@ -601,3 +605,23 @@ you should place your code here."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (engine-mode evil-search-highlight-persist yapfify xterm-color ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org tide symon string-inflection spaceline smex smeargle shell-pop restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort psci psc-ide popwin pip-requirements persp-mode pcre2el password-generator paradox orgit org-projectile org-present org-pomodoro org-download org-bullets org-brain open-junk-file noflet neotree mwim multi-term move-text mmm-mode meghanada markdown-toc magithub magit-gitflow magit-gh-pulls macrostep lorem-ipsum live-py-mode linum-relative link-hint ivy-purpose ivy-hydra intero info+ indent-guide hy-mode hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime elisp-slime-nav editorconfig dumb-jump diff-hl define-word darktooth-theme dante cython-mode counsel-projectile company-statistics company-ghci company-ghc company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
