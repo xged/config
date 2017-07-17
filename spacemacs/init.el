@@ -554,29 +554,31 @@ you should place your code here."
   (defkeyevil-n ">" 'evil-shift-right-line)
   (defkeyevil-n "C-h SPC" 'ivy-spacemacs-help)
 
-  ;;; Settings
-  (setq-default avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
-                                 (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)))
-  (setq-default ac-ignore-case nil)  ;!
+  ;;; Settings: variables
+  (setq-default
+   avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
+                    (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
+   ac-ignore-case nil  ;!
+   evil-escape-key-sequence "fj"
+   ivy-initial-inputs-alist nil
+   git-magit-status-fullscreen t  ;\ needs dotspacemacs/sync-configuration-layers
+   evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist)
+   evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist)
+   evil-surround-pairs-alist (cons '(?k "{" . "}") evil-surround-pairs-alist)
+   evil-surround-pairs-alist (cons '(?d "<" . ">") evil-surround-pairs-alist)
+   avy-case-fold-search t
+   word-wrap t
+   evil-ex-search-highlight-all nil
+   evil-normal-state-cursor "white"
+   expand-region-fast-keys-enabled nil
+   evil-move-beyond-eol t
+   truncate-lines t
+   evil-move-cursor-back nil)
   (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
   (spacemacs/toggle-camel-case-motion-on)  ;!
   (spacemacs/toggle-golden-ratio-on)
-  (setq-default evil-escape-key-sequence "fj")
-  (setq-default ivy-initial-inputs-alist nil)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (spacemacs/toggle-display-time-on) (setq-default display-time-24hr-format t)
-  (setq-default git-magit-status-fullscreen t)
-  (setq-default evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist))
-  (setq-default evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist))
-  (setq-default evil-surround-pairs-alist (cons '(?k "{" . "}") evil-surround-pairs-alist))
-  (setq-default evil-surround-pairs-alist (cons '(?d "<" . ">") evil-surround-pairs-alist))
-  (setq-default avy-case-fold-search t)
-  (setq-default word-wrap t)
-  (setq-default evil-ex-search-highlight-all nil)
-  (setq-default evil-normal-state-cursor "white")
-  (setq-default expand-region-fast-keys-enabled nil)
-  (setq-default evil-move-beyond-eol t)
-  (setq-default truncate-lines t)
 
   ;; Hooks
   (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
