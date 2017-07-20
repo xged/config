@@ -54,7 +54,6 @@ This function should only modify configuration layer settings."
        haskell
      ranger
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
-     theming
      colors
      )
    ;; List of additional packages that will be installed without being
@@ -340,35 +339,6 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq-default theming-modifications
-   '((darktooth
-      ;; default
-      (default :foreground "white" :background "black")
-      ;; comments
-      (font-lock-comment-face :foreground "grey50")
-      (font-lock-doc-face :foreground "grey66")
-      (link :foreground "grey66")
-      ;; keywords
-      (font-lock-keyword-face :foreground "#ca7dd4")
-      ;; strings
-      (font-lock-string-face :foreground "#87d47d")
-      ;; variables
-      (font-lock-function-name-face :foreground "#52cbff")
-      (font-lock-variable-name-face :foreground "#52cbff")
-      ;; builtins
-      (font-lock-builtin-face :foreground "#ffa352")
-      (font-lock-type-face :foreground "#ffa352")
-      (font-lock-constant-face :foreground "#ffa352")
-      (highlight-numbers-number :foreground "#ffa352")
-      ;; modes
-      (hl-line :background "black" :weight bold)
-      (avy-lead-face :foreground "white")
-      (avy-lead-face-0 :foreground "white")
-      (avy-lead-face-1 :foreground "white")
-      (avy-lead-face-2 :foreground "white")
-      (magit-section-highlight :background "black")
-      ))
-   )
   )
 
 (defun dotspacemacs/user-config ()
@@ -583,6 +553,35 @@ you should place your code here."
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (spacemacs/toggle-display-time-on)
   (mouse-avoidance-mode)
+
+  ;; Settings: theme
+  (defvar xged/face-black  "black")
+  (defvar xged/face-grey   "grey50")
+  (defvar xged/face-greyl  "grey66")
+  (defvar xged/face-white  "white")
+  (defvar xged/face-brown  "#ffa852")
+  (defvar xged/face-green  "#87d47d")
+  (defvar xged/face-blue   "#52d1ff")
+  (defvar xged/face-purple "#ca7dd4")
+  (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
+  (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
+  (set-face-attribute 'font-lock-comment-face       nil :foreground xged/face-grey)
+  (set-face-attribute 'font-lock-constant-face      nil :foreground xged/face-brown)
+  (set-face-attribute 'font-lock-doc-face           nil :foreground xged/face-greyl)
+  (set-face-attribute 'font-lock-function-name-face nil :foreground xged/face-blue)
+  (set-face-attribute 'font-lock-keyword-face       nil :foreground xged/face-purple)
+  (set-face-attribute 'font-lock-string-face        nil :foreground xged/face-green)
+  (set-face-attribute 'font-lock-type-face          nil :foreground xged/face-brown)
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground xged/face-blue)
+  (set-face-attribute 'hl-line                      nil :background xged/face-black :weight 'bold)
+  (set-face-attribute 'link                         nil :foreground xged/face-grey)
+  ;; Modes
+  (set-face-attribute 'avy-lead-face                nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-0              nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-1              nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-2              nil :foreground xged/face-white)
+  (set-face-attribute 'highlight-numbers-number     nil :foreground xged/face-brown)
+  (set-face-attribute 'magit-section-highlight      nil :background xged/face-black)
 
   ;; Hooks
   (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
