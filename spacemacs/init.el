@@ -286,7 +286,7 @@ It should only modify the values of Spacemacs settings."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters nil
+   dotspacemacs-highlight-delimiters 'all
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server nil
@@ -537,7 +537,6 @@ you should place your code here."
    avy-case-fold-search t
    word-wrap t
    evil-ex-search-highlight-all nil
-   evil-normal-state-cursor "white"
    expand-region-fast-keys-enabled nil
    evil-move-beyond-eol t
    truncate-lines t
@@ -563,6 +562,9 @@ you should place your code here."
   (defvar xged/face-green  "#87d47d")
   (defvar xged/face-blue   "#52d1ff")
   (defvar xged/face-purple "#ca7dd4")
+  (setq-default evil-normal-state-cursor "white"
+                magit-diff-highlight-hunk-body nil)
+  (global-highlight-parentheses-mode -1)  ; needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-comment-face       nil :foreground xged/face-grey)
@@ -573,15 +575,36 @@ you should place your code here."
   (set-face-attribute 'font-lock-string-face        nil :foreground xged/face-green)
   (set-face-attribute 'font-lock-type-face          nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground xged/face-blue)
-  (set-face-attribute 'hl-line                      nil :background xged/face-black :weight 'bold)
+  (set-face-attribute 'hl-line                      nil :background xged/face-black)
   (set-face-attribute 'link                         nil :foreground xged/face-grey)
+  (set-face-attribute 'region                       nil :background xged/face-grey)
+  (set-face-attribute 'fringe                       nil :background xged/face-black)
   ;; Modes
-  (set-face-attribute 'avy-lead-face                nil :foreground xged/face-white)
-  (set-face-attribute 'avy-lead-face-0              nil :foreground xged/face-white)
-  (set-face-attribute 'avy-lead-face-1              nil :foreground xged/face-white)
-  (set-face-attribute 'avy-lead-face-2              nil :foreground xged/face-white)
-  (set-face-attribute 'highlight-numbers-number     nil :foreground xged/face-brown)
-  (set-face-attribute 'magit-section-highlight      nil :background xged/face-black)
+  (set-face-attribute 'avy-lead-face                     nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-0                   nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-1                   nil :foreground xged/face-white)
+  (set-face-attribute 'avy-lead-face-2                   nil :foreground xged/face-white)
+  (set-face-attribute 'git-gutter+-added                 nil :foreground xged/face-green :background xged/face-green)
+  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'git-gutter+-deleted               nil :foreground xged/face-brown :background xged/face-brown)
+  (set-face-attribute 'git-gutter+-modified              nil :foreground xged/face-purple :background xged/face-purple)
+  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'git-gutter+-unchanged             nil :foreground xged/face-blue :background xged/face-blue)
+  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'rainbow-delimiters-depth-1-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-2-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-3-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-4-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-5-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-6-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-7-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-8-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-9-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil :foreground xged/face-grey :background xged/face-brown)
+  (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
 
   ;; Hooks
   (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
