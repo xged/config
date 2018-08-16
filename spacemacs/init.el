@@ -459,11 +459,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'avy)
   (require 'magit)
-  ;; Interim
-  (defvar xged/goto-j-fp)
-  (defvar xged/goto-f-fp)
-  (defvar xged/goto-k-fp)
-  (load-file "/home/xged/src/config/spacemacs/interim.el")
+
+  ;;; Temporal
+  (defun xged/goto-j () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/lang_char_freqs.py"))
+  (defun xged/goto-f () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/test_pytest.py"))
+  (defun xged/goto-k () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/main.py"))
 
   ;;; Functions
   (defun defkeyevil-n (key def) (define-key evil-normal-state-map (kbd key) def))  ; xged/define-key-evil-n
@@ -505,9 +505,6 @@ you should place your code here."
                ((equal (following-char) ?z) (progn (delete-char 1) (insert-char ?ž) (backward-char)))
                )
          )
-  (defun xged/goto-j () (interactive) (find-file xged/goto-j-fp))
-  (defun xged/goto-f () (interactive) (find-file xged/goto-f-fp))
-  (defun xged/goto-k () (interactive) (find-file xged/goto-k-fp))
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
   (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/evil-mc-paste-after) (spacemacs/evil-mc-paste-before)))
