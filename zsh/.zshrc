@@ -39,19 +39,29 @@ pu()   {yaourt -Syua --noconfirm $@}
 sb()   {$@ &; disown %%; sleep 1; exit}
 sd()   {kill $(pgrep $@); kill $(pgrep $@)}
 
-unzip() {tar xzf $@}
-spacemacs-update() {cd $HOME/.emacs.d; git pull; cd -}
-git-stats-commits-d() {git log --no-merges --date=short --format='%ad' | sort | uniq -c}
-git-stats-commits-w() {git log --no-merges --date=short --format='%ad' | sort | awk '{system("date -d "$1" +%V")}' | uniq -c}
+unzip() {tar xzf $@
+        }
+spacemacs-update() {
+    cd $HOME/.emacs.d; git pull; cd -
+}
+git-stats-commits-d() {
+    git log --no-merges --date=short --format='%ad' | sort | uniq -c
+}
+git-stats-commits-w() {
+    git log --no-merges --date=short --format='%ad' | sort | awk '{system("date -d "$1" +%V")}' | uniq -c
+}
 xged-kb() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
   xkbcomp $HOME/src/config/archlinux/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
-
-xged-kb-bt() {echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3; xged-kb}  # init: scan on
-xged-startup() {xged-kb}
+xged-kb-bt() {
+    echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3; xged-kb  # init: scan on
+}
+xged-startup() {
+    xged-kb
+}
 xged-startup-su() {
     xged-startup
     sudo ifconfig wlp2s0 down  # disable wireless
