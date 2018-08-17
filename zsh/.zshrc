@@ -6,11 +6,6 @@ source $ZSH/oh-my-zsh.sh
 export SPACEMACSDIR=$HOME/src/config/spacemacs
 export PYTHONPATH=$PYTHONPATH:$HOME/src/lang_char_freqs.py
 
-# App
-ae()   {emacs --load ~/.emacs.d/core/templates/.spacemacs.template $@}
-# Legacy
-c()    {cd $@ && ls}
-cc()   {cd .. $@ && ls}
 # File-system
 f()    {cd $@ && ls}
 alias  fd="rm -rf"
@@ -26,8 +21,8 @@ lppu() {sudo pip install --upgrade --force-reinstall $@}
 lpt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
 lpc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
-ml()   {xbacklight -set 3}
-mL()   {xbacklight -set 6}
+ml()   {xbacklight -set 9}
+mL()   {xbacklight -set 25}
 mlp()  {xbacklight -inc 1}
 mlm()  {xbacklight -dec 1}
 # Package
