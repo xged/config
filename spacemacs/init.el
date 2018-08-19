@@ -634,10 +634,6 @@ you should place your code here."
    ac-ignore-case nil  ;!
    evil-escape-key-sequence "fj"
    git-magit-status-fullscreen t  ;\ needs dotspacemacs/sync-configuration-layers
-   evil-surround-pairs-alist (cons '(?j "(" . ")") evil-surround-pairs-alist)
-   evil-surround-pairs-alist (cons '(?f "[" . "]") evil-surround-pairs-alist)
-   evil-surround-pairs-alist (cons '(?k "{" . "}") evil-surround-pairs-alist)
-   evil-surround-pairs-alist (cons '(?d "<" . ">") evil-surround-pairs-alist)
    avy-case-fold-search t
    word-wrap t
    evil-ex-search-highlight-all nil
