@@ -26,10 +26,11 @@ mL()   {xbacklight -set 25}
 mlp()  {xbacklight -inc 1}
 mlm()  {xbacklight -dec 1}
 # Package
-p()    {yaourt -S --noconfirm --needed $@}
-pf()   {yaourt -S --noconfirm --needed --force $@}
-pd()   {yaourt -Rsc --noconfirm $@}
-pu()   {yaourt -Syua --noconfirm $@}
+p()    {yay -S --noconfirm --needed $@}
+ps()   {yay --noconfirm --needed $@}
+pf()   {yay -S --noconfirm --needed --force $@}
+pd()   {yay -Rsc --noconfirm $@}
+pu()   {yay -Syu --noconfirm $@}
 # Session
 sb()   {$@ &; disown %%; sleep 1; exit}
 sd()   {kill $(pgrep $@); kill $(pgrep $@)}
