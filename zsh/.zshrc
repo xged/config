@@ -49,7 +49,7 @@ git-stats-commits-w() {
 xged-kb() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
-  xkbcomp $HOME/src/config/archlinux/keyboard.xkb $DISPLAY -w0  # keymap
+  xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
 xged-kb-bt() {
