@@ -1,6 +1,6 @@
 xged-init-pkgs() {
     sudo pacman -S --noconfirm --needed yay
-    yay -S --noconfirm --needed bluez-utils google-chrome emacs adobe-source-code-pro-fonts tree aspell-en xorg-xbacklight xdotool xsel
+    yay -S --noconfirm --needed bluez-utils google-chrome emacs adobe-source-code-pro-fonts tree aspell-en xorg-xbacklight
 }
 xged-init-main() {
     sudo mount $1 /mnt
@@ -11,8 +11,8 @@ xged-init-main() {
     # relog
 }
 xged-init-xfce() {
-    # set Settings_Manager/Window_Manager/Keyboard/Cycle_Windows to <F12>
-    # set Settings_Manager/Keyboard/Application_Shortcuts: < sh -c 'xdotool type "$(xsel)"' > to <C-SPC>
+    # Settings Manager: Window_Manager: Keyboard: Cycle Windows: <F12>
+    # xfce4-clipman (active): Properties: Sync selections: On
 }
 xged-init-fs() {
     rm -rf Music Pictures Public Templates Videos
