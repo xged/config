@@ -11,8 +11,10 @@ f()    {cd $@ && ls}
 alias  fd="rm -rf"
 ff()   {cd .. $@ && ls}
 fl()   {ls -a --ignore='.' --ignore='..' $@}
-fm()   {mkdir $@ && cd $@}
+fdir() {mkdir $@ && cd $@}
 ft()   {tree -a --dirsfirst -L 4 -I '.git' $@}
+alias  fm="mv"
+alias  fc="cp -r"
 # Lang
 lp()   {python $@}
 lpp()  {sudo pip install -U $@}
@@ -21,8 +23,8 @@ lppu() {sudo pip install --upgrade --force-reinstall $@}
 lpt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
 lpc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
-ml()   {xbacklight -set 9}
-mL()   {xbacklight -set 25}
+ml()   {xbacklight -set 7}
+mL()   {xbacklight -set 10}
 mlp()  {xbacklight -inc 1}
 mlm()  {xbacklight -dec 1}
 # Package
@@ -35,30 +37,22 @@ pu()   {yay -Syu --noconfirm $@}
 sb()   {$@ &; disown %%; sleep 1; exit}
 sd()   {kill $(pgrep $@); kill $(pgrep $@)}
 
-unzip() {tar xzf $@
-        }
-spacemacs-update() {
-    cd $HOME/.emacs.d; git pull; cd -
-}
-git-stats-commits-d() {
-    git log --no-merges --date=short --format='%ad' | sort | uniq -c
-}
-git-stats-commits-w() {
-    git log --no-merges --date=short --format='%ad' | sort | awk '{system("date -d "$1" +%V")}' | uniq -c
-}
-xged-kb() {
+unzip() {tar xzf $@}
+git-stats-commits-d() {git log --no-merges --date=short --format='%ad' | sort | uniq -c}
+git-stats-commits-w() {git log --no-merges --date=short --format='%ad' | sort | awk '{system("date -d "$1" +%V")}' | uniq -c}
+xged-keyboard() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
   xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
-xged-kb-bt() {
-    echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3; xged-kb  # init: scan on
+xged-keyboard-bluetooth() {
+    echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3  # init: scan on
 }
 xged-startup() {
-    xged-kb
+    xged-keyboard
+    xbacklight -set 10
 }
 xged-startup-su() {
-    xged-startup
     sudo ifconfig wlp2s0 down  # disable wireless
 }
