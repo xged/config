@@ -592,8 +592,6 @@ you should place your code here."
   (defkeyevil-nmv "SPC j" 'xged/forward-paragraph)  ;\ visual line
   (defkeyevil-nmv "SPC k" 'xged/backward-paragraph)  ;\ visual line
   (defkeyevil-nm "b" 'ivy-switch-buffer)
-  (defkeyevil-nm "SPC b" 'previous-buffer)
-  (defkeyevil-nm "SPC B" 'next-buffer)
   (defkeyevil-nm "gs" 'spacemacs/default-pop-shell)
   (defkeyevil-nm "gS" 'spacemacs/switch-to-scratch-buffer)
   (defkeyevil-nm "gt" 'org-projectile/goto-todos)
@@ -604,8 +602,10 @@ you should place your code here."
   (defkeyevil-nm "gf" 'xged/goto-f)
   (defkeyevil-nm "gk" 'xged/goto-k)
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
-  (defkeyevil-nm "SPC q" 'spacemacs/restart-emacs-resume-layouts)
-  (defkeyevil-nm "C-q" 'spacemacs/kill-emacs)
+  (defkeyevil-nm "q" 'previous-buffer)
+  (defkeyevil-nm "Q" 'next-buffer)
+  (defkeyevil-nm "SPC q" 'spacemacs/kill-emacs)
+  (defkeyevil-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
   (defkeyevil-nm "SPC SPC" 'counsel-M-x)
   (defkeyevil-i "M-a" (kbd "1"))
   (defkeyevil-i "M-s" (kbd "2"))
