@@ -642,8 +642,6 @@ you should place your code here."
    truncate-lines t
    evil-move-cursor-back nil
    display-time-24hr-format t
-   mouse-avoidance-banish-position
-    '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    )
 
   (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
@@ -651,7 +649,7 @@ you should place your code here."
   (spacemacs/toggle-golden-ratio-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (spacemacs/toggle-display-time-on)
-  (mouse-avoidance-mode)
+  (mouse-avoidance-mode "banish")
 
   ;; Settings: theme
   (defvar xged/face-black  "black")
