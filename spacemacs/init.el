@@ -576,10 +576,10 @@ you should place your code here."
   (defkeyevil-nv "U" 'undo-tree-redo)
   (defkeyevil-v "y" 'evil-yank)
   (defkeyevil-v "d" 'evil-delete)
-  (defkeyevil-nm "SPC d" 'spacemacs/kill-this-buffer)
+  (defkeyevil-nm "SPC d" 'kill-this-buffer)
   (defkeyevil-nm "SPC D" 'spacemacs/delete-current-buffer-file)
-  (defkeyevil-nm "C-d" 'spacemacs/ace-delete-window)
-  (defkeyevil-nm "C-D" 'spacemacs/delete-window)
+  (defkeyevil-nm "C-d" 'delete-other-windows)
+  (defkeyevil-nm "C-D" 'delete-window)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
   (defkeyevil-nm "C-f" 'spacemacs/show-and-copy-buffer-filename)
@@ -604,7 +604,7 @@ you should place your code here."
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
   (defkeyevil-nm "q" 'previous-buffer)
   (defkeyevil-nm "Q" 'next-buffer)
-  (defkeyevil-nm "SPC q" 'spacemacs/kill-emacs)
+  (defkeyevil-nm "SPC q" 'save-buffers-kill-emacs)
   (defkeyevil-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
   (defkeyevil-nm "SPC SPC" 'counsel-M-x)
   (defkeyevil-i "M-a" (kbd "1"))
@@ -648,7 +648,7 @@ you should place your code here."
   (spacemacs/toggle-camel-case-motion-on)
   (spacemacs/toggle-golden-ratio-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
-  (spacemacs/toggle-display-time-on)
+  (display-time-mode)
   (mouse-avoidance-mode "banish")
 
   ;; Settings: theme
