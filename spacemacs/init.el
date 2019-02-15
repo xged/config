@@ -639,6 +639,7 @@ before packages are loaded."
    evil-move-cursor-back nil
    display-time-24hr-format t
    popwin:popup-window-height 100  ;!
+   mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    )
 
   ;; Settings: commands
