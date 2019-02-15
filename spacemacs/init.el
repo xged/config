@@ -640,6 +640,7 @@ before packages are loaded."
    display-time-24hr-format t
    popwin:popup-window-height 100  ;!
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
+   dotspacemacs-highlight-delimiters nil
    )
 
   ;; Settings: commands
@@ -689,16 +690,6 @@ before packages are loaded."
   (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
-  (set-face-attribute 'rainbow-delimiters-depth-1-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-2-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-3-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-4-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-5-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-6-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-7-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-8-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-depth-9-face   nil :foreground xged/face-grey)
-  (set-face-attribute 'rainbow-delimiters-unmatched-face nil :foreground xged/face-grey :background xged/face-brown)
   (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
 
