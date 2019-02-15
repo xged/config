@@ -53,7 +53,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      version-control
      github
-     ;;; langs
+     ;; langs
        python
        typescript
        haskell
@@ -462,12 +462,12 @@ before packages are loaded."
   (require 'avy)
   (require 'magit)
 
-  ;;; Temporal
+  ;; Temporal
   (defun xged/goto-j () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/lang_char_freqs.py"))
   (defun xged/goto-f () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/test_pytest.py"))
   (defun xged/goto-k () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/main.py"))
 
-  ;;; Functions
+  ;; Functions
   (defun defkeyevil-n (key def) (define-key evil-normal-state-map (kbd key) def))  ; xged/define-key-evil-n
   (defun defkeyevil-m (key def) (define-key evil-motion-state-map (kbd key) def))
   (defun defkeyevil-v (key def) (define-key evil-visual-state-map (kbd key) def))
@@ -485,7 +485,7 @@ before packages are loaded."
   (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
     (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
 
-  ;;; Commands
+  ;; Commands
   (defun xged/transform-into-foreign-letter-lt () (interactive)
          (cond ((equal (following-char) ?A) (progn (delete-char 1) (insert-char ?Ą) (backward-char)))
                ((equal (following-char) ?C) (progn (delete-char 1) (insert-char ?Č) (backward-char)))
@@ -518,7 +518,7 @@ before packages are loaded."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
 
-  ;;; Key Bindings
+  ;; Key Bindings
   (defkeyevil-nmv "SPC" nil)
   (defkeyevil-nmv "m" nil)
   (defkeyevil-n "mm" 'magit-status)
@@ -628,7 +628,7 @@ before packages are loaded."
   (defkeyevil-nmv "C-h SPC" 'ivy-spacemacs-help)
   (defkeyevil-nv "t" 'spacemacs/duplicate-line-or-region)
 
-  ;;; Settings: variables
+  ;; Settings: variables
   (setq-default
    avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
                     (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
@@ -646,7 +646,7 @@ before packages are loaded."
    popwin:popup-window-height 100  ;!
    )
 
-  ;;; Settings: commands
+  ;; Settings: commands
   (global-centered-cursor-mode)  ;\ term shell
   (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
