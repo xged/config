@@ -509,7 +509,7 @@ before packages are loaded."
          )
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
-  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/evil-mc-paste-after) (spacemacs/evil-mc-paste-before)))
+  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/paste-transient-state/evil-paste-after) (spacemacs/paste-transient-state/evil-paste-before)))
   (defun xged/paste-primary-selection () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
@@ -532,13 +532,11 @@ before packages are loaded."
   (defkeyevil-n "md" 'git-gutter+-revert-hunk)
   (defkeyevil-n "mD" 'git-gutter+-revert-hunks)
   (defkeyevil-n "mc" 'magit-commit)
-  (defkeyevil-n "me" 'magit-commit-extend)
   (defkeyevil-n "mf" 'magit-commit-instant-fixup)
-  (defkeyevil-n "mF" 'magit-commit-instant-squash)
-  (defkeyevil-n "mr" 'magit-rebase-continue)
+  (defkeyevil-n "mF" 'magit-commit-extend)
   (defkeyevil-n "mb" 'spacemacs/git-blame-micro-state)
-  (defkeyevil-n "ml" 'magit-log-current)
   (defkeyevil-n "mt" 'spacemacs/time-machine-transient-state/body)
+  (defkeyevil-n "ml" 'magit-log-current)
   (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
   (defkeyevil-nmv "c" 'avy-goto-word-or-subword-1)
@@ -570,8 +568,9 @@ before packages are loaded."
   (defkeyevil-nmv "r" 'evil-iedit-state/iedit-mode)
   (defkeyevil-nv "SPC r" 'replace-regexp)
   (defkeyevil-nm "s" 'swiper)
-  (evil-define-key '(visual operator) evil-surround-mode-map "s" 'evil-visualstar/begin-search-forward)
-  (evil-define-key '(visual operator) evil-surround-mode-map "S" 'spacemacs/swiper-region-or-symbol)  ;\
+  (evil-define-key '(visual operator) evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)  ;\
+  (evil-define-key '(visual operator) evil-surround-mode-map "n" 'evil-visualstar/begin-search-forward)
+  (defkeyevil-nm "SPC s" 'spacemacs/counsel-jump-in-buffer)
   (defkeyevil-nm "SPC s" 'counsel-imenu)
   (defkeyevil-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (defkeyevil-v "u" 'undo)  ;\
@@ -584,8 +583,7 @@ before packages are loaded."
   (defkeyevil-nm "C-D" 'delete-window)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
-  (defkeyevil-nm "C-f" 'spacemacs/show-and-copy-buffer-filename)
-  (defkeyevil-nm "C-S-f" 'spacemacs/rename-current-buffer-file )
+  (defkeyevil-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (defkeyevil-nmv "SPC h" 'back-to-indentation)
   (defkeyevil-nm "SPC l" 'end-of-line)
   (defkeyevil-v "SPC l" 'evil-last-non-blank)
@@ -604,6 +602,7 @@ before packages are loaded."
   (defkeyevil-nm "gf" 'xged/goto-f)
   (defkeyevil-nm "gk" 'xged/goto-k)
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
+  (evil-define-key 'normal emacs-lisp-mode-map ",i" 'spacemacs/ediff-dotfile-and-template)
   (defkeyevil-nm "q" 'previous-buffer)
   (defkeyevil-nm "Q" 'next-buffer)
   (defkeyevil-nm "SPC q" 'save-buffers-kill-emacs)
@@ -621,8 +620,8 @@ before packages are loaded."
   (defkeyevil-i "M-:" (kbd "0"))
   (defkeyevil-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
   (defkeyevil-n "RET" 'xged/insert-line-below)
-  (defkeyevil-v "RET" 'evil-exchange)
   (defkeyevil-n "S-<return>" 'xged/insert-line-above)
+  (defkeyevil-v "x" 'evil-exchange)
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (defkeyevil-n "<" 'evil-shift-left-line)
   (defkeyevil-n ">" 'evil-shift-right-line)
@@ -644,11 +643,12 @@ before packages are loaded."
    truncate-lines t
    evil-move-cursor-back nil
    display-time-24hr-format t
+   popwin:popup-window-height 100  ;!
    )
 
-  (global-centered-cursor-mode)  ;\ needs dotspacemacs/sync-configuration-layers
-  (spacemacs/toggle-camel-case-motion-on)
-  (spacemacs/toggle-golden-ratio-on)
+  ;;; Settings: commands
+  (global-centered-cursor-mode)  ;\ term shell
+  (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (display-time-mode)
   (mouse-avoidance-mode "banish")
