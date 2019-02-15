@@ -52,12 +52,14 @@ This function should only modify configuration layer settings."
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
-     github
+
      ;; langs
-       python
-       typescript
-       haskell
-       java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
+     python
+     typescript
+     haskell
+     java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
+
+     github
      ranger
      colors
      html
@@ -472,16 +474,9 @@ before packages are loaded."
   (defun defkeyevil-m (key def) (define-key evil-motion-state-map (kbd key) def))
   (defun defkeyevil-v (key def) (define-key evil-visual-state-map (kbd key) def))
   (defun defkeyevil-i (key def) (define-key evil-insert-state-map (kbd key) def))
-  (defun defkeyevil-nm (key def)
-    (defkeyevil-n key def)
-    (defkeyevil-m key def))
-  (defun defkeyevil-nv (key def)
-    (defkeyevil-n key def)
-    (defkeyevil-v key def))
-  (defun defkeyevil-nmv (key def)
-    (defkeyevil-n key def)
-    (defkeyevil-m key def)
-    (defkeyevil-v key def))
+  (defun defkeyevil-nm (key def) (defkeyevil-n key def) (defkeyevil-m key def))
+  (defun defkeyevil-nv (key def) (defkeyevil-n key def) (defkeyevil-v key def))
+  (defun defkeyevil-nmv (key def) (defkeyevil-n key def) (defkeyevil-m key def) (defkeyevil-v key def))
   (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
     (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
 
@@ -509,7 +504,8 @@ before packages are loaded."
          )
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
-  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/paste-transient-state/evil-paste-after) (spacemacs/paste-transient-state/evil-paste-before)))
+  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/paste-transient-state/evil-paste-after)
+                                       (spacemacs/paste-transient-state/evil-paste-before)))
   (defun xged/paste-primary-selection () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
@@ -630,8 +626,7 @@ before packages are loaded."
 
   ;; Settings: variables
   (setq-default
-   avy-keys (append (list ?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q)
-                    (list ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
+   avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)
    ac-ignore-case nil  ;!
    evil-escape-key-sequence "fj"
    git-magit-status-fullscreen t  ;\ needs dotspacemacs/sync-configuration-layers
