@@ -270,7 +270,7 @@ It should only modify the values of Spacemacs settings."
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
-   dotspacemacs-auto-save-file-location 'cache
+   dotspacemacs-auto-save-file-location nil
 
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
@@ -513,6 +513,7 @@ before packages are loaded."
   (defun xged/goto-word-0-line-and-below (arg) (interactive "P")
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
+  (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
 
   ;; Key Bindings
   (defkeyevil-nmv "SPC" nil)
@@ -694,22 +695,8 @@ before packages are loaded."
   (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
 
   ;; Hooks
-  (defadvice xged/goto-j (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice xged/goto-f (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice xged/goto-k (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice spacemacs/alternate-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice next-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice previous-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice ivy-switch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice spacemacs/kill-this-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice other-window (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice magit-status (before other-window-now activate) (when buffer-file-name (projectile-save-project-buffers)))
-  (defadvice spacemacs/switch-to-messages-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice remember-notes (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice org-projectile/goto-todos (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice spacemacs/switch-to-scratch-buffer (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice spacemacs/default-pop-shell (before other-window-now activate) (when buffer-file-name (save-buffer)))
-  (defadvice spacemacs/find-dotfile (before other-window-now activate) (when buffer-file-name (save-buffer)))
+  (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
+  (defadvice switch-to-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))  ; xged/paste triggers it too
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
