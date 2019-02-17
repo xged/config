@@ -477,8 +477,6 @@ before packages are loaded."
   (defun defkeyevil-nm (key def) (defkeyevil-n key def) (defkeyevil-m key def))
   (defun defkeyevil-nv (key def) (defkeyevil-n key def) (defkeyevil-v key def))
   (defun defkeyevil-nmv (key def) (defkeyevil-n key def) (defkeyevil-m key def) (defkeyevil-v key def))
-  (defun xged/current-local-map-symbol () (catch 'gotit (mapatoms (lambda (sym) (and
-    (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym '(current-local-map))) (throw 'gotit sym))))))
 
   ;; Commands
   (defun xged/transform-into-foreign-letter-lt () (interactive)
@@ -536,7 +534,7 @@ before packages are loaded."
   (defkeyevil-n "ml" 'magit-log-current)
   (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
-  (defkeyevil-nmv "c" 'avy-goto-word-or-subword-1)
+  (defkeyevil-nmv "c" 'avy-goto-subword-1)
   (defkeyevil-nv "f" 'er/expand-region)
   (defkeyevil-v "F" 'er/contract-region)
   (defkeyevil-nv ":" 'xged/paste)
@@ -546,8 +544,7 @@ before packages are loaded."
   (defkeyevil-v "p" 'evil-surround-region)
   (defkeyevil-nmv "a" 'evil-jump-backward)
   (defkeyevil-nmv "A" 'evil-jump-forward)
-  (defkeyevil-nmv "C-a" 'goto-last-change)
-  (defkeyevil-nmv "C-S-a" 'goto-last-change-reverse)
+  (defkeyevil-nmv "SPC a" 'goto-last-change)
   (defkeyevil-nm "<escape>" 'spacemacs/alternate-buffer)
   (defkeyevil-nm "d" 'evil-visual-line)
   (defkeyevil-nmv "SPC v" 'mark-paragraph)
@@ -575,8 +572,9 @@ before packages are loaded."
   (defkeyevil-v "d" 'evil-delete)
   (defkeyevil-nm "SPC d" 'kill-this-buffer)
   (defkeyevil-nm "SPC D" 'spacemacs/delete-current-buffer-file)
-  (defkeyevil-nm "C-d" 'delete-other-windows)
+  (defkeyevil-nm "C-d" 'delete-other-windows)  ;\
   (defkeyevil-nm "C-D" 'delete-window)
+  (defkeyevil-nm "<backspace>" 'evil-delete-char)
   (defkeyevil-nm "SPC f" 'counsel-find-file)
   (defkeyevil-nm "SPC F" 'counsel-recentf)
   (defkeyevil-nm "C-f" 'spacemacs/rename-current-buffer-file)
@@ -585,8 +583,6 @@ before packages are loaded."
   (defkeyevil-v "SPC l" 'evil-last-non-blank)
   (defkeyevil-nmv "C-j" 'xged/forward-paragraph)
   (defkeyevil-nmv "C-k" 'xged/backward-paragraph)
-  (defkeyevil-nmv "SPC j" 'xged/forward-paragraph)  ;\ visual line
-  (defkeyevil-nmv "SPC k" 'xged/backward-paragraph)  ;\ visual line
   (defkeyevil-nm "b" 'ivy-switch-buffer)
   (defkeyevil-nm "gs" 'spacemacs/default-pop-shell)
   (defkeyevil-nm "gS" 'spacemacs/switch-to-scratch-buffer)
