@@ -612,7 +612,6 @@ before packages are loaded."
    avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)
    ac-ignore-case nil  ;!
    evil-escape-key-sequence "fj"
-   magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
    avy-case-fold-search t
    word-wrap t
    evil-ex-search-highlight-all nil
@@ -638,6 +637,10 @@ before packages are loaded."
     ;; make popup reuse current window
     (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window
                                                                             display-buffer-use-some-window)))
+  (defun always-true (&rest _args) t)
+  (setq display-buffer-base-action '(display-buffer-same-window))
+  (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
+                                                     '(always-true display-buffer-same-window) 'append))
 
   ;; Settings: theme
   (defvar xged/face-black  "black")
