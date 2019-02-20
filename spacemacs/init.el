@@ -542,6 +542,10 @@ before packages are loaded."
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "b" 'ivy-switch-buffer)
+  (xged/kb-nm "q" 'previous-buffer) (xged/kb-nm "Q" 'next-buffer)
+  (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
+  (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
+  ;; Key Bindings: Manage: goto
   (xged/kb-nm "gs" 'spacemacs/default-pop-shell)
   (xged/kb-nm "gS" 'spacemacs/switch-to-scratch-buffer)
   (xged/kb-nm "gt" 'org-projectile/goto-todos)
@@ -549,9 +553,7 @@ before packages are loaded."
   (xged/kb-nm "gm" 'spacemacs/switch-to-messages-buffer)
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
   (xged/kb-nm "gj" 'xged/goto-j) (xged/kb-nm "gf" 'xged/goto-f) (xged/kb-nm "gk" 'xged/goto-k)
-  (xged/kb-nm "q" 'previous-buffer) (xged/kb-nm "Q" 'next-buffer)
-  (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
-  (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
+  ;; Key Bindings: Manage: Git
   (xged/kb-n "mm" 'magit-status)
   (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
