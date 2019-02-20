@@ -502,8 +502,6 @@ before packages are loaded."
          )
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
-  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (spacemacs/paste-transient-state/evil-paste-after)
-                                       (spacemacs/paste-transient-state/evil-paste-before)))
   (defun xged/paste-primary-selection () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
@@ -573,7 +571,7 @@ before packages are loaded."
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
 
   ;; Key Bindings: Insert
-  (xged/kb-nv ":" 'xged/paste)
+  (xged/kb-nv ":" 'evil-paste-before)
   (xged/kb-nv "SPC :" 'xged/paste-primary-selection)
   (xged/kb-n "C-:" 'counsel-yank-pop)
   (xged/kb-v "y" 'evil-yank)
