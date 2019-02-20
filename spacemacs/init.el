@@ -278,7 +278,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil, the paste transient-state is enabled. While enabled, after you
    ;; paste something, pressing `C-j' and `C-k' several times cycles through the
    ;; elements in the `kill-ring'. (default nil)
-   dotspacemacs-enable-paste-transient-state t
+   dotspacemacs-enable-paste-transient-state nil
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
@@ -572,8 +572,8 @@ before packages are loaded."
 
   ;; Key Bindings: Insert
   (xged/kb-nv ":" 'evil-paste-before)
-  (xged/kb-nv "SPC :" 'xged/paste-primary-selection)
-  (xged/kb-n "C-:" 'counsel-yank-pop)
+  (xged/kb-nv "SPC :" 'counsel-yank-pop)
+  (xged/kb-nv "C-:" 'xged/paste-primary-selection)
   (xged/kb-v "y" 'evil-yank)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
