@@ -631,16 +631,6 @@ before packages are loaded."
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (display-time-mode)
   (mouse-avoidance-mode "banish")
-  (with-eval-after-load 'window-purpose
-    ;; remove bottom split popup
-    (setq purpose-special-action-sequences (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
-    ;; make popup reuse current window
-    (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window
-                                                                            display-buffer-use-some-window)))
-  (defun always-true (&rest _args) t)
-  (setq display-buffer-base-action '(display-buffer-same-window))
-  (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
-                                                     '(always-true display-buffer-same-window) 'append))
 
   ;; Settings: theme
   (defvar xged/face-black  "black")
@@ -684,6 +674,18 @@ before packages are loaded."
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
+
+  ;; Settings: Fullscreen
+  (with-eval-after-load 'window-purpose
+    ;; remove bottom split popup
+    (setq purpose-special-action-sequences (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
+    ;; make popup reuse current window
+    (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window
+                                                                            display-buffer-use-some-window)))
+  (defun always-true (&rest _args) t)
+  (setq display-buffer-base-action '(display-buffer-same-window))
+  (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
+                                                     '(always-true display-buffer-same-window) 'append))
 
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
