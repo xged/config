@@ -664,16 +664,17 @@ before packages are loaded."
   (set-face-attribute 'avy-lead-face-1                   nil :foreground xged/face-white)
   (set-face-attribute 'avy-lead-face-2                   nil :foreground xged/face-white)
   (set-face-attribute 'git-gutter+-added                 nil :foreground xged/face-green :background xged/face-green)
-  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'git-gutter+-deleted               nil :foreground xged/face-brown :background xged/face-brown)
   (set-face-attribute 'git-gutter+-modified              nil :foreground xged/face-purple :background xged/face-purple)
-  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'git-gutter+-unchanged             nil :foreground xged/face-blue :background xged/face-blue)
-  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
-  (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
-  (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)
+  (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)
   (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
   (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
+  ;; Settings: Theme: startup error
+  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
 
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
