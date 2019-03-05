@@ -470,7 +470,7 @@ before packages are loaded."
   (defun xged/goto-k () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/main.py"))
 
   ;; Functions
-  (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))  ; xged/define-key-evil-n
+  (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
   (defun xged/kb-m (key def) (define-key evil-motion-state-map (kbd key) def))
   (defun xged/kb-v (key def) (define-key evil-visual-state-map (kbd key) def))
   (defun xged/kb-i (key def) (define-key evil-insert-state-map (kbd key) def))
@@ -557,7 +557,7 @@ before packages are loaded."
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-n "mH" 'git-gutter+-show-hunk)
   (xged/kb-nv "ms" 'git-gutter+-stage-hunks)
-  (xged/kb-n "mS" 'magit-stage-file)  ; git-gutter+-stage-and-commit-whole-buffer
+  (xged/kb-n "mS" 'magit-stage-file)
   (xged/kb-n "mu" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-n "md" 'git-gutter+-revert-hunk)
   (xged/kb-n "mD" 'git-gutter+-revert-hunks)
@@ -643,7 +643,7 @@ before packages are loaded."
   (defvar xged/face-purple "#ca7dd4")
   (setq-default evil-normal-state-cursor "white"
                 magit-diff-highlight-hunk-body nil)
-  (global-highlight-parentheses-mode -1)  ; needs dotspacemacs/sync-configuration-layers
+  (global-highlight-parentheses-mode -1)  ;\
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-comment-face       nil :foreground xged/face-grey)
@@ -669,12 +669,12 @@ before packages are loaded."
   (set-face-attribute 'git-gutter+-unchanged             nil :foreground xged/face-blue :background xged/face-blue)
   (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)
-  (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)
   (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
   ;; Settings: Theme: startup error
-  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\ needs dotspacemacs/sync-configuration-layers
-  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\ needs dotspacemacs/sync-configuration-layers
-  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\ needs dotspacemacs/sync-configuration-layers
+  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\
+  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\
+  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\
 
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
