@@ -597,7 +597,7 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map ",i" 'spacemacs/ediff-dotfile-and-template)
 
-  ;; Key Bindings: Search
+  ;; Key Bindings: Find
   (xged/kb-nm "s" 'swiper)
   (evil-define-key '(visual operator) evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)  ;\
   (evil-define-key '(visual operator) evil-surround-mode-map "n" 'evil-visualstar/begin-search-forward)
@@ -607,7 +607,7 @@ before packages are loaded."
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
   (xged/kb-nmv "C-h SPC" 'ivy-spacemacs-help)
 
-  ;; Settings: variables
+  ;; Settings: Variables
   (setq-default
    avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)
    ac-ignore-case nil  ;!
@@ -625,14 +625,14 @@ before packages are loaded."
    dotspacemacs-highlight-delimiters nil
    )
 
-  ;; Settings: commands
+  ;; Settings: Commands
   (global-centered-cursor-mode)  ;\ term shell
   (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (display-time-mode)
   (mouse-avoidance-mode "banish")
 
-  ;; Settings: theme
+  ;; Settings: Theme
   (defvar xged/face-black  "black")
   (defvar xged/face-grey   "grey50")
   (defvar xged/face-greyl  "grey66")
@@ -658,7 +658,7 @@ before packages are loaded."
   (set-face-attribute 'link                         nil :foreground xged/face-grey)
   (set-face-attribute 'region                       nil :background xged/face-grey)
   (set-face-attribute 'fringe                       nil :background xged/face-black)
-  ;; Modes
+  ;; Settings: Theme: Modes
   (set-face-attribute 'avy-lead-face                     nil :foreground xged/face-white)
   (set-face-attribute 'avy-lead-face-0                   nil :foreground xged/face-white)
   (set-face-attribute 'avy-lead-face-1                   nil :foreground xged/face-white)
