@@ -522,7 +522,7 @@ before packages are loaded."
   (xged/kb-nmv "SPC v" 'mark-paragraph)
 
   ;; Key Bindings: Navigate
-  (xged/kb-nmv "c" 'avy-goto-subword-1)
+  (xged/kb-nmv "c" 'avy-goto-word-1)
   (xged/kb-nmv "a" 'evil-jump-backward) (xged/kb-nmv "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
   (xged/kb-nmv "e" 'subword-forward) (xged/kb-nmv "E" 'subword-backward)
@@ -560,10 +560,10 @@ before packages are loaded."
   (xged/kb-n "mS" 'magit-stage-file)
   (xged/kb-n "mu" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-n "md" 'git-gutter+-revert-hunk)
-  (xged/kb-n "mD" 'git-gutter+-revert-hunks)
-  (xged/kb-n "mc" 'magit-commit)
-  (xged/kb-n "mf" 'magit-commit-instant-fixup)
-  (xged/kb-n "mF" 'magit-commit-extend)
+  (xged/kb-n "mc" 'magit-commit-create)
+  (xged/kb-n "mf" 'magit-commit-fixup)
+  (xged/kb-n "mr" 'magit-commit-instant-fixup)  ; rebase
+  (xged/kb-n "mR" 'magit-commit-extend)
   (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
@@ -599,13 +599,18 @@ before packages are loaded."
 
   ;; Key Bindings: Find
   (xged/kb-nm "s" 'swiper)
-  (evil-define-key '(visual operator) evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)  ;\
-  (evil-define-key '(visual operator) evil-surround-mode-map "n" 'evil-visualstar/begin-search-forward)
-  (xged/kb-nm "SPC s" 'spacemacs/counsel-jump-in-buffer)
-  (xged/kb-nm "SPC s" 'counsel-imenu)
-  (xged/kb-nm "SPC F" 'counsel-recentf)
+  (evil-define-key 'visual evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)
+  (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
+  (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
-  (xged/kb-nmv "C-h SPC" 'ivy-spacemacs-help)
+  (xged/kb-nmv "z f" 'describe-function)
+  (xged/kb-nmv "z v" 'describe-variable)
+  (xged/kb-nmv "z k" 'describe-key)
+  (xged/kb-nmv "z b" 'describe-bindings)
+  (xged/kb-nmv "z l" 'ivy-spacemacs-help)  ; layers and packages
+  (xged/kb-nmv "z m" 'describe-mode)  ; active modes
+  (xged/kb-nmv "z c" 'where-is)  ; describe command
+  (xged/kb-nmv "z s" 'apropos-command)  ; symbols
 
   ;; Settings: Variables
   (setq-default
@@ -623,6 +628,7 @@ before packages are loaded."
    popwin:popup-window-height 100  ;!
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    dotspacemacs-highlight-delimiters nil
+   auto-completion-tab-key-behavior 'complete
    )
 
   ;; Settings: Commands
@@ -643,7 +649,7 @@ before packages are loaded."
   (defvar xged/face-purple "#ca7dd4")
   (setq-default evil-normal-state-cursor "white"
                 magit-diff-highlight-hunk-body nil)
-  (global-highlight-parentheses-mode -1)  ;\
+  (global-highlight-parentheses-mode 0)  ;\
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-comment-face       nil :foreground xged/face-grey)
@@ -669,8 +675,6 @@ before packages are loaded."
   (set-face-attribute 'git-gutter+-unchanged             nil :foreground xged/face-blue :background xged/face-blue)
   (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)
-  (set-face-attribute 'sp-show-pair-match-face           nil :background xged/face-black)
-  (set-face-attribute 'sp-show-pair-mismatch-face        nil :background xged/face-brown)
   ;; Settings: Theme: startup error
   (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\
   (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\
@@ -690,7 +694,7 @@ before packages are loaded."
 
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
-  (defadvice switch-to-buffer (before save-buffer-now activate) (when buffer-file-name (save-buffer)))  ; xged/paste triggers it too
+  (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))  ; xged/paste triggers this too
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -707,7 +711,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-company helm-c-yasnippet auto-complete helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mode-manager helm-hoogle helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-ag flyspell-correct-helm evil-mc ace-jump-helm-line helm helm-core yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode psci psc-ide prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file noflet nameless mwim mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
+    (doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
