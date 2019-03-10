@@ -58,6 +58,7 @@ This function should only modify configuration layer settings."
      typescript
      haskell
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
+     yaml
 
      github
      ranger
@@ -464,11 +465,6 @@ before packages are loaded."
   (require 'avy)
   (require 'magit)
 
-  ;; Temporal
-  (defun xged/goto-j () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/lang_char_freqs.py"))
-  (defun xged/goto-f () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/test_pytest.py"))
-  (defun xged/goto-k () (interactive) (find-file "/home/xged/src/lang_char_freqs.py/main.py"))
-
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
   (defun xged/kb-m (key def) (define-key evil-motion-state-map (kbd key) def))
@@ -546,11 +542,9 @@ before packages are loaded."
   ;; Key Bindings: Manage: goto
   (xged/kb-nm "gs" 'spacemacs/default-pop-shell)
   (xged/kb-nm "gS" 'spacemacs/switch-to-scratch-buffer)
-  (xged/kb-nm "gt" 'org-projectile/goto-todos)
-  (xged/kb-nm "gn" 'remember-notes)
+  (xged/kb-nm "gn" (lambda () (interactive) (find-file "/home/xged/src/config/Notes.yaml")))
   (xged/kb-nm "gm" 'spacemacs/switch-to-messages-buffer)
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
-  (xged/kb-nm "gj" 'xged/goto-j) (xged/kb-nm "gf" 'xged/goto-f) (xged/kb-nm "gk" 'xged/goto-k)
   ;; Key Bindings: Manage: Git
   (xged/kb-n "mm" 'magit-status)
   (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
