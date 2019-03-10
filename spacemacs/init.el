@@ -498,7 +498,6 @@ before packages are loaded."
          )
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
-  (defun xged/paste-primary-selection () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
@@ -567,7 +566,7 @@ before packages are loaded."
   ;; Key Bindings: Insert
   (xged/kb-nv ":" 'evil-paste-before)
   (xged/kb-nv "SPC :" 'counsel-yank-pop)
-  (xged/kb-nv "C-:" 'xged/paste-primary-selection)
+  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (evil-paste-before 1)))
   (xged/kb-v "y" 'evil-yank)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
