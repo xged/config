@@ -643,6 +643,7 @@ before packages are loaded."
   (setq-default evil-normal-state-cursor "white"
                 magit-diff-highlight-hunk-body nil)
   (global-highlight-parentheses-mode 0)  ;\
+  (global-hl-line-mode 0)
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-comment-face       nil :foreground xged/face-grey)
@@ -653,7 +654,6 @@ before packages are loaded."
   (set-face-attribute 'font-lock-string-face        nil :foreground xged/face-green)
   (set-face-attribute 'font-lock-type-face          nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground xged/face-blue)
-  (set-face-attribute 'hl-line                      nil :background xged/face-black)
   (set-face-attribute 'link                         nil :foreground xged/face-grey)
   (set-face-attribute 'region                       nil :background xged/face-grey)
   (set-face-attribute 'fringe                       nil :background xged/face-black)
