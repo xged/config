@@ -505,6 +505,7 @@ before packages are loaded."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
   (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
+  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))
 
   ;; Key Bindings
   (xged/kb-nmv "SPC" nil)
@@ -564,9 +565,9 @@ before packages are loaded."
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
 
   ;; Key Bindings: Insert
-  (xged/kb-nv ":" 'evil-paste-before)
+  (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "SPC :" 'counsel-yank-pop)
-  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (evil-paste-before 1)))
+  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
   (xged/kb-v "y" 'evil-yank)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
