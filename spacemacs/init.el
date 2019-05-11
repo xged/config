@@ -464,6 +464,7 @@ before packages are loaded."
 
   (require 'avy)
   (require 'magit)
+  (require 'evil-surround)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -623,6 +624,7 @@ before packages are loaded."
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    dotspacemacs-highlight-delimiters nil
    auto-completion-tab-key-behavior 'complete
+   evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
    )
 
   ;; Settings: Commands
