@@ -465,6 +465,8 @@ before packages are loaded."
   (require 'avy)
   (require 'magit)
   (require 'evil-surround)
+  (require 'git-gutter+)
+  (require 'highlight-numbers)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -659,6 +661,7 @@ before packages are loaded."
   (set-face-attribute 'link                         nil :foreground xged/face-grey)
   (set-face-attribute 'region                       nil :background xged/face-grey)
   (set-face-attribute 'fringe                       nil :background xged/face-black)
+  (set-face-attribute 'highlight-numbers-number     nil :foreground xged/face-brown :foreground xged/face-brown)
   ;; Settings: Theme: Modes
   (set-face-attribute 'avy-lead-face                     nil :foreground xged/face-white)
   (set-face-attribute 'avy-lead-face-0                   nil :foreground xged/face-white)
@@ -668,12 +671,10 @@ before packages are loaded."
   (set-face-attribute 'git-gutter+-deleted               nil :foreground xged/face-brown :background xged/face-brown)
   (set-face-attribute 'git-gutter+-modified              nil :foreground xged/face-purple :background xged/face-purple)
   (set-face-attribute 'git-gutter+-unchanged             nil :foreground xged/face-blue :background xged/face-blue)
+  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)
+  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)
   (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)
-  ;; Settings: Theme: startup error
-  (set-face-attribute 'git-gutter+-commit-header-face    nil :foreground xged/face-grey :background xged/face-grey)  ;\
-  (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)  ;\
-  (set-face-attribute 'highlight-numbers-number          nil :foreground xged/face-brown :foreground xged/face-brown)  ;\
 
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
