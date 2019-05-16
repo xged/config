@@ -372,7 +372,7 @@ It should only modify the values of Spacemacs settings."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters nil
+   dotspacemacs-highlight-delimiters 'all
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
@@ -467,6 +467,7 @@ before packages are loaded."
   (require 'evil-surround)
   (require 'git-gutter+)
   (require 'highlight-numbers)
+  (require 'rainbow-delimiters)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -675,6 +676,16 @@ before packages are loaded."
   (set-face-attribute 'git-gutter+-separator             nil :foreground xged/face-blue :background xged/face-blue)
   (set-face-attribute 'magit-log-date                    nil :foreground xged/face-brown)
   (set-face-attribute 'magit-section-highlight           nil :background xged/face-black)
+  (set-face-attribute 'rainbow-delimiters-depth-1-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-2-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-3-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-4-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-5-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-6-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-7-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-8-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-depth-9-face   nil :foreground xged/face-grey)
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil :foreground xged/face-grey :background xged/face-brown)
 
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
