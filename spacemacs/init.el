@@ -533,7 +533,7 @@ before packages are loaded."
   (xged/kb-nmv "SPC h" 'back-to-indentation) (xged/kb-nm "SPC l" 'end-of-line) (xged/kb-v "SPC l" 'evil-last-non-blank)
   (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
 
-  ;; Key Bindings: Manage
+  ;; Key Bindings: Manage (Project)
   (xged/kb-nm "<escape>" 'spacemacs/alternate-buffer)
   (xged/kb-nm "SPC d" 'kill-this-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
@@ -546,14 +546,38 @@ before packages are loaded."
   (xged/kb-nm "q" 'previous-buffer) (xged/kb-nm "Q" 'next-buffer)
   (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
-  (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key Bindings: Manage: goto
   (xged/kb-nm "gs" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1)))
   (xged/kb-nm "gS" 'spacemacs/switch-to-scratch-buffer)
   (xged/kb-nm "gn" (lambda () (interactive) (find-file "/home/xged/src/config/Notes.yaml")))
   (xged/kb-nm "gm" 'spacemacs/switch-to-messages-buffer)
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
-  ;; Key Bindings: Manage: Git
+
+  ;; Key Bindings: Edit
+  (xged/kb-v "d" 'evil-delete)
+  (xged/kb-nv ":" 'xged/paste)
+  (xged/kb-nv "SPC :" 'counsel-yank-pop)
+  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
+  (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
+  (xged/kb-nm "<backspace>" 'evil-delete-char)
+  (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
+  (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
+  (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
+  (xged/kb-v "x" 'evil-exchange)
+  (xged/kb-n "y" (kbd "i SPC <escape>"))
+  (xged/kb-i "M-a" (kbd "1")) (xged/kb-i "M-s" (kbd "2")) (xged/kb-i "M-d" (kbd "3")) (xged/kb-i "M-f" (kbd "4")) (xged/kb-i "M-g" (kbd "5")) (xged/kb-i "M-h" (kbd "6")) (xged/kb-i "M-j" (kbd "7")) (xged/kb-i "M-k" (kbd "8")) (xged/kb-i "M-l" (kbd "9")) (xged/kb-i "M-:" (kbd "0"))
+  (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
+
+  ;; Key Bindings: Magic
+  (xged/kb-v "y" 'evil-yank)
+  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
+  (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
+  (xged/kb-nv "SPC r" 'replace-regexp)
+  (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
+  (xged/kb-nv "SPC c" 'evil-invert-char)
+  (xged/kb-nv "SPC C" 'upcase-dwim)
+  (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
+  ;; Key Bindings: Magic: Git
   (xged/kb-n "mm" 'magit-status)
   (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
@@ -569,37 +593,8 @@ before packages are loaded."
   (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
-  (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
-  (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
 
-  ;; Key Bindings: Insert
-  (xged/kb-nv ":" 'xged/paste)
-  (xged/kb-nv "SPC :" 'counsel-yank-pop)
-  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
-  (xged/kb-v "y" 'evil-yank)
-  (xged/kb-n "y" (kbd "i SPC <escape>"))
-  (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
-  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
-  (xged/kb-v "d" 'evil-delete)
-  (xged/kb-nm "<backspace>" 'evil-delete-char)
-  (xged/kb-i "M-a" (kbd "1")) (xged/kb-i "M-s" (kbd "2")) (xged/kb-i "M-d" (kbd "3")) (xged/kb-i "M-f" (kbd "4")) (xged/kb-i "M-g" (kbd "5")) (xged/kb-i "M-h" (kbd "6")) (xged/kb-i "M-j" (kbd "7")) (xged/kb-i "M-k" (kbd "8")) (xged/kb-i "M-l" (kbd "9")) (xged/kb-i "M-:" (kbd "0"))
-  (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
-  (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
-  (xged/kb-v "x" 'evil-exchange)
-  (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
-  (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
-  (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
-
-  ;; Key Bindings: Transform
-  (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
-  (xged/kb-nv "SPC c" 'evil-invert-char)
-  (xged/kb-nv "SPC C" 'upcase-dwim)
-  (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
-  (xged/kb-nv "SPC r" 'replace-regexp)
-  (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
-  (evil-define-key 'normal emacs-lisp-mode-map ",i" 'spacemacs/ediff-dotfile-and-template)
-
-  ;; Key Bindings: Find
+  ;; Key Bindings: Discover
   (xged/kb-nm "s" 'swiper)
   (evil-define-key 'visual evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
@@ -613,6 +608,13 @@ before packages are loaded."
   (xged/kb-nmv "z m" 'describe-mode)  ; active modes
   (xged/kb-nmv "z c" 'where-is)  ; describe command
   (xged/kb-nmv "z s" 'apropos-command)  ; symbols
+
+  ;; Key Bindings: Mode-specific
+  (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
+  (evil-define-key 'normal emacs-lisp-mode-map ",i" 'spacemacs/ediff-dotfile-and-template)
+  (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
+  (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
+  (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
 
   ;; Settings: Variables
   (setq-default
