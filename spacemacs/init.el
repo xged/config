@@ -586,11 +586,11 @@ before packages are loaded."
   (xged/kb-n "mS" 'magit-stage-file)
   (xged/kb-n "mu" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-n "md" 'git-gutter+-revert-hunk)
-  (xged/kb-n "mc" 'magit-commit-create)
-  (xged/kb-n "mf" 'magit-commit-fixup)
-  (xged/kb-n "mr" 'magit-commit-instant-fixup)  ; rebase
+  (xged/kb-n "mc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
+  (xged/kb-n "mf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
+  (xged/kb-n "mr" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))  ; rebase
   (xged/kb-n "mR" 'magit-rebase-abort)
-  (xged/kb-n "me" 'magit-commit-extend)
+  (xged/kb-n "me" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
   (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)  ;/ messing up unstage changes
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
