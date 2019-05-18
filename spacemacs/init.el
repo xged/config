@@ -529,9 +529,11 @@ before packages are loaded."
   (xged/kb-nmv "SPC a" 'goto-last-change)
   (xged/kb-nm "w" 'evil-forward-WORD-begin) (xged/kb-nm "W" 'evil-forward-WORD-end)
   (xged/kb-v "w" 'evil-forward-WORD-end) (xged/kb-v "W" 'evil-forward-WORD-begin)
-  (xged/kb-nmv "e" 'evil-jump-item) (xged/kb-nmv "E" 'evil-jump-out-args)
-  (xged/kb-nmv "SPC h" 'back-to-indentation) (xged/kb-nm "SPC l" 'end-of-line) (xged/kb-v "SPC l" 'evil-last-non-blank)
+  (xged/kb-nmv "v" 'sp-next-sexp)
+  (xged/kb-nmv "e" 'evil-jump-item)
+  (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
   (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
+  (xged/kb-nmv "SPC j" 'flycheck-next-error)
 
   ;; Key Bindings: Manage (Project)
   (xged/kb-nm "<escape>" 'spacemacs/alternate-buffer)
@@ -559,13 +561,11 @@ before packages are loaded."
   (xged/kb-nv "SPC :" 'counsel-yank-pop)
   (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
-  (xged/kb-nm "<backspace>" 'evil-delete-char)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
   (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
-  (xged/kb-v "x" 'evil-exchange)
+  (xged/kb-v "RET" 'evil-exchange)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
-  (xged/kb-i "M-a" (kbd "1")) (xged/kb-i "M-s" (kbd "2")) (xged/kb-i "M-d" (kbd "3")) (xged/kb-i "M-f" (kbd "4")) (xged/kb-i "M-g" (kbd "5")) (xged/kb-i "M-h" (kbd "6")) (xged/kb-i "M-j" (kbd "7")) (xged/kb-i "M-k" (kbd "8")) (xged/kb-i "M-l" (kbd "9")) (xged/kb-i "M-:" (kbd "0"))
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
 
   ;; Key Bindings: Magic
@@ -573,7 +573,7 @@ before packages are loaded."
   (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
   (xged/kb-nv "SPC r" 'replace-regexp)
-  (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO v
+  (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
   (xged/kb-nv "SPC c" 'evil-invert-char)
   (xged/kb-nv "SPC C" 'upcase-dwim)
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
@@ -589,8 +589,9 @@ before packages are loaded."
   (xged/kb-n "mc" 'magit-commit-create)
   (xged/kb-n "mf" 'magit-commit-fixup)
   (xged/kb-n "mr" 'magit-commit-instant-fixup)  ; rebase
+  (xged/kb-n "mR" 'magit-rebase-abort)
   (xged/kb-n "me" 'magit-commit-extend)
-  (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)
+  (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)  ;/ messing up unstage changes
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
 
@@ -665,7 +666,7 @@ before packages are loaded."
   (set-face-attribute 'font-lock-string-face        nil :foreground xged/face-green)
   (set-face-attribute 'font-lock-type-face          nil :foreground xged/face-brown)
   (set-face-attribute 'font-lock-variable-name-face nil :foreground xged/face-blue)
-  (set-face-attribute 'link                         nil :foreground xged/face-grey)
+  (set-face-attribute 'link                         nil :foreground xged/face-greyl :underline nil)
   (set-face-attribute 'region                       nil :background xged/face-grey)
   (set-face-attribute 'fringe                       nil :background xged/face-black)
   (set-face-attribute 'highlight-numbers-number     nil :foreground xged/face-brown :foreground xged/face-brown)
