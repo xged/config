@@ -257,7 +257,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
@@ -517,16 +517,19 @@ before packages are loaded."
   (xged/kb-v "i" 'evil-change) (xged/kb-n "I" 'evil-append-line)
 
   ;; Key Bindings: Select
-  (xged/kb-nv "f" 'er/expand-region) (xged/kb-v "F" 'er/contract-region)
+  (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
-  (xged/kb-nmv "SPC v" 'mark-paragraph)
+  (xged/kb-nm "x" 'evil-visual-char)
+  (xged/kb-nm "C-x" 'evil-visual-block)
+  (xged/kb-nmv "SPC x" 'mark-paragraph)
 
   ;; Key Bindings: Navigate
   (xged/kb-nmv "c" 'avy-goto-word-1)
-  (xged/kb-nmv "a" 'evil-jump-backward) (xged/kb-nmv "A" 'evil-jump-forward)
+  (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
-  (xged/kb-nmv "e" 'subword-forward) (xged/kb-nmv "E" 'subword-backward)
-  (xged/kb-nmv "w" 'evil-jump-item) (xged/kb-nmv "W" 'evil-jump-out-args)
+  (xged/kb-nm "w" 'evil-forward-WORD-begin) (xged/kb-nm "W" 'evil-forward-WORD-end)
+  (xged/kb-v "w" 'evil-forward-WORD-end) (xged/kb-v "W" 'evil-forward-WORD-begin)
+  (xged/kb-nmv "e" 'evil-jump-item) (xged/kb-nmv "E" 'evil-jump-out-args)
   (xged/kb-nmv "SPC h" 'back-to-indentation) (xged/kb-nm "SPC l" 'end-of-line) (xged/kb-v "SPC l" 'evil-last-non-blank)
   (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
 
@@ -543,8 +546,9 @@ before packages are loaded."
   (xged/kb-nm "q" 'previous-buffer) (xged/kb-nm "Q" 'next-buffer)
   (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
+  (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key Bindings: Manage: goto
-  (xged/kb-nm "gs" 'spacemacs/default-pop-shell)
+  (xged/kb-nm "gs" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1)))
   (xged/kb-nm "gS" 'spacemacs/switch-to-scratch-buffer)
   (xged/kb-nm "gn" (lambda () (interactive) (find-file "/home/xged/src/config/Notes.yaml")))
   (xged/kb-nm "gm" 'spacemacs/switch-to-messages-buffer)
@@ -561,7 +565,7 @@ before packages are loaded."
   (xged/kb-n "mc" 'magit-commit-create)
   (xged/kb-n "mf" 'magit-commit-fixup)
   (xged/kb-n "mr" 'magit-commit-instant-fixup)  ; rebase
-  (xged/kb-n "mR" 'magit-commit-extend)
+  (xged/kb-n "me" 'magit-commit-extend)
   (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
@@ -625,7 +629,6 @@ before packages are loaded."
    display-time-24hr-format t
    popwin:popup-window-height 100  ;!
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
-   auto-completion-tab-key-behavior 'complete
    evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
    )
 
@@ -648,6 +651,7 @@ before packages are loaded."
   (setq-default evil-normal-state-cursor "white"
                 magit-diff-highlight-hunk-body nil)
   (global-highlight-parentheses-mode 0)  ;\
+  (show-smartparens-global-mode 0)
   (global-hl-line-mode 0)
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/face-brown)
