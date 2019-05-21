@@ -628,7 +628,6 @@ before packages are loaded."
    truncate-lines t
    evil-move-cursor-back nil
    display-time-24hr-format t
-   popwin:popup-window-height 100  ;!
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
    er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword)
