@@ -79,7 +79,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(highlight-parentheses)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -652,7 +652,6 @@ before packages are loaded."
   (defvar xged/face-purple "#ca7dd4")
   (setq-default evil-normal-state-cursor "white"
                 magit-diff-highlight-hunk-body nil)
-  (global-highlight-parentheses-mode 0)  ;\
   (show-smartparens-global-mode 0)
   (global-hl-line-mode 0)
   (set-face-attribute 'default                      nil :foreground xged/face-white :background xged/face-black)
