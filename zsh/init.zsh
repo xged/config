@@ -12,7 +12,7 @@ xged-init-main() {
 }
 xged-init-xfce() {
     # Settings Manager: Window_Manager: Keyboard: Cycle Windows: <F12>
-    # xfce4-clipman (active): Properties: Sync selections: On
+    # set Settings_Manager/Keyboard/Application_Shortcuts: < sh -c 'xdotool type "$(xsel)"' > to <M-:>
 }
 xged-init-fs() {
     rm -rf Music Pictures Public Templates Videos

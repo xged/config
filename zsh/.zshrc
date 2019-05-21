@@ -4,27 +4,33 @@ ZSH_THEME="robbyrussell"
 source $ZSH/oh-my-zsh.sh
 
 export SPACEMACSDIR=$HOME/src/config/spacemacs
-export PYTHONPATH=$PYTHONPATH:$HOME/src/lang_char_freqs.py
+# export PYTHONPATH=$PYTHONPATH:$HOME/src/lang_char_freqs.py
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
+# export PATH=~/.local/bin:$PATH
 
 # File-system
 f()    {cd $@ && ls}
 alias  fd="rm -rf"
 ff()   {cd .. $@ && ls}
 fl()   {ls -a --ignore='.' --ignore='..' $@}
-fdir() {mkdir $@ && cd $@}
+fdr() {mkdir $@ && cd $@}
 ft()   {tree -a --dirsfirst -L 4 -I '.git' $@}
 alias  fm="mv"
 alias  fc="cp -r"
-# Lang
-lp()   {python $@}
-lpp()  {sudo pip install -U $@}
-lppd() {sudo pip uninstall $@}
-lppu() {sudo pip install --upgrade --force-reinstall $@}
-lpt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
-lpc()  {mypy --ignore-missing-imports *.py $@}
+# Python
+py()   {python $@}
+pyp()  {sudo pip install -U $@}
+pypd() {sudo pip uninstall $@}
+pypu() {sudo pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U}
+pyt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
+pyc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
-ml()   {xbacklight -set 7}
-mL()   {xbacklight -set 10}
+mla()  {xbacklight -set 5}
+mlb()  {xbacklight -set 8}
+mlc()  {xbacklight -set 12}
+mld()  {xbacklight -set 16}
+mle()  {xbacklight -set 20}
 mlp()  {xbacklight -inc 1}
 mlm()  {xbacklight -dec 1}
 # Package
@@ -36,6 +42,9 @@ pu()   {yay -Syu --noconfirm $@}
 # Session
 sb()   {$@ &; disown %%; sleep 1; exit}
 sd()   {kill $(pgrep $@); kill $(pgrep $@)}
+# Node
+n()  {tsc; node $@}
+np() {sudo npm install $1 @types/"$@"}
 
 unzip() {tar xzf $@}
 git-stats-commits-d() {git log --no-merges --date=short --format='%ad' | sort | uniq -c}
@@ -49,10 +58,6 @@ xged-keyboard() {
 xged-keyboard-bluetooth() {
     echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3  # init: scan on
 }
-xged-startup() {
-    xged-keyboard
-    xbacklight -set 10
-}
 xged-startup-su() {
-    sudo ifconfig wlp2s0 down  # disable wireless
+    sudo nmcli radio wifi off  # disable wireless
 }

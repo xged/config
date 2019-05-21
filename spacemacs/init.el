@@ -520,7 +520,8 @@ before packages are loaded."
   ;; Key Bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
-  (xged/kb-nmv "e" 'mark-word)
+  (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-word) (backward-char)))
+  (xged/kb-v "e" (lambda () (interactive) (forward-word)))
   (xged/kb-nmv "SPC v" 'mark-paragraph)
 
   ;; Key Bindings: Navigate
@@ -555,15 +556,17 @@ before packages are loaded."
 
   ;; Key Bindings: Edit
   (xged/kb-v "d" 'evil-delete)
-  (xged/kb-nv ":" 'xged/paste)
-  (xged/kb-nv "SPC :" 'counsel-yank-pop)
+  (xged/kb-nv ":" 'xged/paste) (evil-define-key 'normal term-raw-map (kbd ":") 'term-paste)
   (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
+  (evil-define-key 'normal term-raw-map (kbd "C-:") (lambda () (interactive) (kill-new (gui-get-primary-selection)) (term-paste)))
+  (xged/kb-nv "SPC :" 'counsel-yank-pop)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
   (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
   (xged/kb-v "RET" 'evil-exchange)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
+  (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
 
   ;; Key Bindings: Magic
@@ -630,7 +633,9 @@ before packages are loaded."
    display-time-24hr-format t
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
+   term-char-mode-point-at-process-mark nil
    er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword)
+   evil-cross-lines t
    )
 
   ;; Settings: Commands
@@ -639,6 +644,7 @@ before packages are loaded."
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (display-time-mode)
   (mouse-avoidance-mode "banish")
+  (fset 'evil-visual-update-x-selection 'ignore)
 
   ;; Settings: Theme
   (defvar xged/face-black  "black")
@@ -705,7 +711,7 @@ before packages are loaded."
 
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
-  (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))  ; xged/paste triggers this too
+  (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
