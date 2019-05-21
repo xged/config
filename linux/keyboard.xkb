@@ -2,7 +2,7 @@ xkb_keymap {
 xkb_keycodes "evdev+aliases(qwerty)" {
     minimum = 8;
     maximum = 255;
-     <ESC> = 105;
+     <ESC> = 50;
     <AE01> = 10;
     <AE02> = 11;
     <AE03> = 12;
@@ -59,7 +59,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <KPMU> = 63;
     <LALT> = 133;
     <SPCE> = 65;
-    <CAPS> = 50;
+    <CAPS> = 105;
     <FK01> = 67;
     <FK02> = 68;
     <FK03> = 69;
