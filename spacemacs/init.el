@@ -468,6 +468,7 @@ before packages are loaded."
   (require 'git-gutter+)
   (require 'highlight-numbers)
   (require 'rainbow-delimiters)
+  (require 'expand-region)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -519,18 +520,15 @@ before packages are loaded."
   ;; Key Bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
-  (xged/kb-nm "x" 'evil-visual-char)
-  (xged/kb-nm "C-x" 'evil-visual-block)
-  (xged/kb-nmv "SPC x" 'mark-paragraph)
+  (xged/kb-nmv "e" 'mark-word)
+  (xged/kb-nmv "SPC v" 'mark-paragraph)
 
   ;; Key Bindings: Navigate
   (xged/kb-nmv "c" 'avy-goto-word-1)
   (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
-  (xged/kb-nm "w" 'evil-forward-WORD-begin) (xged/kb-nm "W" 'evil-forward-WORD-end)
-  (xged/kb-v "w" 'evil-forward-WORD-end) (xged/kb-v "W" 'evil-forward-WORD-begin)
-  (xged/kb-nmv "v" 'sp-next-sexp)
-  (xged/kb-nmv "e" 'evil-jump-item)
+  (xged/kb-nmv "w" 'evil-jump-item)
+  (xged/kb-nmv "/" 'sp-next-sexp)
   (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
   (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
@@ -633,6 +631,7 @@ before packages are loaded."
    popwin:popup-window-height 100  ;!
    mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
    evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
+   er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword)
    )
 
   ;; Settings: Commands
