@@ -510,8 +510,20 @@ before packages are loaded."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
   (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
+  (defun xged/paste-pop (count) (interactive "p")
+    (unless evil-last-paste (user-error "Previous paste command used a register"))
+    (evil-undo-pop)
+    (goto-char (nth 2 evil-last-paste))
+    (setq this-command (nth 0 evil-last-paste))
+    (let ((kill-ring (list (current-kill (if (and (> count 0) (nth 5 evil-last-paste)) (1+ count) count))))
+          (kill-ring-yank-pointer kill-ring))
+      (when (eq last-command 'evil-visual-paste) (let ((evil-no-display t)) (evil-visual-restore)))
+      (funcall (nth 0 evil-last-paste) (nth 1 evil-last-paste))
+      (when (eq last-command 'evil-visual-paste) (setcdr (nthcdr 4 evil-last-paste) nil))))
   (defun xged/paste () (interactive)
-    (if (eq major-mode 'term-mode) (term-paste) (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
+    (if (eq major-mode 'term-mode) (term-paste)  ; evil-paste-pop (undo) does not work in term-mode
+      (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
+        (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))))
 
   ;; Key Bindings
   (xged/kb-nmv "SPC" nil)
@@ -558,8 +570,8 @@ before packages are loaded."
   ;; Key Bindings: Edit
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nv ":" 'xged/paste)
-  (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
-  (xged/kb-nv "SPC :" 'counsel-yank-pop)
+  (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
+  (xged/kb-nv "C-:" 'counsel-yank-pop)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
