@@ -510,7 +510,8 @@ before packages are loaded."
          (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
   (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
-  (defun xged/paste () (interactive) (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))
+  (defun xged/paste () (interactive)
+    (if (eq major-mode 'term-mode) (term-paste) (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
 
   ;; Key Bindings
   (xged/kb-nmv "SPC" nil)
@@ -556,9 +557,8 @@ before packages are loaded."
 
   ;; Key Bindings: Edit
   (xged/kb-v "d" 'evil-delete)
-  (xged/kb-nv ":" 'xged/paste) (evil-define-key 'normal term-raw-map (kbd ":") 'term-paste)
+  (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "C-:" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
-  (evil-define-key 'normal term-raw-map (kbd "C-:") (lambda () (interactive) (kill-new (gui-get-primary-selection)) (term-paste)))
   (xged/kb-nv "SPC :" 'counsel-yank-pop)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
