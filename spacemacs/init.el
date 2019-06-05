@@ -481,7 +481,7 @@ before packages are loaded."
 
   ;; Commands
   (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
-  (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
+  (defun xged/backward-paragraph () (interactive) (previous-line) (evil-a-paragraph -1) (back-to-indentation))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
@@ -514,7 +514,7 @@ before packages are loaded."
   (xged/kb-nm "d" 'evil-visual-line)
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-word) (backward-char)))
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))
-  (xged/kb-nmv "SPC v" 'mark-paragraph)
+  (xged/kb-v "v" 'evil-a-paragraph)
 
   ;; Key Bindings: Navigate
   (xged/kb-nmv "c" 'avy-goto-word-1)
