@@ -480,8 +480,8 @@ before packages are loaded."
   (defun xged/kb-nmv (key def) (xged/kb-n key def) (xged/kb-m key def) (xged/kb-v key def))
 
   ;; Commands
-  (defun xged/forward-paragraph () (interactive) (evil-a-paragraph) (back-to-indentation))
-  (defun xged/backward-paragraph () (interactive) (previous-line) (evil-a-paragraph -1) (back-to-indentation))
+  (defun xged/forward-paragraph () (interactive) (next-line) (forward-paragraph) (next-line) (back-to-indentation))
+  (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
@@ -512,17 +512,24 @@ before packages are loaded."
   ;; Key Bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
-  (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-word) (backward-char)))
-  (xged/kb-v "e" (lambda () (interactive) (forward-word)))
+  (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
+  (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
   (xged/kb-v "v" 'evil-a-paragraph)
 
-  ;; Key Bindings: Navigate
+  ;; Key Bindings: Navigate (File)
+  (xged/kb-nmv "j" 'next-line)
+  (xged/kb-nmv "k" 'previous-line)
   (xged/kb-nmv "c" 'avy-goto-word-1)
+  (xged/kb-nmv "[" (lambda () (interactive) (avy--generic-jump "[([{]" nil)))
   (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
   (xged/kb-nmv "w" 'evil-jump-item)
-  (xged/kb-nmv "/" 'sp-next-sexp)
+  (xged/kb-nmv "/" 'sp-next-sexp)  ;/ !visual
   (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
+  (evil-define-key 'normal python-mode-map (kbd "gj") 'python-nav-forward-block)
+  (evil-define-key 'visual python-mode-map (kbd "gj") 'python-nav-forward-block)
+  (evil-define-key 'normal python-mode-map (kbd "gk") 'python-nav-backward-block)
+  (evil-define-key 'visual python-mode-map (kbd "gk") 'python-nav-backward-block)
   (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
 
@@ -566,8 +573,8 @@ before packages are loaded."
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
   (xged/kb-nv "SPC r" 'replace-regexp)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
-  (xged/kb-nv "SPC c" 'evil-invert-char)
-  (xged/kb-nv "SPC C" 'upcase-dwim)
+  (xged/kb-nv "SPC c" 'evil-invert-char)  ;| upcase-dwim
+  (xged/kb-nv "M-c" 'ace-link)
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key Bindings: Magic: Git
   (xged/kb-n "mm" 'magit-status)
@@ -583,7 +590,7 @@ before packages are loaded."
   (xged/kb-n "mr" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))  ; rebase
   (xged/kb-n "mR" 'magit-rebase-abort)
   (xged/kb-n "me" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
-  (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)  ;/ messing up unstage changes
+  (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)  ;/ modifies the file
   (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "ml" 'magit-log-current)
 
@@ -612,9 +619,7 @@ before packages are loaded."
   ;; Settings: Variables
   (setq-default
    avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)
-   ac-ignore-case nil  ;!
    evil-escape-key-sequence "fj"
-   avy-case-fold-search t
    word-wrap t
    evil-ex-search-highlight-all nil
    expand-region-fast-keys-enabled nil
