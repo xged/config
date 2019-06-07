@@ -616,25 +616,21 @@ before packages are loaded."
   (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
 
-  ;; Settings: Variables
-  (setq-default
-   avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q)
-   evil-escape-key-sequence "fj"
-   word-wrap t
-   evil-ex-search-highlight-all nil
-   expand-region-fast-keys-enabled nil
-   evil-move-beyond-eol t
-   truncate-lines t
-   evil-move-cursor-back nil
-   display-time-24hr-format t
-   mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1))
-   evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist)
-   term-char-mode-point-at-process-mark nil
-   er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword)
-   evil-cross-lines t
-   )
-
-  ;; Settings: Commands
+  ;; Settings
+  (setq-default avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
+  (setq-default evil-escape-key-sequence "fj")
+  (setq-default word-wrap t)
+  (setq-default evil-ex-search-highlight-all nil)
+  (setq-default expand-region-fast-keys-enabled nil)
+  (setq-default evil-move-beyond-eol t)
+  (setq-default truncate-lines t)
+  (setq-default evil-move-cursor-back nil)
+  (setq-default display-time-24hr-format t)
+  (setq-default mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1)))
+  (setq-default evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
+  (setq-default term-char-mode-point-at-process-mark nil)
+  (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
+  (setq-default evil-cross-lines t)
   (global-centered-cursor-mode)  ;\ term shell
   (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
