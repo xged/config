@@ -507,11 +507,13 @@ before packages are loaded."
   ;; Key Bindings
   (xged/kb-nmv "SPC" nil)
   (xged/kb-nmv "m" nil)
-  (xged/kb-v "i" 'evil-change) (xged/kb-n "I" 'evil-append-line)
+  (xged/kb-v "i" 'evil-change)
+    (xged/kb-n "I" 'evil-append-line)
   (setq-default evil-escape-key-sequence "fj")
 
   ;; Key Bindings: Select
-  (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
+  (xged/kb-nmv "f" 'er/expand-region)
+    (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
@@ -522,16 +524,20 @@ before packages are loaded."
   (xged/kb-nmv "k" 'previous-line)
   (xged/kb-nmv "c" 'avy-goto-word-1)
   (xged/kb-nmv "[" (lambda () (interactive) (avy--generic-jump "[([{]" nil)))
-  (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
+  (xged/kb-nm "a" 'evil-jump-backward)
+    (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
   (xged/kb-nmv "w" 'evil-jump-item)
   (xged/kb-nmv "/" 'sp-next-sexp)  ;/ !visual
-  (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
+  (xged/kb-nmv "gh" 'back-to-indentation)
+    (xged/kb-nm "gl" 'end-of-line)
+    (xged/kb-v "gl" 'evil-last-non-blank)
   (evil-define-key 'normal python-mode-map (kbd "gj") 'python-nav-forward-block)
   (evil-define-key 'visual python-mode-map (kbd "gj") 'python-nav-forward-block)
   (evil-define-key 'normal python-mode-map (kbd "gk") 'python-nav-backward-block)
   (evil-define-key 'visual python-mode-map (kbd "gk") 'python-nav-backward-block)
-  (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
+  (xged/kb-nmv "C-j" 'xged/forward-paragraph)
+    (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
 
   ;; Key Bindings: Manage (Project)
@@ -544,7 +550,8 @@ before packages are loaded."
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "b" 'ivy-switch-buffer)
-  (xged/kb-nm "q" 'previous-buffer) (xged/kb-nm "Q" 'next-buffer)
+  (xged/kb-nm "q" 'previous-buffer)
+    (xged/kb-nm "Q" 'next-buffer)
   (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
   ;; Key Bindings: Manage: goto
@@ -560,17 +567,22 @@ before packages are loaded."
   (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
   (xged/kb-nv "C-:" 'counsel-yank-pop)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
-  (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
+  (xged/kb-n "p" 'sp-splice-sexp)
+    (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
-  (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
+  (xged/kb-n "RET" 'xged/insert-line-below)
+    (xged/kb-n "S-<return>" 'xged/insert-line-above)
   (xged/kb-v "RET" 'evil-exchange)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
-  (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
-  (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
+  (xged/kb-v "<" 'evil-shift-left)
+    (xged/kb-v ">" 'evil-shift-right)
+  (xged/kb-n "<" 'evil-shift-left-line)
+    (xged/kb-n ">" 'evil-shift-right-line)
 
   ;; Key Bindings: Magic
   (xged/kb-v "y" 'evil-yank)
-  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
+  (xged/kb-v "u" 'undo)
+    (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
   (xged/kb-nv "SPC r" 'replace-regexp)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
@@ -579,7 +591,8 @@ before packages are loaded."
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key Bindings: Magic: Git
   (xged/kb-n "mm" 'magit-status)
-  (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
+  (xged/kb-nv "mj" 'git-gutter+-next-hunk)
+    (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-n "mH" 'git-gutter+-show-hunk)
   (xged/kb-nv "ms" 'git-gutter+-stage-hunks)
