@@ -58,6 +58,3 @@ xged-keyboard() {
 xged-keyboard-bluetooth() {
     echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3  # init: scan on
 }
-xged-startup-su() {
-    sudo nmcli radio wifi off  # disable wireless
-}
