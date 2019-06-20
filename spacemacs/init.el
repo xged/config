@@ -527,7 +527,7 @@ before packages are loaded."
   (xged/kb-nm "a" 'evil-jump-backward)
     (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
-  (xged/kb-nmv "w" 'evil-jump-item)
+  (xged/kb-nmv "w" 'evil-jump-item)  ;| evilmi-jump-items
   (xged/kb-nmv "gh" 'back-to-indentation)
     (xged/kb-nm "gl" 'end-of-line)
     (xged/kb-v "gl" 'evil-last-non-blank)
@@ -609,7 +609,7 @@ before packages are loaded."
   (xged/kb-nm "s" 'swiper)
   (evil-define-key 'visual evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
-  (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer
+  (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
   (xged/kb-nmv "z f" 'describe-function)
   (xged/kb-nmv "z v" 'describe-variable)
