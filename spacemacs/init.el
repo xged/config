@@ -527,12 +527,12 @@ before packages are loaded."
   (xged/kb-nm "a" 'evil-jump-backward)
     (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
-  (xged/kb-nmv "w" 'evil-jump-item)  ;| evilmi-jump-items
+  (xged/kb-nmv "w" 'er/mark-outside-pairs)
   (xged/kb-nmv "gh" 'back-to-indentation)
     (xged/kb-nm "gl" 'end-of-line)
     (xged/kb-v "gl" 'evil-last-non-blank)
-  (xged/kb-nmv "gj" 'sp-next-sexp)
-    (xged/kb-nmv "gk" 'sp-previous-sexp)
+  (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))
+  (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))
   (xged/kb-nmv "C-j" 'xged/forward-paragraph)
     (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
@@ -542,8 +542,7 @@ before packages are loaded."
   (xged/kb-nm "SPC d" 'kill-this-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
   (xged/kb-nmv "SPC w" 'xged/window-next)
-  (xged/kb-nm "C-d" 'delete-other-windows)  ;\
-  (xged/kb-nm "C-D" 'delete-window)
+  (xged/kb-nm "C-d" 'delete-window)
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "b" 'ivy-switch-buffer)
@@ -609,16 +608,18 @@ before packages are loaded."
   (xged/kb-nm "s" 'swiper)
   (evil-define-key 'visual evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
+  (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
   (xged/kb-nmv "z f" 'describe-function)
   (xged/kb-nmv "z v" 'describe-variable)
   (xged/kb-nmv "z k" 'describe-key)
   (xged/kb-nmv "z b" 'describe-bindings)
-  (xged/kb-nmv "z l" 'ivy-spacemacs-help)  ; layers and packages
+  (xged/kb-nmv "z l" 'ivy-spacemacs-help-layers)  ; layers
+  (xged/kb-nmv "z p" 'ivy-spacemacs-help)  ; packages
   (xged/kb-nmv "z m" 'describe-mode)  ; active modes
   (xged/kb-nmv "z c" 'where-is)  ; describe command
-  (xged/kb-nmv "z s" 'apropos-command)  ; symbols
+  (xged/kb-nmv "z a" 'apropos-command)
 
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
