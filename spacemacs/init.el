@@ -214,7 +214,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 17
+                               :size 19
                                :weight normal
                                :width normal)
 
@@ -506,7 +506,8 @@ before packages are loaded."
   (defun spacemacs/alternate-buffer (&optional window) (interactive)
     (let ((current-buffer (window-buffer window)) (buffer-predicate (frame-parameter (window-frame window) 'buffer-predicate)))
       (switch-to-buffer (or (cl-find-if
-        (lambda (buffer) (and (not (eq buffer current-buffer)) (or (null buffer-predicate) (funcall buffer-predicate buffer))))
+        (lambda (buffer) (and (not (eq buffer current-buffer))
+          (or (null buffer-predicate) (funcall buffer-predicate buffer))))
         (mapcar #'car (window-prev-buffers window)))
           (other-buffer current-buffer t))))) ;; `other-buffer' honors `buffer-predicate' so no need to filter
     (push "*.+" spacemacs-useless-buffers-regexp)
@@ -593,7 +594,8 @@ before packages are loaded."
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
   (xged/kb-nv "SPC c" 'evil-invert-char)  ;| upcase-dwim
   (xged/kb-nv "M-c" 'ace-link)
-  (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
+  (xged/kb-nm "M-q"
+    (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key bindings: Magic: Git
   (xged/kb-n "mm" 'magit-status)
   (xged/kb-nv "mj" 'git-gutter+-next-hunk)
@@ -648,7 +650,8 @@ before packages are loaded."
   (display-time-mode)
     (setq-default display-time-24hr-format t)
   (mouse-avoidance-mode "banish")
-    (setq-default mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1)))
+    (setq-default mouse-avoidance-banish-position
+     '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1)))
   (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
   (fset 'evil-visual-update-x-selection 'ignore)
@@ -657,7 +660,8 @@ before packages are loaded."
   (setq-default avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
     (setq-default expand-region-fast-keys-enabled nil)
-  (setq-default evil-surround-pairs-alist (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
+  (setq-default evil-surround-pairs-alist
+    (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
   (setq-default shell-pop-autocd-to-working-dir nil)
 
@@ -715,7 +719,8 @@ before packages are loaded."
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
     ;; remove bottom split popup
-    (setq purpose-special-action-sequences (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
+    (setq purpose-special-action-sequences
+      (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
     ;; make popup reuse current window
     (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window
                                                                             display-buffer-use-some-window)))
