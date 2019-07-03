@@ -646,14 +646,14 @@ before packages are loaded."
   (setq-default truncate-lines t)
     (setq-default word-wrap t)
   (setq-default evil-ex-search-highlight-all nil)
-  (display-time-mode)
-    (setq-default display-time-24hr-format t)
   (mouse-avoidance-mode "banish")
     (setq-default mouse-avoidance-banish-position
-     '((frame-or-window . frame) (side . right) (side-pos . -1) (top-or-bottom . top) (top-or-bottom-pos . -1)))
+     '((frame-or-window . frame) (side . right) (side-pos . -2) (top-or-bottom . top) (top-or-bottom-pos . -2)))
   (spacemacs/toggle-camel-case-motion-globally-on)
-  (add-to-list 'spacemacs-indent-sensitive-modes 'elisp-mode)  ;!
+  (add-to-list 'spacemacs-indent-sensitive-modes 'emacs-lisp-mode)
   (fset 'evil-visual-update-x-selection 'ignore)
+  (setq-default mode-line-format nil)
+  (setq-default inhibit-message t)
 
   ;; Settings: Modes
   (setq-default avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
