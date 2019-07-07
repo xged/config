@@ -502,7 +502,7 @@ before packages are loaded."
     (if (eq major-mode 'term-mode) (term-paste)  ; evil-paste-pop (undo) does not work in term-mode
       (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
         (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))))
-  (defun spacemacs/alternate-buffer (&optional window) (interactive)
+  (defun xged/alternate-buffer (&optional window) (interactive)
     (let ((current-buffer (window-buffer window)) (buffer-predicate (frame-parameter (window-frame window) 'buffer-predicate)))
       (switch-to-buffer (or (cl-find-if
         (lambda (buffer) (and (not (eq buffer current-buffer))
@@ -510,7 +510,6 @@ before packages are loaded."
         (mapcar #'car (window-prev-buffers window)))
           (other-buffer current-buffer t))))) ;; `other-buffer' honors `buffer-predicate' so no need to filter
     (push "*.+" spacemacs-useless-buffers-regexp)
-    (push "init.el" spacemacs-useless-buffers-regexp)
     (push "Notes.yaml" spacemacs-useless-buffers-regexp)
 
   ;; Key bindings
@@ -547,7 +546,7 @@ before packages are loaded."
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
 
   ;; Key bindings: Manage (Project)
-  (xged/kb-nm "<escape>" 'spacemacs/alternate-buffer)
+  (xged/kb-nm "<escape>" 'xged/alternate-buffer)
   (xged/kb-nm "SPC d" 'kill-this-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
   (xged/kb-nmv "SPC w" 'xged/window-next)
