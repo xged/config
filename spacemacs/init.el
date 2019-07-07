@@ -485,7 +485,7 @@ before packages are loaded."
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
   (defun xged/goto-word-0-line-and-below (arg) (interactive "P")
-         (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
+    (avy-with avy-goto-word-0 (avy-goto-word-0 arg (line-beginning-position) (window-end (selected-window) t))))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
   (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
@@ -539,8 +539,8 @@ before packages are loaded."
   (xged/kb-nmv "gh" 'back-to-indentation)
     (xged/kb-nm "gl" 'end-of-line)
     (xged/kb-v "gl" 'evil-last-non-blank)
-  (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))
-  (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))
+  (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
+  (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))  ;/ visual-line
   (xged/kb-nmv "C-j" 'xged/forward-paragraph)
     (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC j" 'flycheck-next-error)
@@ -620,15 +620,15 @@ before packages are loaded."
   (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
-  (xged/kb-nmv "z f" 'describe-function)
-  (xged/kb-nmv "z v" 'describe-variable)
-  (xged/kb-nmv "z k" 'describe-key)
-  (xged/kb-nmv "z b" 'describe-bindings)
-  (xged/kb-nmv "z l" 'ivy-spacemacs-help-layers)  ; layers
-  (xged/kb-nmv "z p" 'ivy-spacemacs-help)  ; packages
-  (xged/kb-nmv "z m" 'describe-mode)  ; active modes
-  (xged/kb-nmv "z c" 'where-is)  ; describe command
-  (xged/kb-nmv "z a" 'apropos-command)
+  (xged/kb-nmv "zf" 'describe-function)
+  (xged/kb-nmv "zv" 'describe-variable)
+  (xged/kb-nmv "zk" 'describe-key)
+  (xged/kb-nmv "zb" 'describe-bindings)
+  (xged/kb-nmv "zl" 'ivy-spacemacs-help-layers)  ; layers
+  (xged/kb-nmv "zp" 'ivy-spacemacs-help)  ; packages
+  (xged/kb-nmv "zm" 'describe-mode)  ; active modes
+  (xged/kb-nmv "zc" 'where-is)  ; describe command
+  (xged/kb-nmv "za" 'apropos-command)
 
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
@@ -661,7 +661,7 @@ before packages are loaded."
   (setq-default evil-surround-pairs-alist
     (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
-  (setq-default shell-pop-autocd-to-working-dir nil)
+    (setq-default shell-pop-autocd-to-working-dir nil)
 
   ;; Settings: Theme
   (defvar xged/color-background "black")
@@ -725,7 +725,7 @@ before packages are loaded."
   (defun always-true (&rest _args) t)
   (setq display-buffer-base-action '(display-buffer-same-window))
   (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
-                                                     '(always-true display-buffer-same-window) 'append))
+   '(always-true display-buffer-same-window) 'append))
 
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
