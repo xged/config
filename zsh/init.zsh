@@ -11,8 +11,9 @@ xged-init-main() {
     # relog
 }
 xged-init-xfce() {
-    # Settings Manager: Window_Manager: Keyboard: Cycle Windows: <F12>
-    # set Settings_Manager/Keyboard/Application_Shortcuts: < sh -c 'xdotool type "$(xsel)"' > to <M-:>
+    # SettingsManager/Window_Manager/Keyboard/CycleWindows: <F12>
+    # SettingsManager/Keyboard/ApplicationShortcuts:  "sh -c 'xdotool type "$(xsel)"'", "M-:"
+    # SettingsManager/PowerManager/Security/lock_screen..: off
     sudo nmcli radio wifi off  # disable wireless
 }
 xged-init-fs() {

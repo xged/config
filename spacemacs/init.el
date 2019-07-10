@@ -511,14 +511,12 @@ before packages are loaded."
           (or (null buffer-predicate) (funcall buffer-predicate buffer))))
         (mapcar #'car (window-prev-buffers window)))
           (other-buffer current-buffer t))))) ;; `other-buffer' honors `buffer-predicate' so no need to filter
-    (push "*.+" spacemacs-useless-buffers-regexp)
+    (push "*.+" spacemacs-useless-buffers-regexp) (push "*ansi-term-1*" spacemacs-useful-buffers-regexp)
     (push "Notes.yaml" spacemacs-useless-buffers-regexp)
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
   (xged/kb-nmv "m" nil)
-  (xged/kb-v "i" 'evil-change)
-    (xged/kb-n "I" 'evil-append-line)
   (setq-default evil-escape-key-sequence "fj")
 
   ;; Key bindings: Select
@@ -528,6 +526,7 @@ before packages are loaded."
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
   (xged/kb-nm "x" 'evil-visual-char)
   (xged/kb-v "x" 'evil-a-paragraph)
+  (xged/kb-nm "SPC x" 'evil-visual-restore)
   (xged/kb-nm "C-x" 'evil-visual-block)
   (xged/kb-nmv "w" 'er/mark-outside-pairs)
 
@@ -564,6 +563,8 @@ before packages are loaded."
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
 
   ;; Key bindings: Edit
+  (xged/kb-n "i" (lambda () (interactive) (when (eq 0 (current-column)) (indent-for-tab-command)) (evil-insert 1)))
+    (xged/kb-v "i" 'evil-change)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
@@ -629,7 +630,7 @@ before packages are loaded."
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
   (evil-define-key 'normal comint-mode-map (kbd "SPC j") 'comint-next-prompt)
-    (evil-define-key 'normal inferior-python-mode-map (kbd "SPC k") 'comint-previous-prompt)
+    (evil-define-key 'normal comint-mode-map (kbd "SPC k") 'comint-previous-prompt)
   (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
   (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
   (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'"))
@@ -653,12 +654,14 @@ before packages are loaded."
 
   ;; Settings: Modes
   (setq-default avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
+    (setq-default avy-orders-alist '((avy-goto-word-1 . avy-order-closest)))
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
     (setq-default expand-region-fast-keys-enabled nil)
   (setq-default evil-surround-pairs-alist
     (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
     (setq-default shell-pop-autocd-to-working-dir nil)
+  (setq-default magit-commit-show-diff nil)
 
   ;; Settings: Theme
   (defvar xged/color-background "black")
@@ -727,6 +730,9 @@ before packages are loaded."
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
   (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))
+  ; kill-term no-confirm
+  (add-hook 'term-exec-hook (lambda () (let ((proc (get-buffer-process (current-buffer))))
+    (when (processp proc) (set-process-query-on-exit-flag proc nil)))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

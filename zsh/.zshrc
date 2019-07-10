@@ -28,8 +28,8 @@ pyc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
 mla()  {xbacklight -set 5}
 mlb()  {xbacklight -set 8}
-mlc()  {xbacklight -set 12}
-mld()  {xbacklight -set 16}
+mlc()  {xbacklight -set 11}
+mld()  {xbacklight -set 15}
 mle()  {xbacklight -set 20}
 mlp()  {xbacklight -inc 1}
 mlm()  {xbacklight -dec 1}
@@ -40,7 +40,6 @@ pf()   {yay -S --noconfirm --needed --force $@}
 pd()   {yay -Rsc --noconfirm $@}
 pu()   {yay -Syu --noconfirm $@}
 # Session
-sb()   {$@ &; disown %%; sleep 1; exit}
 sd()   {kill $(pgrep $@); kill $(pgrep $@)}
 # Node
 n()  {tsc; node $@}
