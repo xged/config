@@ -522,8 +522,7 @@ before packages are loaded."
   (setq-default evil-escape-key-sequence "fj")
 
   ;; Key bindings: Select
-  (xged/kb-nmv "f" 'er/expand-region)
-    (xged/kb-v "a" 'er/contract-region)
+  (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
@@ -537,31 +536,24 @@ before packages are loaded."
   (xged/kb-nmv "k" 'previous-line)
   (xged/kb-nmv "c" 'avy-goto-word-1)
   (xged/kb-nmv "[" (lambda () (interactive) (avy--generic-jump "[([{]" nil)))
-  (xged/kb-nm "a" 'evil-jump-backward)
-    (xged/kb-nm "A" 'evil-jump-forward)
+  (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
-  (xged/kb-nmv "gh" 'back-to-indentation)
-    (xged/kb-nm "gl" 'end-of-line)
-    (xged/kb-v "gl" 'evil-last-non-blank)
+  (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
   (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
   (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))  ;/ visual-line
-  (xged/kb-nmv "C-j" 'xged/forward-paragraph)
-    (xged/kb-nmv "C-k" 'xged/backward-paragraph)
-  (xged/kb-nmv "SPC n" 'flycheck-next-error)
-    (xged/kb-nmv "SPC N" 'flycheck-previous-error)
+  (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
+  (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
   ;; Key bindings: Manage (Project)
   (xged/kb-nm "<escape>" 'xged/alternate-buffer)
   (xged/kb-nm "SPC d" 'kill-this-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
   (xged/kb-nmv "SPC w" 'xged/window-next)
-  (xged/kb-nm "C-d" 'delete-other-windows)
-    (xged/kb-nm "C-S-D" 'delete-window)
+  (xged/kb-nm "C-d" 'delete-other-windows) (xged/kb-nm "C-S-D" 'delete-window)
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "b" 'ivy-switch-buffer)
-  (xged/kb-nm "q" 'next-buffer)
-    (xged/kb-nm "Q" 'previous-buffer)
+  (xged/kb-nm "q" 'next-buffer) (xged/kb-nm "Q" 'previous-buffer)
   (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
   ;; Key bindings: Manage: goto
@@ -580,19 +572,15 @@ before packages are loaded."
   (xged/kb-n "p" 'sp-splice-sexp)
     (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
-  (xged/kb-n "RET" 'xged/insert-line-below)
-    (xged/kb-n "S-<return>" 'xged/insert-line-above)
+  (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
   (xged/kb-v "RET" 'evil-exchange)
   (xged/kb-n "y" (kbd "i SPC <escape>"))
-  (xged/kb-v "<" 'evil-shift-left)
-    (xged/kb-v ">" 'evil-shift-right)
-  (xged/kb-n "<" 'evil-shift-left-line)
-    (xged/kb-n ">" 'evil-shift-right-line)
+  (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
+  (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
 
   ;; Key bindings: Magic
   (xged/kb-v "y" 'evil-yank)
-  (xged/kb-v "u" 'undo)
-    (xged/kb-nv "U" 'undo-tree-redo)
+  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
   (xged/kb-nv "SPC r" 'replace-regexp)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
@@ -602,8 +590,7 @@ before packages are loaded."
     (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key bindings: Magic: Git
   (xged/kb-n "mm" 'magit-status)
-  (xged/kb-nv "mj" 'git-gutter+-next-hunk)
-    (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
+  (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-n "mH" 'git-gutter+-show-hunk)
   (xged/kb-nv "ms" 'git-gutter+-stage-hunks)
@@ -657,8 +644,7 @@ before packages are loaded."
     (setq-default word-wrap t)
   (setq-default evil-ex-search-highlight-all nil)
   (mouse-avoidance-mode "banish")
-    (setq-default mouse-avoidance-banish-position
-     '((frame-or-window . frame) (side . right) (side-pos . -2) (top-or-bottom . top) (top-or-bottom-pos . -2)))
+    (setq-default mouse-avoidance-banish-position '((frame-or-window . frame) (side . right) (side-pos . -2) (top-or-bottom . top) (top-or-bottom-pos . -2)))
   (spacemacs/toggle-camel-case-motion-globally-on)
   (add-to-list 'spacemacs-indent-sensitive-modes 'emacs-lisp-mode)
   (fset 'evil-visual-update-x-selection 'ignore)
