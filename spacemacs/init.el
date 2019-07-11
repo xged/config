@@ -624,16 +624,16 @@ before packages are loaded."
   (xged/kb-nmv "za" 'apropos-command)
 
   ;; Key bindings: Mode-specific
-  (evil-define-key 'normal emacs-lisp-mode-map ",r" 'dotspacemacs/sync-configuration-layers)
-  (evil-define-key 'normal emacs-lisp-mode-map ",i" 'spacemacs/ediff-dotfile-and-template)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd ",r") 'dotspacemacs/sync-configuration-layers)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
-  (evil-define-key 'normal comint-mode-map "\"" 'comint-interrupt-subjob)
+  (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
   (evil-define-key 'normal comint-mode-map (kbd "SPC j") 'comint-next-prompt)
     (evil-define-key 'normal inferior-python-mode-map (kbd "SPC k") 'comint-previous-prompt)
-  (define-key magit-log-select-mode-map ",," 'magit-log-select-pick)
-  (define-key magit-log-select-mode-map ",k" 'magit-log-select-quit)
-  (evil-define-key 'insert python-mode-map "\"" (kbd "\'"))
-  (evil-define-key 'normal python-mode-map "v" 'spacemacs/python-shell-send-buffer-switch)
+  (define-key magit-log-select-mode-map (kbd ",,") 'magit-log-select-pick)
+  (define-key magit-log-select-mode-map (kbd ",k") 'magit-log-select-quit)
+  (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'"))
+  (evil-define-key 'normal python-mode-map (kbd "v") 'spacemacs/python-shell-send-buffer-switch)
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
