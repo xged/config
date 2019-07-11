@@ -520,7 +520,7 @@ before packages are loaded."
   (setq-default evil-escape-key-sequence "fj")
 
   ;; Key bindings: Select
-  (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "a" 'er/contract-region)
+  (xged/kb-nmv "a" 'er/expand-region) (xged/kb-v "A" 'er/contract-region)
   (xged/kb-nm "d" 'evil-visual-line)
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
@@ -533,9 +533,10 @@ before packages are loaded."
   ;; Key bindings: Navigate (File)
   (xged/kb-nmv "j" 'next-line)
   (xged/kb-nmv "k" 'previous-line)
-  (xged/kb-nmv "c" 'avy-goto-word-1)
+  (xged/kb-nm "f" 'avy-goto-word-1)
+  (xged/kb-v "f" 'evil-yank)
   (xged/kb-nmv "[" (lambda () (interactive) (avy--generic-jump "[([{]" nil)))
-  (xged/kb-nm "a" 'evil-jump-backward) (xged/kb-nm "A" 'evil-jump-forward)
+  (xged/kb-nm "ga" 'evil-jump-backward) (xged/kb-nm "gf" 'evil-jump-forward)
   (xged/kb-nmv "SPC a" 'goto-last-change)
   (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
   (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
@@ -563,8 +564,8 @@ before packages are loaded."
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
 
   ;; Key bindings: Edit
-  (xged/kb-n "i" (lambda () (interactive) (when (eq 0 (current-column)) (indent-for-tab-command)) (evil-insert 1)))
-  (xged/kb-v "i" 'evil-change)
+  (xged/kb-n "s" (lambda () (interactive) (when (eq 0 (current-column)) (indent-for-tab-command)) (evil-insert 1)))
+  (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-change)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
@@ -574,7 +575,7 @@ before packages are loaded."
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
   (xged/kb-n "RET" 'xged/insert-line-below) (xged/kb-n "S-<return>" 'xged/insert-line-above)
   (xged/kb-v "RET" 'evil-exchange)
-  (xged/kb-n "y" (kbd "i SPC <escape>"))
+  (xged/kb-n "y" (kbd "s SPC <escape>"))
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
 
@@ -607,8 +608,8 @@ before packages are loaded."
   (xged/kb-n "ml" 'magit-log-current)
 
   ;; Key bindings: Discover
-  (xged/kb-nm "s" 'swiper)
-  (evil-define-key 'visual evil-surround-mode-map "s" 'spacemacs/swiper-region-or-symbol)
+  (xged/kb-nm "i" 'swiper)
+  (xged/kb-v "i" 'spacemacs/swiper-region-or-symbol)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
   (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nm "SPC s" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
