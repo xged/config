@@ -554,7 +554,7 @@ before packages are loaded."
   (xged/kb-nm "C-f" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "b" 'ivy-switch-buffer)
   (xged/kb-nm "q" 'next-buffer) (xged/kb-nm "Q" 'previous-buffer)
-  (xged/kb-nm "SPC q" 'save-buffers-kill-emacs)
+  (xged/kb-nm "SPC q" 'kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
   ;; Key bindings: Manage: goto
   (xged/kb-nm "gs" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (read-only-mode -1)))
@@ -729,6 +729,7 @@ before packages are loaded."
 
   ;; Hooks
   (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
+  (add-hook 'kill-emacs-hook (lambda () (save-some-buffers t)))
   (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))
   ; kill-term no-confirm
   (add-hook 'term-exec-hook (lambda () (let ((proc (get-buffer-process (current-buffer))))
