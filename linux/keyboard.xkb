@@ -29,7 +29,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AD10> = 33;
     <AD11> = 34;
     <AD12> = 35;
-    <RTRN> = 108;
+    <RTRN> = 44;
     <LCTL> = 66;
     <AC01> = 38;
     <AC02> = 39;
@@ -37,7 +37,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AC04> = 41;
     <AC05> = 42;
     <AC06> = 43;
-    <AC07> = 44;
+    <AC07> = 108;
     <AC08> = 45;
     <AC09> = 46;
     <AC10> = 47;

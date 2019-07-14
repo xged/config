@@ -515,7 +515,7 @@ before packages are loaded."
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
   (xged/kb-nmv "m" nil)
-  (setq-default evil-escape-key-sequence "fj")
+  (setq-default evil-escape-key-sequence "fd")  ; default
 
   ;; Key bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "F" 'er/contract-region)
@@ -523,22 +523,22 @@ before packages are loaded."
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
   (xged/kb-nm "x" 'evil-visual-char)
-  (xged/kb-v "x" 'evil-a-paragraph)
-  (xged/kb-nm "SPC x" 'evil-visual-restore)
+  (xged/kb-nm "SPC x" 'evil-a-paragraph)
   (xged/kb-nm "C-x" 'evil-visual-block)
+  (xged/kb-nm "gx" 'evil-visual-restore)
   (xged/kb-nmv "w" 'er/mark-outside-pairs)
 
   ;; Key bindings: Navigate (File)
-  (xged/kb-nmv "j" 'next-line)
+  (xged/kb-nmv "RET" 'next-line)
   (xged/kb-nmv "k" 'previous-line)
   (xged/kb-nm "s" 'avy-goto-word-1)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-nm "ga" 'evil-jump-backward) (xged/kb-nm "gf" 'evil-jump-forward)
   (xged/kb-nmv "g." 'goto-last-change)
   (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
-  (xged/kb-nmv "gj" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
+  (xged/kb-nmv "g RET" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
   (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))  ;/ visual-line
-  (xged/kb-nmv "C-j" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
+  (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
   ;; Key bindings: Manage (Project)
@@ -571,7 +571,7 @@ before packages are loaded."
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
-  (xged/kb-v "RET" 'evil-exchange)
+  (xged/kb-v "x" 'evil-exchange)
   (xged/kb-n "y" (lambda () (interactive) (insert " ") (evil-backward-char)))
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
@@ -587,9 +587,8 @@ before packages are loaded."
   (xged/kb-nm "M-q"
     (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key bindings: Magic: Git
-  (xged/kb-n "a" 'git-gutter+-next-hunk)
+  (xged/kb-n "a" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mm" 'magit-status)
-  (xged/kb-nv "mj" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
   (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-n "mH" 'git-gutter+-show-hunk)
   (xged/kb-nv "ms" 'git-gutter+-stage-hunks)
@@ -607,10 +606,10 @@ before packages are loaded."
   (xged/kb-n "ml" 'magit-log-current)
 
   ;; Key bindings: Discover
-  (xged/kb-nm "RET" 'swiper)
+  (xged/kb-nm "c" 'swiper)
+  (xged/kb-nm "SPC c" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
   (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
-  (xged/kb-nm "SPC RET" 'counsel-imenu)  ;| spacemacs/counsel-jump-in-buffer, counsel-semantic-or-imenu
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
   (xged/kb-nmv "zf" 'describe-function)
   (xged/kb-nmv "zv" 'describe-variable)
@@ -627,7 +626,7 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
   (evil-define-key 'normal term-raw-map (kbd "RET") 'xged/term-send-ret)
   (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
-  (evil-define-key 'normal comint-mode-map (kbd "SPC j") 'comint-next-prompt)
+  (evil-define-key 'normal comint-mode-map (kbd "SPC RET") 'comint-next-prompt)
   (evil-define-key 'normal comint-mode-map (kbd "SPC k") 'comint-previous-prompt)
   (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'"))
   (evil-define-key 'normal python-mode-map (kbd "v") 'spacemacs/python-shell-send-buffer-switch)
