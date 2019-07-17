@@ -514,7 +514,7 @@ before packages are loaded."
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
-  (xged/kb-nmv "m" nil)
+  (xged/kb-nmv "s" nil)
   (setq-default evil-escape-key-sequence "fd")  ; default
 
   ;; Key bindings: Select
@@ -531,7 +531,7 @@ before packages are loaded."
   ;; Key bindings: Navigate (File)
   (xged/kb-nmv "RET" 'next-line)
   (xged/kb-nmv "k" 'previous-line)
-  (xged/kb-nm "s" 'avy-goto-word-1)
+  (xged/kb-nm "a" 'avy-goto-word-1)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-nm "ga" 'evil-jump-backward) (xged/kb-nm "gf" 'evil-jump-forward)
   (xged/kb-nmv "g." 'goto-last-change)
@@ -582,28 +582,28 @@ before packages are loaded."
   (xged/kb-nv "SPC r" 'replace-regexp)
   (xged/kb-nm "C-r" 'spacemacs/rename-current-buffer-file)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
-  (xged/kb-nv "SPC c" 'evil-invert-char)  ;| upcase-dwim
-  (xged/kb-nv "M-c" 'ace-link)
+  (xged/kb-nv "SPC TAB" 'evil-invert-char)  ;| upcase-dwim
+  (xged/kb-nv "C-a" 'ace-link)
   (xged/kb-nm "M-q"
     (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   ;; Key bindings: Magic: Git
-  (xged/kb-n "a" 'git-gutter+-next-hunk) (xged/kb-nv "mk" 'git-gutter+-previous-hunk)
-  (xged/kb-n "mm" 'magit-status)
-  (xged/kb-n "mh" 'git-gutter+-show-hunk-inline-at-point)
-  (xged/kb-n "mH" 'git-gutter+-show-hunk)
-  (xged/kb-nv "ms" 'git-gutter+-stage-hunks)
-  (xged/kb-n "mg" 'magit-stage-file)
-  (xged/kb-n "mu" 'git-gutter+-unstage-whole-buffer)
-  (xged/kb-n "md" 'git-gutter+-revert-hunk)
-  (xged/kb-n "mc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
-  (xged/kb-n "mf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
-  (xged/kb-n "mF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
-  (xged/kb-n "ma" 'magit-abort-dwim)
-  (xged/kb-n "m," 'magit-rebase-continue)
-  (xged/kb-n "me" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
-  (xged/kb-n "mb" 'spacemacs/git-blame-micro-state)  ;/ modifies the file
-  (xged/kb-n "mt" 'spacemacs/time-machine-transient-state/body)
-  (xged/kb-n "ml" 'magit-log-current)
+  (xged/kb-n "s RET" 'git-gutter+-next-hunk) (xged/kb-nv "sk" 'git-gutter+-previous-hunk)
+  (xged/kb-n "s SPC" 'magit-status)
+  (xged/kb-n "sh" 'git-gutter+-show-hunk-inline-at-point)
+  (xged/kb-n "sH" 'git-gutter+-show-hunk)
+  (xged/kb-n "ss" 'git-gutter+-stage-hunks)
+  (xged/kb-n "sg" 'magit-stage-file)
+  (xged/kb-n "su" 'git-gutter+-unstage-whole-buffer)
+  (xged/kb-n "sd" 'git-gutter+-revert-hunk)
+  (xged/kb-n "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
+  (xged/kb-n "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
+  (xged/kb-n "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
+  (xged/kb-n "sa" 'magit-abort-dwim)
+  (xged/kb-n "s," 'magit-rebase-continue)
+  (xged/kb-n "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
+  (xged/kb-n "sb" 'spacemacs/git-blame-micro-state)  ;/ modifies the file
+  (xged/kb-n "st" 'spacemacs/time-machine-transient-state/body)
+  (xged/kb-n "sl" 'magit-log-current)
 
   ;; Key bindings: Discover
   (xged/kb-nm "c" 'swiper)
