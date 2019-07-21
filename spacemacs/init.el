@@ -487,7 +487,7 @@ before packages are loaded."
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
-  (defun xged/save-buffer () (interactive) (if (and (buffer-file-name) (buffer-modified-p)) (save-buffer)))
+  (defun xged/save-buffer () (if (buffer-file-name) (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
     (unless evil-last-paste (user-error "Previous paste command used a register"))
     (evil-undo-pop)
@@ -532,12 +532,9 @@ before packages are loaded."
   (xged/kb-nmv "RET" 'next-line)
   (xged/kb-nmv "k" 'previous-line)
   (xged/kb-nm "a" 'avy-goto-word-1)
-  (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
-  (xged/kb-nm "ga" 'evil-jump-backward) (xged/kb-nm "gf" 'evil-jump-forward)
+  (xged/kb-nmv "gk" 'evil-jump-backward) (xged/kb-nmv "g RET" 'evil-jump-forward)
   (xged/kb-nmv "g." 'goto-last-change)
   (xged/kb-nmv "gh" 'back-to-indentation) (xged/kb-nm "gl" 'end-of-line) (xged/kb-v "gl" 'evil-last-non-blank)
-  (xged/kb-nmv "g RET" (lambda () (interactive) (next-line (window-height))))  ;/ visual-line
-  (xged/kb-nmv "gk" (lambda () (interactive) (previous-line (window-height))))  ;/ visual-line
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
@@ -553,6 +550,7 @@ before packages are loaded."
   (xged/kb-nm "SPC b" 'ivy-switch-buffer)
   (xged/kb-nm "SPC q" 'kill-emacs)
   (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
+  (xged/kb-nm "SPC r" 'spacemacs/rename-current-buffer-file)
   ;; Key bindings: Manage: goto
   (xged/kb-nm "gs" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (read-only-mode -1)))
   (xged/kb-nm "gS" 'spacemacs/switch-to-scratch-buffer)
@@ -568,21 +566,22 @@ before packages are loaded."
   (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
   (xged/kb-nv "C-:" 'counsel-yank-pop)
+  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
+  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
   (xged/kb-v "x" 'evil-exchange)
-  (xged/kb-n "y" (lambda () (interactive) (insert " ") (evil-backward-char)))
+  (xged/kb-n "y" (lambda () (interactive) (insert " ")))
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
+  (xged/kb-nv "SPC a" 'evil-invert-char)  ;| upcase-dwim
 
   ;; Key bindings: Magic
-  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
-  (xged/kb-nv "SPC r" 'replace-regexp)
-  (xged/kb-nm "C-r" 'spacemacs/rename-current-buffer-file)
+  (xged/kb-nv "C-r" 'replace-regexp)
+  (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
-  (xged/kb-nv "SPC TAB" 'evil-invert-char)  ;| upcase-dwim
   (xged/kb-nv "C-a" 'ace-link)
   (xged/kb-nm "M-q"
     (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
@@ -604,6 +603,7 @@ before packages are loaded."
   (xged/kb-n "sb" 'spacemacs/git-blame-micro-state)  ;/ modifies the file
   (xged/kb-n "st" 'spacemacs/time-machine-transient-state/body)
   (xged/kb-n "sl" 'magit-log-current)
+  (xged/kb-n "sz" (lambda () (interactive) (magit-snapshot-save t t nil t)))
 
   ;; Key bindings: Discover
   (xged/kb-nm "c" 'swiper)
@@ -648,8 +648,8 @@ before packages are loaded."
   (setq-default inhibit-message t)
 
   ;; Settings: Modes
-  (setq-default avy-keys '(?j ?f ?k ?d ?l ?s ?: ?a ?m ?c ?h ?g ?, ?x ?i ?r ?o ?e ?p ?w ?. ?z ?q ?J ?F ?K ?D ?L ?S ?A ?M ?C ?< ?H ?G ?X ?I ?R ?O ?E ?P ?W ?> ?Z ?' ?Q))
-  (setq-default avy-orders-alist '((avy-goto-word-1 . avy-order-closest)))
+  (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
+  (setq-default avy-orders-alist '((avy-goto-word-1 . avy-order-closest) (avy-goto-word-0 . avy-order-closest)))
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
   (setq-default expand-region-fast-keys-enabled nil)
   (setq-default evil-surround-pairs-alist
