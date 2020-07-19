@@ -59,6 +59,7 @@ This function should only modify configuration layer settings."
      haskell
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
      yaml
+     c-c++
 
      github
      ranger
@@ -73,7 +74,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(super-save)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -257,7 +258,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
@@ -422,7 +423,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'trailing
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -468,12 +469,14 @@ before packages are loaded."
   (require 'git-gutter+)
   (require 'highlight-numbers)
   (require 'expand-region)
+  (require 'evil-escape)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
   (defun xged/kb-m (key def) (define-key evil-motion-state-map (kbd key) def))
   (defun xged/kb-v (key def) (define-key evil-visual-state-map (kbd key) def))
   (defun xged/kb-i (key def) (define-key evil-insert-state-map (kbd key) def))
+  (defun xged/kb-M (key def) (define-key magit-mode-map (kbd key) def))
   (defun xged/kb-nm (key def) (xged/kb-n key def) (xged/kb-m key def))
   (defun xged/kb-nv (key def) (xged/kb-n key def) (xged/kb-v key def))
   (defun xged/kb-nmv (key def) (xged/kb-n key def) (xged/kb-m key def) (xged/kb-v key def))
@@ -487,7 +490,7 @@ before packages are loaded."
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
   (defun xged/term-send-ret () (interactive) (term-send-raw-string "\n"))
-  (defun xged/save-buffer () (if (buffer-file-name) (save-buffer)))
+  (defun xged/save-buffer () (when (and buffer-file-name (buffer-modified-p (current-buffer)) (file-writable-p buffer-file-name)) (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
     (unless evil-last-paste (user-error "Previous paste command used a register"))
     (evil-undo-pop)
@@ -515,7 +518,6 @@ before packages are loaded."
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
   (xged/kb-nmv "s" nil)
-  (setq-default evil-escape-key-sequence "fd")  ; default
 
   ;; Key bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "F" 'er/contract-region)
@@ -523,14 +525,13 @@ before packages are loaded."
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
   (xged/kb-nm "x" 'evil-visual-char)
-  (xged/kb-nm "SPC x" 'evil-a-paragraph)
-  (xged/kb-nm "C-x" 'evil-visual-block)
+  (xged/kb-nm "SPC x" 'mark-paragraph)
+  (xged/kb-nm "X" 'evil-visual-block)  ;< C-x
   (xged/kb-nm "gx" 'evil-visual-restore)
   (xged/kb-nmv "w" 'er/mark-outside-pairs)
 
   ;; Key bindings: Navigate (File)
-  (xged/kb-nmv "RET" 'next-line)
-  (xged/kb-nmv "k" 'previous-line)
+  (xged/kb-nmv "RET" 'evil-next-line)
   (xged/kb-nm "a" 'avy-goto-word-1)
   (xged/kb-nmv "gk" 'evil-jump-backward) (xged/kb-nmv "g RET" 'evil-jump-forward)
   (xged/kb-nmv "g." 'goto-last-change)
@@ -540,16 +541,17 @@ before packages are loaded."
 
   ;; Key bindings: Manage (Project)
   (xged/kb-nm "<escape>" 'xged/alternate-buffer)
-  (xged/kb-nm "SPC d" 'kill-this-buffer)
+  (xged/kb-nm "b" 'ivy-switch-buffer)
+  (xged/kb-nm "C-b" 'next-buffer)
+  (xged/kb-nm "SPC d" 'kill-this-buffer) (advice-add 'kill-this-buffer :before #'xged/save-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
   (xged/kb-nmv "SPC w" 'xged/window-next)
-  (xged/kb-nm "C-d" 'delete-other-windows) (xged/kb-nm "C-S-D" 'delete-window)
+  (xged/kb-nm "C-d" 'delete-window) (xged/kb-nm "C-S-D" 'delete-other-windows)
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/copy-file-name)
-  (xged/kb-nm "b" 'next-buffer) (xged/kb-nm "B" 'previous-buffer)
-  (xged/kb-nm "SPC b" 'ivy-switch-buffer)
-  (xged/kb-nm "SPC q" 'kill-emacs)
-  (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts)
+  (xged/kb-nm "SPC q" 'spacemacs/kill-emacs)
+  (advice-add 'kill-emacs :before #'xged/save-buffer)
+  (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
   (xged/kb-nm "SPC r" 'spacemacs/rename-current-buffer-file)
   ;; Key bindings: Manage: goto
   (xged/kb-nm "gs" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (read-only-mode -1)))
@@ -557,16 +559,14 @@ before packages are loaded."
   (xged/kb-nm "gn" (lambda () (interactive) (find-file "/home/xged/src/config/Notes.yaml")))
   (xged/kb-nm "gm" 'spacemacs/switch-to-messages-buffer)
   (xged/kb-nm "ge" 'spacemacs/find-dotfile)
+  (xged/kb-nm "gc" 'calculator)
 
   ;; Key bindings: Edit
   (xged/kb-n "i" 'evil-insert)  ; default
   (xged/kb-v "i" 'evil-change)
-  (evil-define-key 'normal text-mode-map (kbd "i") 'evil-insert)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nv ":" 'xged/paste)
-  (xged/kb-nv "SPC :" (lambda () (interactive) (kill-new (gui-get-primary-selection)) (xged/paste)))
-  (xged/kb-nv "C-:" 'counsel-yank-pop)
-  (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
+  (xged/kb-nv "SPC :" 'counsel-yank-pop)
   (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-nm "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
@@ -575,7 +575,9 @@ before packages are loaded."
   (xged/kb-n "y" (lambda () (interactive) (insert " ")))
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
-  (xged/kb-nv "SPC a" 'evil-invert-char)  ;| upcase-dwim
+  (xged/kb-nv "SPC i" 'evil-invert-char)  ;| upcase-dwim
+  (xged/kb-n "v" 'xged/insert-line-below)
+  (xged/kb-n "V" 'xged/insert-line-above)
 
   ;; Key bindings: Magic
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
@@ -583,13 +585,15 @@ before packages are loaded."
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-n "SPC t" 'spacemacs/toggle-truncate-lines)  ;TODO visual
   (xged/kb-nv "C-a" 'ace-link)
-  (xged/kb-nm "M-q"
-    (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
+  (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
+  (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
   ;; Key bindings: Magic: Git
+  (xged/kb-M "RET" 'evil-next-line)
+  (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward)
+  (xged/kb-M "SPC" 'magit-diff-visit-file)
   (xged/kb-n "s RET" 'git-gutter+-next-hunk) (xged/kb-nv "sk" 'git-gutter+-previous-hunk)
   (xged/kb-n "s SPC" 'magit-status)
   (xged/kb-n "sh" 'git-gutter+-show-hunk-inline-at-point)
-  (xged/kb-n "sH" 'git-gutter+-show-hunk)
   (xged/kb-n "ss" 'git-gutter+-stage-hunks)
   (xged/kb-n "sg" 'magit-stage-file)
   (xged/kb-n "su" 'git-gutter+-unstage-whole-buffer)
@@ -615,7 +619,7 @@ before packages are loaded."
   (xged/kb-nmv "zv" 'describe-variable)
   (xged/kb-nmv "zk" 'describe-key) (xged/kb-i "C-k" 'describe-key)
   (xged/kb-nmv "zb" 'describe-bindings) (xged/kb-i "C-b" 'describe-bindings)
-  (xged/kb-nmv "zm" 'xged/local-map-name) (xged/kb-i "C-m" 'xged/local-map-name)
+  (xged/kb-nmv "zm" 'xged/local-map-name) (xged/kb-i "M-m" 'xged/local-map-name)
   (xged/kb-nmv "zl" 'ivy-spacemacs-help-layers)  ; layers
   (xged/kb-nmv "zp" 'ivy-spacemacs-help)  ; packages
   (xged/kb-nmv "zc" 'where-is)  ; describe command
@@ -646,6 +650,8 @@ before packages are loaded."
   (fset 'evil-visual-update-x-selection 'ignore)
   (setq-default mode-line-format nil)
   (setq-default inhibit-message t)
+  (setq-default auto-window-vscroll nil)  ;%
+  (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
 
   ;; Settings: Modes
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
@@ -658,7 +664,14 @@ before packages are loaded."
   (setq-default shell-pop-autocd-to-working-dir nil)
   (setq-default magit-commit-show-diff nil)
 
+  ;; Save
+  (super-save-mode +1)  ;/ ,r
+
   ;; Settings: Theme
+  (show-smartparens-global-mode -1)
+  (global-hl-line-mode -1)
+  (setq-default git-gutter-fr+-side 'left-fringe)
+  ;; Settings: Theme: Colors
   (defvar xged/color-background "black")
   (defvar xged/color-default    "grey95")
   (defvar xged/color-string     "#9efa9e")
@@ -667,9 +680,6 @@ before packages are loaded."
   (defvar xged/color-type       "#70b8ff")
   (defvar xged/color-comment    "grey60")
   (defvar xged/color-docs       "#00cc99")
-  (setq-default evil-normal-state-cursor '("white" hollow))
-  (show-smartparens-global-mode -1)
-  (global-hl-line-mode -1)
   (mapc (lambda (mode) (font-lock-add-keywords mode
    '(("\\([][(){}]\\)" 0 'font-lock-type-face)
      ("\\([=:;]\\)" 0 'font-lock-comment-face)
@@ -694,7 +704,7 @@ before packages are loaded."
   (set-face-attribute 'region                       nil :background xged/color-comment)
   (set-face-attribute 'fringe                       nil :background xged/color-background)
   (set-face-attribute 'highlight-numbers-number     nil :foreground xged/color-type)
-  ;; Settings: Theme: Modes
+  ;; Settings: Theme: Colors: Modes
   (setq-default magit-diff-highlight-hunk-body nil)
   (set-face-attribute 'avy-lead-face                  nil :foreground xged/color-default)
   (set-face-attribute 'avy-lead-face-0                nil :foreground xged/color-default)
@@ -712,23 +722,13 @@ before packages are loaded."
   ;; Settings: Fullscreen
   (with-eval-after-load 'window-purpose
     ;; remove bottom split popup
-    (setq purpose-special-action-sequences
-      (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
+    (setq purpose-special-action-sequences (delete '(pupo/display-condition pupo/display-function) purpose-special-action-sequences))
     ;; make popup reuse current window
-    (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window
-                                                                            display-buffer-use-some-window)))
+    (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window display-buffer-use-some-window)))
   (defun always-true (&rest _args) t)
   (setq display-buffer-base-action '(display-buffer-same-window))
   (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
    '(always-true display-buffer-same-window) 'append))
-
-  ;; Hooks
-  (add-hook 'evil-normal-state-entry-hook 'xged/save-buffer)
-  (add-hook 'kill-emacs-hook (lambda () (save-some-buffers t)))
-  (defadvice switch-to-buffer (before save-buffer-now activate) (xged/save-buffer))
-  ; kill-term no-confirm
-  (add-hook 'term-exec-hook (lambda () (let ((proc (get-buffer-process (current-buffer))))
-    (when (processp proc) (set-process-query-on-exit-flag proc nil)))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -745,7 +745,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
+    (ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
