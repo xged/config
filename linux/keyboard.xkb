@@ -45,7 +45,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <TLDE> = 49;
     <LFSH> = 133;
     <BKSL> = 51;
-    <AB01> = 52;
+    <AB01> = 94;
     <AB02> = 53;
     <AB03> = 54;
     <AB04> = 55;
@@ -88,7 +88,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <LVL3> = 92;
     <LSGT> = 37;
     <FK11> = 95;
-    <FK12> = 94;
+    <FK12> = 52;
     <AB11> = 97;
     <KATA> = 98;
     <HIRA> = 99;
