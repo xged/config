@@ -48,15 +48,13 @@ np() {sudo npm install $1 @types/"$@"}
 x-unzip() {tar xzf $@}
 git-stats-commits-d() {git log --no-merges --date=short --format='%ad' | sort | uniq -c}
 git-stats-commits-w() {git log --no-merges --date=short --format='%ad' | sort | awk '{system("date -d "$1" +%V")}' | uniq -c}
-x-keyboard() {
+x-kb() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
   xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
-x-keyboard-bluetooth() {
-    echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3  # init: scan on
-}
+x-kb-bt() {echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3}  # init: scan on
 x-trash() {echo -n Taking out the trash | pv -qL 10 && rm -rf  ~/.local/share/Trash/files}
 x-du() {du -m --max-depth=1 $@ | sort -n -r | head -n 30}
 x-perm-dir() {sudo chown xged $@ -R}
@@ -66,4 +64,6 @@ x-rerun(){
         sleep 1
     done
 }
-
+x-kb-off() {sudo modprobe -r atkbd}
+x-lightscolor() {redshift -x; redshift -O $@}
+x-count-lines() {cat $@ | awk 'NF' | wc -l}

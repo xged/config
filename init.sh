@@ -1,6 +1,6 @@
 xged-init-sda() {  # xged-init-sda /dev/sda3
     sudo pacman -S --noconfirm --needed yay
-    yay -S --noconfirm --needed bluez-utils google-chrome emacs adobe-source-code-pro-fonts tree aspell-en xorg-xbacklight xsel xvkbd redshift gnirehtet
+    yay -S --noconfirm --needed bluez-utils google-chrome emacs adobe-source-code-pro-fonts tree aspell-en xorg-xbacklight xsel xvkbd redshift gnirehtet timew
 
     echo 'export ZDOTDIR=$HOME/src/config/zsh' >$HOME/.zshenv
     export ZDOTDIR=$HOME/src/config/zsh

@@ -26,7 +26,6 @@ This function should only modify configuration layer settings."
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
 
-   ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
@@ -45,8 +44,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      markdown
-     multiple-cursors
-     treemacs
      org
      shell (shell :variables shell-default-height 100 shell-default-full-span nil)
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
@@ -62,7 +59,6 @@ This function should only modify configuration layer settings."
      c-c++
 
      github
-     ranger
      colors
      html
      )
@@ -105,18 +101,18 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
-   ;; File path pointing to emacs 27.1 executable compiled with support
-   ;; for the portable dumper (this is currently the branch pdumper).
-   ;; (default "emacs-27.0.50")
-   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default spacemacs-27.1.pdmp)
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -136,14 +132,21 @@ It should only modify the values of Spacemacs settings."
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
 
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
+
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
    ;; latest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
-   ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives nil
+   ;; (default t)
+   dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -164,8 +167,10 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -186,6 +191,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -212,8 +222,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
-   ;; quickly tweak the mode-line size to make separators look not too crappy.
+   ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 19
                                :weight normal
@@ -238,8 +247,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-major-mode-leader-key ","
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
 
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -259,6 +270,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts t
+
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
@@ -307,6 +319,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup t
+
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -315,6 +328,11 @@ It should only modify the values of Spacemacs settings."
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
+
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -343,10 +361,14 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-smooth-scrolling t
 
    ;; Control line numbers activation.
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -354,6 +376,7 @@ It should only modify the values of Spacemacs settings."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers nil
 
@@ -366,7 +389,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-smartparens-strict-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis nil
 
@@ -424,6 +447,14 @@ It should only modify the values of Spacemacs settings."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'trailing
+
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -431,7 +462,11 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -543,7 +578,7 @@ before packages are loaded."
   (xged/kb-nm "C-b" 'next-buffer)
   (xged/kb-nm "SPC d" 'kill-this-buffer) (advice-add 'kill-this-buffer :before #'xged/save-buffer)
   (xged/kb-nm "SPC D" 'spacemacs/delete-current-buffer-file)
-  (xged/kb-nm "M-d" 'delete-window) (xged/kb-nm "M-S-D" 'delete-other-windows)
+  (xged/kb-nm "C-d" 'delete-window) (xged/kb-nm "M-S-D" 'delete-other-windows)
   (xged/kb-nmv "SPC w" 'xged/window-next)
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'spacemacs/copy-file-name)
@@ -568,7 +603,6 @@ before packages are loaded."
   (xged/kb-nmv "M-m" 'xged/local-map-name) (xged/kb-i "M-m" 'xged/local-map-name)
   (xged/kb-nm "mL" 'ivy-spacemacs-help-layers)  ; layers
   (xged/kb-nm "mp" 'ivy-spacemacs-help)  ; packages
-  (xged/kb-nm "ma" 'apropos-command)
   (xged/kb-nmv "md" 'spacemacs/jump-to-definition)
 
   ;; Key bindings: Edit
@@ -589,19 +623,22 @@ before packages are loaded."
   (xged/kb-i "C-f" (lambda () (interactive) (insert "()") (backward-char)))
   (xged/kb-n "v" 'xged/insert-line-below)
   (xged/kb-n "V" 'xged/insert-line-above)
-  (xged/kb-n "C-d" 'comment-kill)
+  (xged/kb-n "M-d" 'comment-kill)
   (xged/kb-n "j" 'evil-join)
 
   ;; Key bindings: Magic
-  (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode)
+  (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
   (xged/kb-nm "SPC r" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "C-r" 'xged/revert-buffer)
-  (xged/kb-nv "M-r" 'replace-regexp)
+  (xged/kb-n "R" 'evil-repeat)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-n "/" 'spacemacs/toggle-truncate-lines)
   (xged/kb-nv "C-a" 'ace-link)
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
+  (xged/kb-n "." (lambda () (interactive) (shell-command "timew start productivity :quiet; timew summary") (switch-to-buffer "*Shell Command Output*")))
+  (xged/kb-n "SPC ." (lambda () (interactive) (shell-command "timew stop :quiet; timew summary") (switch-to-buffer "*Shell Command Output*")))
+  (xged/kb-n "C-." (lambda () (interactive) (shell-command "timew week") (switch-to-buffer "*Shell Command Output*")))
   ;; Key bindings: Magic: Git
   (xged/kb-M "RET" 'evil-next-line)
   (xged/kb-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key magit-file-section-map (kbd "C-<return>") 'magit-section-forward)
@@ -611,7 +648,7 @@ before packages are loaded."
   (xged/kb-n "sl" 'magit-log-current)
   (xged/kb-n "sh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-n "ss" 'git-gutter+-stage-hunks)
-  (xged/kb-n "sg" 'magit-stage-file)
+  (xged/kb-n "sS" 'magit-stage-file)
   (xged/kb-n "su" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-n "sd" 'git-gutter+-revert-hunk)
   (xged/kb-n "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
@@ -629,6 +666,7 @@ before packages are loaded."
 
   ;; Key bindings: Discover
   (xged/kb-nm "c" 'swiper)
+  (xged/kb-nm "SPC c" 'swiper-all)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward)
   (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nm "SPC SPC" 'counsel-M-x)
@@ -637,7 +675,6 @@ before packages are loaded."
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",r") 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
-  (evil-define-key 'insert term-raw-map (kbd "RET") (lambda () (interactive) (term-send-raw-string "\n")))
   (evil-define-key 'insert term-raw-map (kbd "C-<return>") 'term-send-down)
   (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
   (evil-define-key 'normal comint-mode-map (kbd "SPC RET") 'comint-next-prompt)
@@ -755,7 +792,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
+    (lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
