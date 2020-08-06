@@ -539,17 +539,12 @@ before packages are loaded."
     (if (eq major-mode 'term-mode) (term-paste)  ; evil-paste-pop (undo) does not work in term-mode
       (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
         (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))))
-  (defun xged/alternate-buffer (&optional window) (interactive)
-    (let ((current-buffer (window-buffer window)) (buffer-predicate (frame-parameter (window-frame window) 'buffer-predicate)))
-      (switch-to-buffer (or (cl-find-if
-        (lambda (buffer) (and (not (eq buffer current-buffer))
-          (or (null buffer-predicate) (funcall buffer-predicate buffer))))
-        (mapcar #'car (window-prev-buffers window)))
-          (other-buffer current-buffer t))))) ;; `other-buffer' honors `buffer-predicate' so no need to filter
-    (push "*.+" spacemacs-useless-buffers-regexp) (push "*ansi-term-1*" spacemacs-useful-buffers-regexp)
-    (push "Notes.yaml" spacemacs-useless-buffers-regexp)
-  ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
-  (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm)) (push "Notes.yaml" spacemacs-useless-buffers-regexp)
+  (push "*.+" spacemacs-useless-buffers-regexp)
+  (push "Notes.yaml" spacemacs-useless-buffers-regexp)
+  (push "*term*" spacemacs-useful-buffers-regexp)
+  (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm))
+  (defun xged/time-summary () (interactive) (term-simple-send "*ansi-term*" "watson log -c --day | sed -e 1b -e '$!d' | egrep -E --color '[0-9]+(m|h)'")
+         (spacemacs/default-pop-shell))
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
@@ -573,7 +568,7 @@ before packages are loaded."
   (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
   ;; Key bindings: Manage (Project)
-  (xged/kb-nm "<escape>" 'xged/alternate-buffer)
+  (xged/kb-nm "<escape>" 'spacemacs/alternate-buffer)
   (xged/kb-nm "b" 'ivy-switch-buffer)
   (xged/kb-nm "C-b" 'next-buffer)
   (xged/kb-nm "SPC d" 'kill-this-buffer) (advice-add 'kill-this-buffer :before #'xged/save-buffer)
@@ -581,9 +576,9 @@ before packages are loaded."
   (xged/kb-nm "C-d" 'delete-window) (xged/kb-nm "M-S-D" 'delete-other-windows)
   (xged/kb-nmv "SPC w" 'xged/window-next)
   (xged/kb-nm "SPC f" 'counsel-find-file)
-  (xged/kb-nm "C-f" 'spacemacs/copy-file-name)
+  (xged/kb-nm "C-f" 'counsel-locate)
   (xged/kb-nm "SPC q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
-  (xged/kb-nm "C-q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
+  (xged/kb-nm "q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
   (xged/kb-nmv "mg" 'evil-goto-first-line)
   (xged/kb-nmv "mG" 'evil-goto-last-line)
   (xged/kb-nmv "mk" 'evil-jump-backward) (xged/kb-nmv "m RET" 'evil-jump-forward)
@@ -598,12 +593,13 @@ before packages are loaded."
   (xged/kb-nm "mc" 'calculator)
   (xged/kb-nm "mf" 'describe-function)
   (xged/kb-nm "mv" 'describe-variable)
-  (xged/kb-nmv "M-k" 'describe-key)
   (xged/kb-nmv "mb" 'describe-bindings) (xged/kb-i "C-b" 'describe-bindings)
-  (xged/kb-nmv "M-m" 'xged/local-map-name) (xged/kb-i "M-m" 'xged/local-map-name)
   (xged/kb-nm "mL" 'ivy-spacemacs-help-layers)  ; layers
   (xged/kb-nm "mp" 'ivy-spacemacs-help)  ; packages
   (xged/kb-nmv "md" 'spacemacs/jump-to-definition)
+  (bind-key* "M-k" 'describe-key)
+  (bind-key* "M-b" 'describe-bindings)
+  (bind-key* "M-m" 'xged/local-map-name)
 
   ;; Key bindings: Edit
   (xged/kb-n "i" 'evil-insert)  ; default
@@ -636,9 +632,9 @@ before packages are loaded."
   (xged/kb-nv "C-a" 'ace-link)
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
-  (xged/kb-n "." (lambda () (interactive) (shell-command "timew start productivity :quiet; timew summary") (switch-to-buffer "*Shell Command Output*")))
-  (xged/kb-n "SPC ." (lambda () (interactive) (shell-command "timew stop :quiet; timew summary") (switch-to-buffer "*Shell Command Output*")))
-  (xged/kb-n "C-." (lambda () (interactive) (shell-command "timew week") (switch-to-buffer "*Shell Command Output*")))
+  (xged/kb-n "." (lambda () (interactive) (if (string-match-p (regexp-quote "Error:") (shell-command-to-string "watson stop")) (shell-command "watson start waste") (progn (shell-command "watson stop") (xged/time-summary)))))
+  (xged/kb-n "SPC ." (lambda () (interactive) (xged/time-summary)))
+
   ;; Key bindings: Magic: Git
   (xged/kb-M "RET" 'evil-next-line)
   (xged/kb-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key magit-file-section-map (kbd "C-<return>") 'magit-section-forward)
@@ -676,11 +672,14 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",r") 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
   (evil-define-key 'insert term-raw-map (kbd "C-<return>") 'term-send-down)
+  (evil-define-key 'normal term-raw-map (kbd "o") (lambda () (interactive) (term-send-raw-string "\n")))
+  (evil-define-key 'normal term-raw-map (kbd ",") (lambda () (interactive) (term-send-raw-string (kbd "C-c"))))
   (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
   (evil-define-key 'normal comint-mode-map (kbd "SPC RET") 'comint-next-prompt)
   (evil-define-key 'normal comint-mode-map (kbd "SPC k") 'comint-previous-prompt)
   (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
   (evil-define-key 'normal python-mode-map (kbd ", SPC") 'spacemacs/python-shell-send-buffer-switch)
+  (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
@@ -706,7 +705,7 @@ before packages are loaded."
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
   (setq-default expand-region-fast-keys-enabled nil)
   (setq-default evil-surround-pairs-alist
-  (append '((?j "(" . ")") (?f "[" . "]") (?k "{" . "}") (?d "<" . ">")) evil-surround-pairs-alist))
+  (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
   (setq-default shell-pop-autocd-to-working-dir nil)
   (setq-default magit-commit-show-diff nil)
@@ -792,7 +791,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
+    (selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
