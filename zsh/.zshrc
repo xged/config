@@ -26,7 +26,7 @@ pypu() {sudo pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 
 pyt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
 pyc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
-mla()  {xbacklight -set 5}
+mla()  {xbacklight -set 6}
 mlb()  {xbacklight -set 8}
 mlc()  {xbacklight -set 11}
 mld()  {xbacklight -set 15}
@@ -67,3 +67,7 @@ x-rerun(){
 x-kb-off() {sudo modprobe -r atkbd}
 x-lightscolor() {redshift -x; redshift -O $@}
 x-count-lines() {cat $@ | awk 'NF' | wc -l}
+lines (){
+    sed -n "$( echo "$@" | sed 's/[0-9]\+/&p;/g')"
+}
+x-git-log() {GIT_PAGER=cat; git log -p --all --reverse $@ | sed -n '/^-/p'}

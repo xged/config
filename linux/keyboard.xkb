@@ -2,7 +2,7 @@ xkb_keymap {
 xkb_keycodes "evdev+aliases(qwerty)" {
     minimum = 8;
     maximum = 255;
-     <ESC> = 50;
+     <ESC> = 37;
     <AE01> = 10;
     <AE02> = 11;
     <AE03> = 12;
@@ -15,7 +15,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AE10> = 19;
     <AE11> = 20;
     <AE12> = 21;
-    <BKSP> = 134;
+    <BKSP> = 108;
      <TAB> = 23;
     <AD01> = 24;
     <AD02> = 25;
@@ -43,9 +43,9 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AC10> = 47;
     <AC11> = 48;
     <TLDE> = 49;
-    <LFSH> = 133;
+    <LFSH> = 64;
     <BKSL> = 51;
-    <AB01> = 94;
+    <AB01> = 50;
     <AB02> = 53;
     <AB03> = 54;
     <AB04> = 55;
@@ -57,7 +57,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AB10> = 61;
     <RTSH> = 22;
     <KPMU> = 63;
-    <LALT> = 64;
+    <LALT> = 133;
     <SPCE> = 65;
     <CAPS> = 105;
     <FK01> = 67;
@@ -86,7 +86,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
      <KP0> = 90;
     <KPDL> = 91;
     <LVL3> = 92;
-    <LSGT> = 37;
+    <LSGT> = 94;
     <FK11> = 95;
     <FK12> = 52;
     <AB11> = 97;
@@ -126,7 +126,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <HJCV> = 131;
     <AE13> = 132;
     <LWIN> = 96;
-    <RWIN> = 108;
+    <RWIN> = 134;
     <COMP> = 110;
     <STOP> = 136;
     <AGAI> = 137;

@@ -539,12 +539,9 @@ before packages are loaded."
     (if (eq major-mode 'term-mode) (term-paste)  ; evil-paste-pop (undo) does not work in term-mode
       (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
         (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))))
-  (push "*.+" spacemacs-useless-buffers-regexp)
-  (push "Notes.yaml" spacemacs-useless-buffers-regexp)
-  (push "*term*" spacemacs-useful-buffers-regexp)
+  (push "*.\*" spacemacs-useless-buffers-regexp)  ;/
+  (push "Notes.yaml" spacemacs-useless-buffers-regexp)  ;/
   (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm))
-  (defun xged/time-summary () (interactive) (term-simple-send "*ansi-term*" "watson log -c --day | sed -e 1b -e '$!d' | egrep -E --color '[0-9]+(m|h)'")
-         (spacemacs/default-pop-shell))
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
@@ -564,6 +561,8 @@ before packages are loaded."
   ;; Key bindings: Navigate (File)
   (xged/kb-nmv "RET" 'evil-next-line)
   (xged/kb-nm "a" 'avy-goto-word-1)
+  (xged/kb-nm "SPC a" 'avy-goto-line)
+  (xged/kb-nv "C-a" 'ace-link)
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
@@ -577,8 +576,9 @@ before packages are loaded."
   (xged/kb-nmv "SPC w" 'xged/window-next)
   (xged/kb-nm "SPC f" 'counsel-find-file)
   (xged/kb-nm "C-f" 'counsel-locate)
-  (xged/kb-nm "SPC q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
-  (xged/kb-nm "q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
+  (xged/kb-nm "C-q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
+  (xged/kb-nm "SPC q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
+  (xged/kb-nmv "q" 'save-buffer)
   (xged/kb-nmv "mg" 'evil-goto-first-line)
   (xged/kb-nmv "mG" 'evil-goto-last-line)
   (xged/kb-nmv "mk" 'evil-jump-backward) (xged/kb-nmv "m RET" 'evil-jump-forward)
@@ -587,7 +587,8 @@ before packages are loaded."
   (xged/kb-nm "mx" 'evil-visual-restore)
   (xged/kb-nm "ms" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (read-only-mode -1)))
   (xged/kb-nm "mS" 'spacemacs/switch-to-scratch-buffer)
-  (xged/kb-nm "mn" (lambda () (interactive) (find-file "/home/xged/src/config/Notes.yaml")))
+  (xged/kb-nm "mn" (lambda () (interactive) (find-file "/home/xged/src/sheets/Notes.yaml")))
+  (xged/kb-nm "mz" (lambda () (interactive) (find-file "/home/xged/src/config/zsh/.zshrc")))
   (xged/kb-nm "mm" 'spacemacs/switch-to-messages-buffer)
   (xged/kb-nm "me" 'spacemacs/find-dotfile)
   (xged/kb-nm "mc" 'calculator)
@@ -604,15 +605,19 @@ before packages are loaded."
   ;; Key bindings: Edit
   (xged/kb-n "i" 'evil-insert)  ; default
   (xged/kb-v "i" 'evil-change)
+  (xged/kb-i "RET" (kbd "<escape>"))
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nv ":" 'xged/paste)
   (xged/kb-nv "SPC :" 'counsel-yank-pop)
   (xged/kb-v "u" 'undo) (xged/kb-nv "U" 'undo-tree-redo)
   (xged/kb-n "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-n "p" 'sp-splice-sexp) (xged/kb-v "p" 'evil-surround-region)
-  (xged/kb-nv "t" 'spacemacs/duplicate-line-or-region)
+  (xged/kb-nv "." 'spacemacs/duplicate-line-or-region)
+  (xged/kb-n "C-." 'evil-repeat)
   (xged/kb-v "x" 'evil-exchange)
   (xged/kb-n "y" (lambda () (interactive) (insert " ")))
+  (xged/kb-n "[" "i(")
+  (xged/kb-n "]" "i{")
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-n "<" 'evil-shift-left-line) (xged/kb-n ">" 'evil-shift-right-line)
   (xged/kb-nv "SPC i" 'evil-invert-char)  ;| upcase-dwim
@@ -626,14 +631,12 @@ before packages are loaded."
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
   (xged/kb-nm "SPC r" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nm "C-r" 'xged/revert-buffer)
-  (xged/kb-n "R" 'evil-repeat)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
-  (xged/kb-n "/" 'spacemacs/toggle-truncate-lines)
-  (xged/kb-nv "C-a" 'ace-link)
+  (xged/kb-nv "/" 'spacemacs/toggle-truncate-lines)
   (xged/kb-nm "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
   (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
-  (xged/kb-n "." (lambda () (interactive) (if (string-match-p (regexp-quote "Error:") (shell-command-to-string "watson stop")) (shell-command "watson start waste") (progn (shell-command "watson stop") (xged/time-summary)))))
-  (xged/kb-n "SPC ." (lambda () (interactive) (xged/time-summary)))
+  (xged/kb-n "SPC t" (lambda () (interactive) (shell-command "timew summary") (switch-to-buffer "*Shell Command Output*") (text-scale-increase 3) (evil-goto-line)))
+  (xged/kb-n "t" (lambda () (interactive) (if (string-match-p (regexp-quote "There is no active time tracking.") (shell-command-to-string "timew")) (shell-command "timew start $ :quiet") (shell-command "timew stop :quiet; timew summary") )))
 
   ;; Key bindings: Magic: Git
   (xged/kb-M "RET" 'evil-next-line)
@@ -677,7 +680,7 @@ before packages are loaded."
   (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
   (evil-define-key 'normal comint-mode-map (kbd "SPC RET") 'comint-next-prompt)
   (evil-define-key 'normal comint-mode-map (kbd "SPC k") 'comint-previous-prompt)
-  (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
+  ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
   (evil-define-key 'normal python-mode-map (kbd ", SPC") 'spacemacs/python-shell-send-buffer-switch)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
 
