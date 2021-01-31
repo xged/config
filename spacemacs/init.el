@@ -550,7 +550,7 @@ before packages are loaded."
 
   ;; Key bindings: Select
   (xged/kb-nmv "f" 'er/expand-region) (xged/kb-v "F" 'er/contract-region)
-  (xged/kb-nmv "d" 'evil-visual-line)
+  (xged/kb-nmv "a" 'evil-visual-line)
   (xged/kb-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (xged/kb-v "e" (lambda () (interactive) (forward-word)))  ;$
   (xged/kb-nmv "x" 'evil-visual-char)
@@ -560,9 +560,9 @@ before packages are loaded."
 
   ;; Key bindings: Navigate (File)
   (xged/kb-nmv "RET" 'evil-next-line)
-  (xged/kb-nmv "a" 'avy-goto-word-1)
-  (xged/kb-nmv "SPC a" 'avy-goto-line)
-  (xged/kb-nmv "C-a" 'ace-link)
+  (xged/kb-nmv "d" 'avy-goto-word-1)
+  (xged/kb-nmv "SPC d" 'avy-goto-line)
+  (xged/kb-nmv "C-d" 'ace-link)
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC n" 'flycheck-next-error) (xged/kb-nmv "SPC N" 'flycheck-previous-error)
 
@@ -576,8 +576,8 @@ before packages are loaded."
   (xged/kb-nmv "SPC w" 'xged/window-next)
   (xged/kb-nmv "SPC f" 'counsel-find-file)
   (xged/kb-nmv "C-f" 'counsel-locate)
-  (xged/kb-nmv "C-q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
-  (xged/kb-nmv "SPC q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
+  (xged/kb-nmv "SPC q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
+  (xged/kb-nmv "C-q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
   (xged/kb-nmv "q" 'save-buffer)
   (xged/kb-nmv "mg" 'evil-goto-first-line)
   (xged/kb-nmv "mG" 'evil-goto-last-line)
@@ -606,6 +606,7 @@ before packages are loaded."
   (xged/kb-nm "i" 'evil-insert)  ; default
   (xged/kb-v "i" 'evil-change)
   (xged/kb-i "RET" (kbd "<escape>"))
+  (xged/kb-i "C-<return>" 'newline-and-indent)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nmv ":" 'xged/paste)
   (xged/kb-nmv "SPC :" 'counsel-yank-pop)
@@ -617,6 +618,7 @@ before packages are loaded."
   (xged/kb-nmv "C-." 'evil-repeat)
   (xged/kb-v "x" 'evil-exchange)
   (xged/kb-nmv "y" (lambda () (interactive) (insert " ")))
+  ;; (xged/kb-n "y" 'evil-yank-line)
   (xged/kb-nmv "[" "i(")
   (xged/kb-nmv "]" "i{")
   (xged/kb-nm "<" 'evil-shift-left-line) (xged/kb-nm ">" 'evil-shift-right-line)
@@ -627,6 +629,7 @@ before packages are loaded."
   (xged/kb-nmv "V" 'xged/insert-line-above)
   (xged/kb-nmv "M-d" 'comment-kill)
   (xged/kb-nmv "j" 'evil-join)
+  (xged/kb-i evil-escape-key-sequence 'newline-and-indent)
 
   ;; Key bindings: Magic
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
@@ -702,6 +705,7 @@ before packages are loaded."
   (setq-default inhibit-message t)
   (setq-default auto-window-vscroll nil)  ;%
   (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
+  (setq-default avy-line-insert-style 'below)
 
   ;; Settings: Modes
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
