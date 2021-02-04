@@ -45,7 +45,14 @@ This function should only modify configuration layer settings."
      git
      markdown
      org
-     shell (shell :variables shell-default-height 100 shell-default-full-span nil)
+     shell (shell :variables
+       shell-default-height 100
+       shell-default-full-span nil
+       shell-default-shell 'eshell
+       shell-enable-smart-eshell t
+       eshell-aliases-file "/home/xged/src/config/alias"
+       shell-pop-autocd-to-working-dir nil
+       )
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
@@ -505,6 +512,7 @@ before packages are loaded."
   (require 'highlight-numbers)
   (require 'expand-region)
   (require 'evil-escape)
+  (require 'em-alias)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -536,9 +544,8 @@ before packages are loaded."
       (funcall (nth 0 evil-last-paste) (nth 1 evil-last-paste))
       (when (eq last-command 'evil-visual-paste) (setcdr (nthcdr 4 evil-last-paste) nil))))
   (defun xged/paste () (interactive)
-    (if (eq major-mode 'term-mode) (term-paste)  ; evil-paste-pop (undo) does not work in term-mode
-      (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
-        (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1)))))
+    (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
+      (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
   (push "*.\*" spacemacs-useless-buffers-regexp)  ;/
   (push "Notes.yaml" spacemacs-useless-buffers-regexp)  ;/
   (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm))
@@ -584,7 +591,7 @@ before packages are loaded."
   (xged/kb-nmv "m." 'goto-last-change)
   (xged/kb-nmv "mh" 'back-to-indentation) (xged/kb-nmv "ml" 'end-of-line) (xged/kb-v "ml" 'evil-last-non-blank)
   (xged/kb-nmv "mx" 'evil-visual-restore)
-  (xged/kb-nmv "ms" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (read-only-mode -1)))
+  (xged/kb-nmv "ms" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1)))
   (xged/kb-nmv "mS" 'spacemacs/switch-to-scratch-buffer)
   (xged/kb-nmv "mn" (lambda () (interactive) (find-file "/home/xged/src/sheets/Notes.yaml")))
   (xged/kb-nmv "mz" (lambda () (interactive) (find-file "/home/xged/src/config/zsh/.zshrc")))
@@ -678,12 +685,11 @@ before packages are loaded."
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",r") 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
-  (evil-define-key 'insert term-raw-map (kbd "C-<return>") 'term-send-down)
-  (evil-define-key 'normal term-raw-map (kbd "o") (lambda () (interactive) (term-send-raw-string "\n")))
-  (evil-define-key 'normal term-raw-map (kbd ",") (lambda () (interactive) (term-send-raw-string (kbd "C-c"))))
-  (evil-define-key 'normal comint-mode-map (kbd "\"") 'comint-interrupt-subjob)
-  (evil-define-key 'normal comint-mode-map (kbd "SPC RET") 'comint-next-prompt)
-  (evil-define-key 'normal comint-mode-map (kbd "SPC k") 'comint-previous-prompt)
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
   ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
   (evil-define-key 'normal python-mode-map (kbd ", SPC") 'spacemacs/python-shell-send-buffer-switch)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
@@ -691,8 +697,7 @@ before packages are loaded."
   ;; Settings
   (setq-default evil-move-cursor-back nil)
   (setq-default evil-move-beyond-eol t)
-  (setq-default evil-cross-lines t)
-  (global-centered-cursor-mode)  ;\ term shell
+  (global-centered-cursor-mode)
   (setq-default truncate-lines t)
   (setq-default word-wrap t)
   (setq-default evil-ex-search-highlight-all nil)
@@ -715,7 +720,7 @@ before packages are loaded."
   (setq-default evil-surround-pairs-alist
   (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
-  (setq-default shell-pop-autocd-to-working-dir nil)
+  (setq-default shell-default-shell 'eshell )
   (setq-default magit-commit-show-diff nil)
 
   ;; Save

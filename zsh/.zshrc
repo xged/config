@@ -20,9 +20,8 @@ alias  fm="mv"
 alias  fc="cp -r"
 # Python
 py()   {python $@}
-pyp()  {sudo pip install -U $@}
-pypd() {sudo pip uninstall $@}
-pypu() {sudo pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U}
+pyp()  {pip install -U $@}
+pypd() {pip uninstall $@}
 pyt()  {pytest -s --cov-report term-missing --cov --durations=10 $@}
 pyc()  {mypy --ignore-missing-imports *.py $@}
 # Machine
@@ -54,20 +53,25 @@ x-kb() {
   xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
-x-kb-bt() {echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3}  # init: scan on
 x-trash() {echo -n Taking out the trash | pv -qL 10 && rm -rf  ~/.local/share/Trash/files}
 x-du() {du -m --max-depth=1 $@ | sort -n -r | head -n 30}
 x-perm-dir() {sudo chown xged $@ -R}
+x-kb-off() {sudo modprobe -r atkbd}
+x-lightscolor() {redshift -x; redshift -O 3500}
+
+alias x="x-kb; mla; x-lightscolor; xmodmap -e \"pointer = 1 3 2\""
+
+# Archive
+pypu() {pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U}
+x-kb-bt() {echo 'connect 34:88:5D:4A:DB:97' | bluetoothctl; sleep 3}  # init: scan on
 x-rerun(){
     until $@; do
         echo "Server 'myserver' crashed with exit code $?.  Respawning.." >&2
         sleep 1
     done
 }
-x-kb-off() {sudo modprobe -r atkbd}
-x-lightscolor() {redshift -x; redshift -O $@}
-x-count-lines() {cat $@ | awk 'NF' | wc -l}
-lines (){
+x-mysterylines (){
     sed -n "$( echo "$@" | sed 's/[0-9]\+/&p;/g')"
 }
+x-count-lines() {cat $@ | awk 'NF' | wc -l}
 x-git-log() {GIT_PAGER=cat; git log -p --all --reverse $@ | sed -n '/^-/p'}

@@ -1,0 +1,50 @@
+# File-system
+alias fd rm -rf $*
+alias fm mv $*
+alias fc cp -r $*
+alias f cd $* && ls
+alias ff cd .. && ls
+alias fl ls -a --ignore='.' --ignore='..' $*
+alias ft tree -a --dirsfirst -L 4 -I '.git' $*
+alias fmk mkdir $* && cd $*
+# Python
+alias py   python $*
+alias pyp  pip install -U $*
+alias pypd pip uninstall $*
+alias pyt  pytest -s --cov-report term-missing --cov --durations=10 $*
+alias pyc  mypy --ignore-missing-imports *.py $*
+# Machine
+alias mla  xbacklight -set 6
+alias mlb  xbacklight -set 8
+alias mlc  xbacklight -set 11
+alias mld  xbacklight -set 15
+alias mle  xbacklight -set 20
+alias mlp  xbacklight -inc 1
+alias mlm  xbacklight -dec 1
+# Package
+alias p    yay -S --noconfirm --needed $*
+alias ps   yay --noconfirm --needed $*
+alias pf   yay -S --noconfirm --needed --force $*
+alias pd   yay -Rsc --noconfirm $*
+alias pu   yay -Syu --noconfirm $*
+# Session
+alias sd   kill $(pgrep $*); kill $(pgrep $*)
+# Node
+alias n  tsc; node $*
+alias np sudo npm install $1 @types/"$*"
+# Connection
+alias cph scrcpy --turn-screen-off --fullscreen --bit-rate 3M --max-fps 30 & disown; gnirehtet run
+# Git
+alias gl git log --pickaxe-regex -p --color-words -G $*
+alias gL git log --pickaxe-regex -p --color-words -S $*
+
+alias git-stats-commits-d git log --no-merges --date=short --format='%ad' | sort | uniq -c
+alias git-stats-commits-w git log --no-merges --date=short --format='%ad' | sort | awk 'system("date -d "$1" +%V")' | uniq -c
+alias x-kb xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'; xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'; xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0; xset r rate 150 30
+alias x-trash echo -n Taking out the trash | pv -qL 10 && rm -rf  ~/.local/share/Trash/files
+alias x-du du -m --max-depth=1 $* | sort -n -r | head -n 30
+alias x-perm-dir sudo chown xged $* -R
+alias x-kb-off sudo modprobe -r atkbd
+alias x-lightscolor redshift -x; redshift -O 3500
+
+alias x x-kb; mla; x-lightscolor; xmodmap -e "pointer = 1 3 2"
