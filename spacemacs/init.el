@@ -567,10 +567,15 @@ before packages are loaded."
   (xged/kb-nmv "X" 'evil-visual-block)  ;< C-x
   (xged/kb-nmv "w" 'er/mark-outside-pairs)
 
-  ;; Key bindings: Navigate (File)
+  ;; Key bindings: Navigate
   (xged/kb-nmv "RET" 'evil-next-line)
   (xged/kb-nm "d" 'avy-goto-word-1)
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
+  (xged/kb-nmv "c" (lambda () (interactive) (swiper) (setq this-command 'evil-ex-search-next)))
+  (xged/kb-nmv "SPC c" (lambda () (interactive) (swiper-all) (setq this-command 'evil-ex-search-next)))
+  (xged/kb-nm "n" 'xged/next) (xged/kb-nm "N" 'xged/previous)
+  (xged/kb-nmv "SPC n" 'evil-ex-search-next) (xged/kb-nmv "SPC N" 'evil-ex-search-previous)
+  (xged/kb-v "n" 'evil-visualstar/begin-search-forward) (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nmv "SPC RET" 'flycheck-next-error) (xged/kb-nmv "SPC k" 'flycheck-previous-error)
   (xged/kb-nmv "g" 'evil-goto-line)
 
@@ -640,6 +645,8 @@ before packages are loaded."
   (xged/kb-nmv "j" 'evil-join)
 
   ;; Key bindings: Magic
+  (xged/kb-nmv "SPC SPC" 'counsel-M-x)
+  (xged/kb-nmv "S-SPC" 'ivy-resume)
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
   (xged/kb-nmv "SPC r" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nmv "C-r" 'xged/revert-buffer)
@@ -675,15 +682,6 @@ before packages are loaded."
   (xged/kb-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
   (xged/kb-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (xged/kb-nm "st" 'spacemacs/time-machine-transient-state/body)
-
-  ;; Key bindings: Discover
-  (xged/kb-nmv "c" (lambda () (interactive) (swiper) (setq this-command 'evil-ex-search-next)))
-  (xged/kb-nmv "SPC c" (lambda () (interactive) (swiper-all) (setq this-command 'evil-ex-search-next)))
-  (xged/kb-nm "n" 'xged/next) (xged/kb-nm "N" 'xged/previous)
-  (xged/kb-nmv "SPC n" 'evil-ex-search-next) (xged/kb-nmv "SPC N" 'evil-ex-search-previous)
-  (xged/kb-v "n" 'evil-visualstar/begin-search-forward) (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
-  (xged/kb-nmv "SPC SPC" 'counsel-M-x)
-  (xged/kb-nmv "S-SPC" 'ivy-resume)
   (xged/kb-nm "sr" 'magit-rebase-interactive)
 
   ;; Key bindings: Mode-specific
