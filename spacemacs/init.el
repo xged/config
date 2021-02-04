@@ -231,7 +231,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 19
+                               :size 18
                                :weight normal
                                :width normal)
 
@@ -570,23 +570,24 @@ before packages are loaded."
   ;; Key bindings: Navigate (File)
   (xged/kb-nmv "RET" 'evil-next-line)
   (xged/kb-nm "d" 'avy-goto-word-1)
-  (xged/kb-nmv "C-d" 'ace-link)
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "SPC RET" 'flycheck-next-error) (xged/kb-nmv "SPC k" 'flycheck-previous-error)
+  (xged/kb-nmv "g" 'evil-goto-line)
 
   ;; Key bindings: Manage (Project)
-  (xged/kb-nmv "<escape>" 'spacemacs/alternate-buffer)
+  (xged/kb-nmv "<escape>" 'spacemacs/alternate-buffer) (advice-add 'spacemacs/alternate-buffer :before #'xged/save-buffer)
   (xged/kb-nmv "b" 'ivy-switch-buffer)
-  (xged/kb-nmv "C-b" 'next-buffer)
+  (xged/kb-nmv "q" 'next-buffer) (xged/kb-nmv "Q" 'previous-buffer)
   (xged/kb-nmv "SPC d" 'kill-this-buffer) (advice-add 'kill-this-buffer :before #'xged/save-buffer)
   (xged/kb-nmv "SPC D" 'spacemacs/delete-current-buffer-file)
   (xged/kb-nmv "C-d" 'delete-window) (xged/kb-nmv "M-S-D" 'delete-other-windows)
   (xged/kb-nmv "SPC w" 'xged/window-next)
   (xged/kb-nmv "SPC f" 'counsel-find-file)
   (xged/kb-nmv "C-f" 'counsel-locate)
-  (xged/kb-nmv "SPC q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
-  (xged/kb-nmv "C-q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
-  (xged/kb-nmv "q" 'save-buffer)
+  (xged/kb-nmv "SPC q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
+  (xged/kb-nmv "C-q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
+  (xged/kb-nmv "SPC s" 'save-buffer)
+
   (xged/kb-nmv "mg" 'evil-goto-first-line)
   (xged/kb-nmv "mG" 'evil-goto-last-line)
   (xged/kb-nmv "mk" 'evil-jump-backward) (xged/kb-nmv "m RET" 'evil-jump-forward)
@@ -613,12 +614,13 @@ before packages are loaded."
   ;; Key bindings: Edit
   (xged/kb-nm "i" 'evil-insert)  ; default
   (xged/kb-v "i" 'evil-change)
-  (xged/kb-i "RET" (kbd "<escape>"))
-  (xged/kb-i "C-<return>" 'newline-and-indent)
+  (xged/kb-i "RET" 'evil-escape)
+  (xged/kb-i "TAB" 'newline-and-indent)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nmv ":" 'xged/paste)
-  (xged/kb-nmv "SPC :" 'counsel-yank-pop)
-  (xged/kb-nmv "u" 'undo) (xged/kb-nmv "U" 'undo-tree-redo)
+  (xged/kb-nm "SPC :" 'counsel-yank-pop)
+  ;; (xged/kb-v "SPC :" 'counsel-yank-pop)
+  (xged/kb-nmv "u" 'evil-undo) (xged/kb-nmv "U" 'evil-redo)
   (xged/kb-nmv "\"" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-nmv "p" 'sp-splice-sexp)
   (xged/kb-v "p" 'evil-surround-region)
@@ -627,17 +629,15 @@ before packages are loaded."
   (xged/kb-v "x" 'evil-exchange)
   (xged/kb-nmv "y" (lambda () (interactive) (insert " ")))
   ;; (xged/kb-n "y" 'evil-yank-line)
-  (xged/kb-nmv "[" "i(")
-  (xged/kb-nmv "]" "i{")
   (xged/kb-nm "<" 'evil-shift-left-line) (xged/kb-nm ">" 'evil-shift-right-line)
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-nmv "SPC i" 'evil-invert-char)  ;| upcase-dwim
   (xged/kb-i "C-f" (lambda () (interactive) (insert "()") (backward-char)))
+  (xged/kb-i "C-d" (lambda () (interactive) (insert "{}") (backward-char)))
   (xged/kb-nmv "v" 'xged/insert-line-below)
   (xged/kb-nmv "V" 'xged/insert-line-above)
   (xged/kb-nmv "M-d" 'comment-kill)
   (xged/kb-nmv "j" 'evil-join)
-  (xged/kb-i evil-escape-key-sequence 'newline-and-indent)
 
   ;; Key bindings: Magic
   (xged/kb-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
@@ -645,7 +645,7 @@ before packages are loaded."
   (xged/kb-nmv "C-r" 'xged/revert-buffer)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-nmv "/" 'spacemacs/toggle-truncate-lines)
-  (xged/kb-nmv "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase")))
+  (xged/kb-nmv "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase") (spacemacs/restart-emacs-resume-layouts)))
   (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
   (xged/kb-nmv "SPC t" (lambda () (interactive) (shell-command "timew summary") (switch-to-buffer "*Shell Command Output*") (text-scale-increase 3) (evil-goto-line)))
   (xged/kb-nmv "t" (lambda () (interactive) (if (string-match-p (regexp-quote "There is no active time tracking.") (shell-command-to-string "timew")) (shell-command "timew start $ :quiet") (shell-command "timew stop :quiet; timew summary") )))
@@ -673,7 +673,7 @@ before packages are loaded."
   (xged/kb-nm "sZ" (lambda () (interactive) (magit-run-git "stash" "pop")))
   (xged/kb-nm "sS" (lambda () (interactive) (magit-snapshot-save t t nil t)))
   (xged/kb-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
-  (xged/kb-nm "sb" 'spacemacs/git-blame-micro-state)  ;/ modifies the file
+  (xged/kb-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (xged/kb-nm "st" 'spacemacs/time-machine-transient-state/body)
 
   ;; Key bindings: Discover
@@ -684,6 +684,7 @@ before packages are loaded."
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward) (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nmv "SPC SPC" 'counsel-M-x)
   (xged/kb-nmv "S-SPC" 'ivy-resume)
+  (xged/kb-nm "sr" 'magit-rebase-interactive)
 
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",r") 'dotspacemacs/sync-configuration-layers)
@@ -713,15 +714,14 @@ before packages are loaded."
   (setq-default inhibit-message t)
   (setq-default auto-window-vscroll nil)  ;%
   (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
-  (setq-default avy-line-insert-style 'below)
+  (setq-default undo-tree-enable-undo-in-region t)
 
   ;; Settings: Modes
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
   (setq-default avy-orders-alist '((avy-goto-word-1 . avy-order-closest) (avy-goto-word-0 . avy-order-closest)))
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
   (setq-default expand-region-fast-keys-enabled nil)
-  (setq-default evil-surround-pairs-alist
-  (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
+  (setq-default evil-surround-pairs-alist (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
   (setq-default shell-default-shell 'eshell )
   (setq-default magit-commit-show-diff nil)
