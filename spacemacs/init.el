@@ -552,6 +552,8 @@ before packages are loaded."
   (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm))
   (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (if git-gutter+-diffinfos (git-gutter+-next-hunk 1)(goto-last-change 1))))
   (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (if git-gutter+-diffinfos (git-gutter+-next-hunk -1)(goto-last-change -1))))
+  (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/config/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
+    (advice-add 'xged/time :before #'xged/save-buffer)
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
@@ -653,9 +655,7 @@ before packages are loaded."
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (xged/kb-nmv "/" 'spacemacs/toggle-truncate-lines)
   (xged/kb-nmv "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase") (spacemacs/restart-emacs-resume-layouts)))
-  (define-key transient-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-edit-map evil-escape-key-sequence 'transient-quit-one) (define-key transient-sticky-map evil-escape-key-sequence 'transient-quit-seq)
-  (xged/kb-nmv "SPC t" (lambda () (interactive) (shell-command "timew summary") (switch-to-buffer "*Shell Command Output*") (text-scale-increase 3) (evil-goto-line)))
-  (xged/kb-nmv "t" (lambda () (interactive) (if (string-match-p (regexp-quote "There is no active time tracking.") (shell-command-to-string "timew")) (shell-command "timew start $ :quiet") (shell-command "timew stop :quiet; timew summary") )))
+  (xged/kb-nmv "t" 'xged/time)
 
   ;; Key bindings: Magic: Git
   (xged/kb-M "RET" 'evil-next-line)
