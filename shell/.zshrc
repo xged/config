@@ -1,13 +1,10 @@
-export ZSH=/home/xged/src/config/zsh/.oh-my-zsh
+export ZSH=/home/xged/src/config/shell/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 # plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 export SPACEMACSDIR=$HOME/src/config/spacemacs
 # export PYTHONPATH=$PYTHONPATH:$HOME/src/lang_char_freqs.py
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-# export PATH=~/.local/bin:$PATH
 
 # File-system
 f()    {cd $@ && ls}
@@ -50,7 +47,7 @@ git-stats-commits-w() {git log --no-merges --date=short --format='%ad' | sort | 
 x-kb() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
-  xkbcomp $HOME/src/config/linux/keyboard.xkb $DISPLAY -w0  # keymap
+  xkbcomp $HOME/src/config/keyboard.xkb $DISPLAY -w0  # keymap
   xset r rate 150 30  # key repeat rate
 }
 x-trash() {echo -n Taking out the trash | pv -qL 10 && rm -rf  ~/.local/share/Trash/files}
