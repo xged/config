@@ -1113,7 +1113,7 @@ xkb_symbols "pc+us+inet(evdev)+terminate(ctrl_alt_bksp)" {
         type= "CTRL+ALT",
         symbols[Group1]= [       BackSpace,       BackSpace,        NoSymbol,        NoSymbol, Terminate_Server ]
     };
-    key  <TAB> {         [             Tab,    ISO_Left_Tab ] };
+    key  <TAB> {         [             Tab,    Up ] };
     key <AD01> {
         type= "ALPHABETIC",
         symbols[Group1]= [               q,               Q ]
@@ -1156,7 +1156,7 @@ xkb_symbols "pc+us+inet(evdev)+terminate(ctrl_alt_bksp)" {
     };
     key <AD11> {         [     bracketleft,       braceleft ] };
     key <AD12> {         [    bracketright,      braceright ] };
-    key <RTRN> {         [          Return ] };
+    key <RTRN> {         [          Return, Down ] };
     key <LCTL> {         [       Control_L ] };
     key <AC01> {
         type= "ALPHABETIC",

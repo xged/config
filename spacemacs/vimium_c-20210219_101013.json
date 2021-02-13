@@ -1,0 +1,50 @@
+{
+	"name": "Vimium C",
+	"@time": "2/19/2021, 10:10:13 AM",
+	"time": 1613722213646,
+	"environment": {
+		"extension": "1.88.2",
+		"platform": "linux",
+		"chrome": 88
+	},
+	"autoReduceMotion": true,
+	"grabBackFocus": true,
+	"keyMappings": [
+		"map <enter> scrollPageDown",
+		"map k scrollPageUp",
+		"map i focusInput",
+		"map l nextTab",
+		"map h previousTab",
+		"map s goBack",
+		"map S goForward",
+		"map e goForward",
+		"map a LinkHints.activateModeToOpenInNewForegroundTab",
+		"map : Vomnibar.activateBookmarksInNewTab",
+		"map ; Vomnibar.activateHistory",
+		"map , Vomnibar.activateHistoryInNewTab",
+		"map < Vomnibar.activate",
+		"map c enterFindMode",
+		"map d removeTab",
+		"map u restoreTab",
+		"map o duplicateTab",
+		"map y copyCurrentUrl",
+		"map p openCopiedUrlInNewTab",
+		"map m createTab",
+		"map f LinkHints.activateMode",
+		""
+	],
+	"keyboard": [
+		150,
+		30
+	],
+	"linkHintCharacters": "fdksla:cmx,iroghe.zptvwq/byj\\\"[",
+	"omniBlockList": "$base64:c2VhcmNo",
+	"userDefinedCss": ".LH { color: white; background: black; font-size: 16px; }",
+	"vomnibarOptions": {
+		"maxMatches": 20,
+		"queryInterval": 500,
+		"sizes": "77,3,44",
+		"styles": "dark",
+		"actions": ""
+	}
+}

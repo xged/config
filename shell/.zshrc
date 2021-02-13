@@ -4,7 +4,6 @@ ZSH_THEME="robbyrussell"
 source $ZSH/oh-my-zsh.sh
 
 export SPACEMACSDIR=$HOME/src/config/spacemacs
-# export PYTHONPATH=$PYTHONPATH:$HOME/src/lang_char_freqs.py
 
 # File-system
 f()    {cd $@ && ls}

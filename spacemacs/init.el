@@ -51,23 +51,21 @@ This function should only modify configuration layer settings."
        shell-default-shell 'eshell
        shell-enable-smart-eshell t
        eshell-aliases-file "/home/xged/src/config/alias"
-       shell-pop-autocd-to-working-dir nil
        )
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
 
      ;; langs
-     python
+     python (python :variables flycheck-flake8rc "~/src/config/.flake8")
      typescript
-     haskell
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
      yaml
-     c-c++
 
      github
      colors
      html
+     debug
      )
 
    ;; List of additional packages that will be installed without being
@@ -251,7 +249,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "C-,"
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
@@ -635,7 +633,6 @@ before packages are loaded."
   (xged/kb-nmv "C-." 'evil-repeat)
   (xged/kb-v "x" 'evil-exchange)
   (xged/kb-nmv "y" (lambda () (interactive) (insert " ")))
-  ;; (xged/kb-n "y" 'evil-yank-line)
   (xged/kb-nm "<" 'evil-shift-left-line) (xged/kb-nm ">" 'evil-shift-right-line)
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-nmv "SPC i" 'evil-invert-char)  ;| upcase-dwim
@@ -667,19 +664,19 @@ before packages are loaded."
   (xged/kb-nm "sh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-nm "ss" (lambda () (interactive) (git-gutter+-stage-hunks) (git-gutter+-next-hunk 1)))
   (xged/kb-v "SPC s" (lambda () (interactive) (git-gutter+-stage-hunks) (evil-normal-state)))
-  (xged/kb-nm "sS" 'magit-stage-file)
+  (xged/kb-nm "sS" 'magit-stage)  ;file
   (xged/kb-nm "su" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-nm "sd" 'git-gutter+-revert-hunk)
-  (xged/kb-nm "sc" 'magit-commit-create)
+  (xged/kb-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
   (xged/kb-nm "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
   (xged/kb-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (xged/kb-nm "sq" 'magit-abort-dwim)
   (xged/kb-nm "s," 'magit-rebase-continue)
-  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
-  (xged/kb-nm "sz" 'magit-stash-index)
+  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend) (git-gutter+-next-hunk)))
+  (xged/kb-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
   (xged/kb-nm "sZ" 'magit-stash-worktree)
   (xged/kb-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
-  (xged/kb-nm "sP" 'magit-stash-pop)
+  (xged/kb-nm "sP" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all) ))
   (xged/kb-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
   (xged/kb-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (xged/kb-nm "st" 'spacemacs/time-machine-transient-state/body)
@@ -691,13 +688,18 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "K") 'evil-previous-line)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
   ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
   (evil-define-key 'normal python-mode-map (kbd ", SPC") 'spacemacs/python-shell-send-buffer-switch)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
-  (evil-define-key 'normal magit-log-select-mode-map (kbd "f") 'magit-log-select-pick)
-  (evil-define-key 'normal magit-log-select-mode-map (kbd "q") 'magit-log-select-quit)
+  (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
+  (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick)
+  (evil-define-key 'normal magit-log-select-mode-map (kbd "<") 'magit-log-select-quit)
+  (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish)
+  (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
+  (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
@@ -716,6 +718,7 @@ before packages are loaded."
   (setq-default auto-window-vscroll nil)  ;%
   (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
   (setq-default undo-tree-enable-undo-in-region t)
+  (setq-default magit-no-confirm t)
 
   ;; Settings: Modes
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
@@ -807,9 +810,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   (quote
-    (selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell))))
+   '(bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

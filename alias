@@ -14,7 +14,7 @@ alias pypd pip uninstall $*
 alias pyt  pytest -s --cov-report term-missing --cov --durations=10 $*
 alias pyc  mypy --ignore-missing-imports *.py $*
 # Machine
-alias mla  xbacklight -set 6
+alias mla  xbacklight -set 5
 alias mlb  xbacklight -set 8
 alias mlc  xbacklight -set 11
 alias mld  xbacklight -set 15
