@@ -75,7 +75,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(super-save)
+   dotspacemacs-additional-packages '(super-save key-chord)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -512,6 +512,7 @@ before packages are loaded."
   (require 'evil-escape)
   (require 'em-alias)
   (require 'company)
+  (require 'key-chord)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -580,7 +581,8 @@ before packages are loaded."
   (xged/kb-nmv "SPC RET" 'flycheck-next-error) (xged/kb-nmv "SPC k" 'flycheck-previous-error)
 
   ;; Key bindings: Manage (Project)
-  (xged/kb-nmv "<escape>" 'spacemacs/alternate-buffer) (advice-add 'spacemacs/alternate-buffer :before #'xged/save-buffer)
+  (bind-key* (kbd "<key-chord> df") 'evil-escape) (bind-key* (kbd "<key-chord> fd") 'evil-escape)
+  (xged/kb-nm "<escape>" 'spacemacs/alternate-buffer) (advice-add 'spacemacs/alternate-buffer :before #'xged/save-buffer)
   (xged/kb-nmv "b" 'ivy-switch-buffer)
   (xged/kb-nmv "q" 'next-buffer) (xged/kb-nmv "Q" 'previous-buffer)
   (xged/kb-nmv "SPC d" 'kill-this-buffer) (advice-add 'kill-this-buffer :before #'xged/save-buffer)
@@ -636,8 +638,12 @@ before packages are loaded."
   (xged/kb-nm "<" 'evil-shift-left-line) (xged/kb-nm ">" 'evil-shift-right-line)
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-nmv "SPC i" 'evil-invert-char)  ;| upcase-dwim
-  (xged/kb-i "C-f" (lambda () (interactive) (insert "()") (backward-char)))
-  (xged/kb-i "C-d" (lambda () (interactive) (insert "{}") (backward-char)))
+  (xged/kb-i "<key-chord> kf" (lambda () (interactive) (insert "()") (backward-char))) (xged/kb-i "<key-chord> fk" (lambda () (interactive) (insert "()") (backward-char)))
+  (xged/kb-n "<key-chord> kf" (lambda () (interactive) (insert "()"))) (xged/kb-n "<key-chord> fk" (lambda () (interactive) (insert "()")))
+  (xged/kb-i "<key-chord> kd" (lambda () (interactive) (insert "{}") (backward-char))) (xged/kb-i "<key-chord> dk" (lambda () (interactive) (insert "{}") (backward-char)))
+  (xged/kb-n "<key-chord> kd" (lambda () (interactive) (insert "{}"))) (xged/kb-n "<key-chord> dk" (lambda () (interactive) (insert "{}")))
+  (xged/kb-i "<key-chord> kl" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-i "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
+  (xged/kb-n "<key-chord> kl" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-n "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
   (xged/kb-nmv "v" 'xged/insert-line-below)
   (xged/kb-nmv "V" 'xged/insert-line-above)
   (xged/kb-nmv "SPC D" 'comment-kill)
@@ -683,8 +689,10 @@ before packages are loaded."
   (xged/kb-nm "sr" 'magit-rebase-interactive)
 
   ;; Key bindings: Mode-specific
-  (evil-define-key 'normal emacs-lisp-mode-map (kbd ", RET") 'dotspacemacs/sync-configuration-layers)
-  (evil-define-key 'normal emacs-lisp-mode-map (kbd ",i") 'spacemacs/ediff-dotfile-and-template)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd ",") 'lisp-state-eval-sexp-end-of-line)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,s") 'dotspacemacs/sync-configuration-layers) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> s,") 'dotspacemacs/sync-configuration-layers)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,t") 'spacemacs/ediff-dotfile-and-template) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> t,") 'spacemacs/ediff-dotfile-and-template)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,f") 'elisp-slime-nav-describe-elisp-thing-at-point) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> f,") 'elisp-slime-nav-describe-elisp-thing-at-point)
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
@@ -718,9 +726,6 @@ before packages are loaded."
   (setq-default auto-window-vscroll nil)  ;%
   (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
   (setq-default undo-tree-enable-undo-in-region t)
-  (setq-default magit-no-confirm t)
-
-  ;; Settings: Modes
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?/ ?b ?y ?j ?\" ?\[ 13))
   (setq-default avy-orders-alist '((avy-goto-word-1 . avy-order-closest) (avy-goto-word-0 . avy-order-closest)))
   (setq-default er/try-expand-list '(er/mark-symbol er/mark-symbol-with-prefix er/mark-next-accessor er/mark-method-call er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun er/mark-subword))
@@ -729,7 +734,11 @@ before packages are loaded."
   (setq-default term-char-mode-point-at-process-mark nil)
   (setq-default shell-default-shell 'eshell )
   (setq-default magit-commit-show-diff nil)
+  (setq-default magit-no-confirm t)
   (add-hook 'evil-normal-state-entry-hook 'company-abort)
+  (setq-default evil-escape-key-sequence nil)
+  (key-chord-mode 1)
+  (setq-default key-chord-two-keys-delay 0.05)
 
   ;; Save
   (super-save-mode +1)  ;/ ,r
