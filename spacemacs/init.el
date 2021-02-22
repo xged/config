@@ -38,7 +38,7 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ivy (ivy :variables ivy-initial-inputs-alist nil)
+     ivy (ivy :variables ivy-initial-inputs-alist '((ivy-switch-buffer . "^")))
      auto-completion
      ;; better-defaults
      emacs-lisp
@@ -49,7 +49,6 @@ This function should only modify configuration layer settings."
        shell-default-height 100
        shell-default-full-span nil
        shell-default-shell 'eshell
-       shell-enable-smart-eshell t
        eshell-aliases-file "/home/xged/src/config/alias"
        )
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
@@ -638,12 +637,8 @@ before packages are loaded."
   (xged/kb-nm "<" 'evil-shift-left-line) (xged/kb-nm ">" 'evil-shift-right-line)
   (xged/kb-v "<" 'evil-shift-left) (xged/kb-v ">" 'evil-shift-right)
   (xged/kb-nmv "SPC i" 'evil-invert-char)  ;| upcase-dwim
-  (xged/kb-i "<key-chord> kf" (lambda () (interactive) (insert "()") (backward-char))) (xged/kb-i "<key-chord> fk" (lambda () (interactive) (insert "()") (backward-char)))
-  (xged/kb-n "<key-chord> kf" (lambda () (interactive) (insert "()"))) (xged/kb-n "<key-chord> fk" (lambda () (interactive) (insert "()")))
-  (xged/kb-i "<key-chord> kd" (lambda () (interactive) (insert "{}") (backward-char))) (xged/kb-i "<key-chord> dk" (lambda () (interactive) (insert "{}") (backward-char)))
-  (xged/kb-n "<key-chord> kd" (lambda () (interactive) (insert "{}"))) (xged/kb-n "<key-chord> dk" (lambda () (interactive) (insert "{}")))
-  (xged/kb-i "<key-chord> kl" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-i "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
-  (xged/kb-n "<key-chord> kl" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-n "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
+  (xged/kb-i "<key-chord> kf" (lambda () (interactive) (insert "()") (backward-char))) (xged/kb-i "<key-chord> fk" (lambda () (interactive) (insert "()") (backward-char))) (xged/kb-n "<key-chord> kf" (lambda () (interactive) (insert "()"))) (xged/kb-n "<key-chord> fk" (lambda () (interactive) (insert "()")))
+  (xged/kb-i "<key-chord> kd" (lambda () (interactive) (insert "{}") (backward-char))) (xged/kb-i "<key-chord> dk" (lambda () (interactive) (insert "{}") (backward-char))) (xged/kb-n "<key-chord> kd" (lambda () (interactive) (insert "{}"))) (xged/kb-n "<key-chord> dk" (lambda () (interactive) (insert "{}")))
   (xged/kb-nmv "v" 'xged/insert-line-below)
   (xged/kb-nmv "V" 'xged/insert-line-above)
   (xged/kb-nmv "SPC D" 'comment-kill)
@@ -659,13 +654,13 @@ before packages are loaded."
   (xged/kb-nmv "/" 'spacemacs/toggle-truncate-lines)
   (xged/kb-nmv "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase") (spacemacs/restart-emacs-resume-layouts)))
   (xged/kb-nmv "t" 'xged/time)
+  (xged/kb-nmv "M-i" 'ispell-word)
 
   ;; Key bindings: Magic: Git
   (xged/kb-M "RET" 'evil-next-line)
   (xged/kb-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key magit-file-section-map (kbd "C-<return>") 'magit-section-forward)
   (xged/kb-M "SPC" 'magit-visit-thing)
-  (xged/kb-nm "sn" 'git-gutter+-next-hunk) (xged/kb-nm "sN" 'git-gutter+-previous-hunk)
-  (xged/kb-nm "s RET" 'magit-status)
+  (xged/kb-nm "s SPC" 'magit-status)
   (xged/kb-nm "sl" 'magit-log-current)
   (xged/kb-nm "sh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-nm "ss" (lambda () (interactive) (git-gutter+-stage-hunks) (git-gutter+-next-hunk 1)))
@@ -678,7 +673,7 @@ before packages are loaded."
   (xged/kb-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (xged/kb-nm "sq" 'magit-abort-dwim)
   (xged/kb-nm "s," 'magit-rebase-continue)
-  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend) (git-gutter+-next-hunk)))
+  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend) (git-gutter+-next-hunk 1)))
   (xged/kb-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
   (xged/kb-nm "sZ" 'magit-stash-worktree)
   (xged/kb-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
@@ -692,7 +687,8 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",") 'lisp-state-eval-sexp-end-of-line)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,s") 'dotspacemacs/sync-configuration-layers) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> s,") 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,t") 'spacemacs/ediff-dotfile-and-template) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> t,") 'spacemacs/ediff-dotfile-and-template)
-  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,f") 'elisp-slime-nav-describe-elisp-thing-at-point) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> f,") 'elisp-slime-nav-describe-elisp-thing-at-point)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,d") 'elisp-slime-nav-describe-elisp-thing-at-point) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> d,") 'elisp-slime-nav-describe-elisp-thing-at-point)
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,l") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-i "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> l,") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-n "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
@@ -700,7 +696,8 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
   ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
-  (evil-define-key 'normal python-mode-map (kbd ", SPC") 'spacemacs/python-shell-send-buffer-switch)
+  (evil-define-key 'normal python-mode-map (kbd ",") 'spacemacs/python-execute-file)
+  (advice-add 'inferior-python-mode :after #'evil-escape)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
   (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick)
@@ -708,6 +705,7 @@ before packages are loaded."
   (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish)
   (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
   (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
+  (define-key evil-iedit-state-map (kbd "s") 'evil-iedit-state/substitute)
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
@@ -741,7 +739,7 @@ before packages are loaded."
   (setq-default key-chord-two-keys-delay 0.05)
 
   ;; Save
-  (super-save-mode +1)  ;/ ,r
+  (super-save-mode +1)  ;/
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
