@@ -4,7 +4,8 @@ from copy import deepcopy as cp
 from datetime import datetime, timedelta
 
 fp = '/home/xged/src/data/.timetracker.pickle'
-datainit = {"tracking_start": None, "day_start": None, "day_end": 23, "work_hours": {}, "timestamps": []}
+datainit: dict = {"tracking_start": None, "day_start": None, "day_end": 23, "work_hours": {}, "timestamps": []}
+BUFFERHOURS = 1
 
 def main():
     currenttime = datetime.now()
@@ -12,10 +13,10 @@ def main():
     with open(fp, "rb+") as f:
         data = pickle.load(f)
         if data["tracking_start"] is None:
-            print("Started Tracking..")
             data["tracking_start"] = currenttime
             if data["work_hours"].setdefault(year, {}).setdefault(week, [0, 0, 0, 0, 0, 0, 0])[day-1] == 0:
-                data["day_start"] = cp(currenttime) - timedelta(hours=0.5)
+                data["day_start"] = cp(currenttime) - timedelta(hours=BUFFERHOURS)
+            print("Started Tracking..")
         else:
             currentwork = (currenttime - data["tracking_start"]).total_seconds()/3600
             data["work_hours"][year][week][day-1] += currentwork
@@ -40,27 +41,32 @@ def read():
         data = pickle.load(f)
     return data
 
+def pread():
+    data = read()
+    del data["timestamps"]
+    return data
+
 def write(data):
     with open(fp, "wb") as f:
         pickle.dump(data, f)
 
-def _merge(source, destination):
+def merge_(source, destination):
     for key, value in source.items():
         if isinstance(value, dict):
             node = destination.setdefault(key, {})
-            _merge(value, node)
+            merge_(value, node)
         else:
             destination[key] = value
     return destination
 
-def update_hours(minutes, day=None, week=None, year=None):
+def add_minutes(minutes, day=None, week=None, year=None):
     currentyear, currentweek, currentday = datetime.isocalendar(datetime.now())
     if day is None: day = currentday
-    if week is None: day = currentweek
-    if year is None: day = currentyear
+    if week is None: week = currentweek
+    if year is None: year = currentyear
     data = read()
-    data["work_hours"][year][week][day] += minutes/60
-    write()
+    data["work_hours"][year][week][day-1] += minutes/60
+    write(data)
     print(data["work_hours"])
 
 def week_avgs():
@@ -74,4 +80,5 @@ if not os.path.exists(fp):
     write(datainit)
     print(datainit)
 
-main()
+if __name__ == "__main__":
+    main()
