@@ -80,7 +80,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(highlight-parentheses rainbow-delimiters hl-line)  ;/ hl-line
+   dotspacemacs-excluded-packages '(highlight-parentheses rainbow-delimiters hl-line dired)  ;/ hl-line
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -273,7 +273,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -621,13 +621,13 @@ before packages are loaded."
   (xged/kb-nm "i" 'evil-insert)  ; default
   (xged/kb-v "i" 'evil-change)
   (xged/kb-i "RET" 'evil-escape)
-  (xged/kb-i "TAB" 'newline-and-indent)
+  (xged/kb-n "<end>" 'newline-and-indent)
   (xged/kb-v "d" 'evil-delete)
   (xged/kb-nmv ":" 'xged/paste)
   (xged/kb-nm "SPC :" 'counsel-yank-pop)
   ;; (xged/kb-v "SPC :" 'counsel-yank-pop)
   (xged/kb-nmv "u" 'evil-undo) (xged/kb-nmv "U" 'evil-redo)
-  (xged/kb-nmv "\"" 'spacemacs/comment-or-uncomment-lines)
+  (xged/kb-nmv "\'" 'spacemacs/comment-or-uncomment-lines)
   (xged/kb-nmv "p" 'sp-splice-sexp)
   (xged/kb-v "p" 'evil-surround-region)
   (xged/kb-nmv "." 'spacemacs/duplicate-line-or-region)
@@ -688,7 +688,7 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,s") 'dotspacemacs/sync-configuration-layers) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> s,") 'dotspacemacs/sync-configuration-layers)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,t") 'spacemacs/ediff-dotfile-and-template) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> t,") 'spacemacs/ediff-dotfile-and-template)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,d") 'elisp-slime-nav-describe-elisp-thing-at-point) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> d,") 'elisp-slime-nav-describe-elisp-thing-at-point)
-  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,l") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-i "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> l,") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (xged/kb-n "<key-chord> lk" (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,l") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> l,") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
@@ -696,8 +696,10 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
   ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
-  (evil-define-key 'normal python-mode-map (kbd ",") 'spacemacs/python-execute-file)
-  (advice-add 'inferior-python-mode :after #'evil-escape)
+  (evil-define-key 'normal python-mode-map (kbd ",") (lambda () (interactive) (save-buffer) (spacemacs/python-execute-file nil)))
+    (advice-add 'inferior-python-mode :after #'evil-escape)
+    (advice-add 'inferior-python-mode :after #'spacemacs/toggle-truncate-lines-off)
+  (evil-define-key 'normal inferior-python-mode-map (kbd "RET") 'evil-next-line)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
   (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick)
@@ -730,15 +732,17 @@ before packages are loaded."
   (setq-default expand-region-fast-keys-enabled nil)
   (setq-default evil-surround-pairs-alist (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
-  (setq-default shell-default-shell 'eshell )
+  (setq-default shell-default-shell 'eshell)
   (setq-default magit-commit-show-diff nil)
   (setq-default magit-no-confirm t)
   (add-hook 'evil-normal-state-entry-hook 'company-abort)
   (setq-default evil-escape-key-sequence nil)
   (key-chord-mode 1)
   (setq-default key-chord-two-keys-delay 0.05)
-
-  ;; Save
+  (setq-default flycheck-idle-change-delay 1)
+  (add-hook 'evil-insert-state-entry-hook (lambda () (spacemacs/toggle-syntax-checking-off)))
+  (add-hook 'evil-insert-state-exit-hook  (lambda () (spacemacs/toggle-syntax-checking-on)))
+  (setq-default flycheck--automatically-disabled-checkers '(emacs-lisp-checkdoc python-mypy))
   (super-save-mode +1)  ;/
 
   ;; Settings: Theme
@@ -752,15 +756,22 @@ before packages are loaded."
   (defvar xged/color-keyword    "#f877f8")
   (defvar xged/color-name       "#ffc285")
   (defvar xged/color-type       "#70b8ff")
-  (defvar xged/color-comment    "grey60")
+  (defvar xged/color-comment    "grey65")
   (defvar xged/color-docs       "#00cc99")
-  (mapc (lambda (mode) (font-lock-add-keywords mode
-   '(("\\([][(){}]\\)" 0 'font-lock-type-face)
-     ("\\([=:;]\\)" 0 'font-lock-comment-face)
-     ("\\([!?.,\\+-<>]\\)" 0 'font-lock-type-face))))
+  ;; (mapc (lambda (mode) (font-lock-add-keywords mode '(
+  ;;    ("\\([!?.,\\+-<>%]\\)" 0 'font-lock-type-face)
+  ;;    ("\\([=:;]\\)" 0 'font-lock-keyword-face)
+  ;;    ;; ("\\([]\\)" 0 'font-lock-variable-name-face)
+  ;;    )))
+
+  (mapc (lambda (mode) (font-lock-add-keywords mode '(
+     ("\\([][(){}=,]\\)" 0 'font-lock-comment-face)
+     ("\\([:;]\\)" 0 'font-lock-keyword-face)
+     ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face)
+     )))
    '(text-mode python-mode))
-  (mapc (lambda (mode) (font-lock-add-keywords mode
-   '(("\\([][(){}]\\)" 0 'font-lock-comment-face)
+  (mapc (lambda (mode) (font-lock-add-keywords mode '(
+     ("\\([][(){}]\\)" 0 'font-lock-comment-face)
      ("\\(['?.]\\)" 0 'font-lock-type-face))))
    '(emacs-lisp-mode))
   (set-face-attribute 'default                      nil :foreground xged/color-default :background xged/color-background)
@@ -803,6 +814,7 @@ before packages are loaded."
   (setq display-buffer-base-action '(display-buffer-same-window))
   (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
    '(always-true display-buffer-same-window) 'append))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -819,7 +831,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
-   '(bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
+   '(discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

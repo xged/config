@@ -13,6 +13,7 @@ alias pyp  pip install -U $*
 alias pypd pip uninstall $*
 alias pyt  pytest -s --cov-report term-missing --cov --durations=10 $*
 alias pyc  mypy --ignore-missing-imports *.py $*
+alias pyprofile py-spy top -- python $*
 # Machine
 alias mla  xbacklight -set 5
 alias mlb  xbacklight -set 8
@@ -33,11 +34,10 @@ alias sd   kill $(pgrep $*); kill $(pgrep $*)
 alias n  tsc; node $*
 alias np sudo npm install $1 @types/"$*"
 # Connection
-alias cph scrcpy --turn-screen-off --fullscreen --bit-rate 3M --max-fps 30 & disown; gnirehtet run
+alias candroid scrcpy --turn-screen-off --fullscreen --bit-rate 3M --max-fps 30 &; gnirehtet run
 # Git
 alias gl git log --pickaxe-regex -p --color-words -G $*
 alias gL git log --pickaxe-regex -p --color-words -S $*
-
 alias git-stats-commits-d git log --no-merges --date=short --format='%ad' | sort | uniq -c
 alias git-stats-commits-w git log --no-merges --date=short --format='%ad' | sort | awk 'system("date -d "$1" +%V")' | uniq -c
 alias x-kb xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'; xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'; xkbcomp $HOME/src/config/keyboard.xkb $DISPLAY -w0; xset r rate 150 30
