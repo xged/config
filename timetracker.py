@@ -3,9 +3,10 @@ import pickle
 from copy import deepcopy as cp
 from datetime import datetime, timedelta
 
-fp = '/home/xged/src/data/.timetracker.pickle'
-datainit: dict = {"tracking_start": None, "day_start": None, "day_end": 23, "work_hours": {}, "timestamps": []}
-BUFFERHOURS = 1
+fp = '/home/xged/src/config/.timetracker.pickle'
+datainit: dict = {"tracking_start": None, "day_start": None, "work_hours": {}, "timestamps": []}
+DAYEND = 22
+PREDICTIONBUFFER = 1
 
 def main():
     currenttime = datetime.now()
@@ -15,20 +16,20 @@ def main():
         if data["tracking_start"] is None:
             data["tracking_start"] = currenttime
             if data["work_hours"].setdefault(year, {}).setdefault(week, [0, 0, 0, 0, 0, 0, 0])[day-1] == 0:
-                data["day_start"] = cp(currenttime) - timedelta(hours=BUFFERHOURS)
+                data["day_start"] = cp(currenttime)
             print("Started Tracking..")
         else:
             currentwork = (currenttime - data["tracking_start"]).total_seconds()/3600
             data["work_hours"][year][week][day-1] += currentwork
-            hourspassed = (currenttime - data["day_start"]).total_seconds()/3600
-            daylength = data["day_end"] - data["day_start"].hour - data["day_start"].minute/60
-            dayprediction = daylength*data["work_hours"][year][week][day-1]/hourspassed
+            hourspassed = (currenttime - data["day_start"]).total_seconds()/3600 + PREDICTIONBUFFER
+            daylength = DAYEND - data["day_start"].hour - data["day_start"].minute/60 + PREDICTIONBUFFER
+            dayprediction = daylength * (data["work_hours"][year][week][day-1]) / hourspassed
             if day == 1:
                 weekavg = (sum(data["work_hours"][year][week-1]))/7
             else:
                 weekavg = (sum(data["work_hours"][year][week][:day-1]))/(day-1)
             weekprediction = (sum(data["work_hours"][year][week][:day-1])+dayprediction)/day
-            data["timestamps"].append((data["tracking_start"], currenttime))
+            if currentwork >= 0.1: data["timestamps"].append((data["tracking_start"], currenttime))
             data["tracking_start"] = None
             print(day, f"{currenttime.hour}:{currenttime.minute} \n")
             print(f'{currentwork:.2f}   {data["work_hours"][year][week][day-1]:.2f}   {dayprediction:.2f}\n')
