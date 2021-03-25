@@ -512,6 +512,7 @@ before packages are loaded."
   (require 'em-alias)
   (require 'company)
   (require 'key-chord)
+  (require 'evil-iedit-state)
 
   ;; Functions
   (defun xged/kb-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -547,7 +548,7 @@ before packages are loaded."
       (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
   (push "*.\*" spacemacs-useless-buffers-regexp)  ;/
   (push "Notes.yaml" spacemacs-useless-buffers-regexp)  ;/
-  (defun xged/revert-buffer () (interactive) (revert-buffer :ignore-auto :noconfirm))
+  (defun xged/revert-buffer () (interactive) (progn (xged/save-buffer) (revert-buffer :ignore-auto :noconfirm)))
   (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (if git-gutter+-diffinfos (git-gutter+-next-hunk 1)(goto-last-change 1))))
   (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (if git-gutter+-diffinfos (git-gutter+-next-hunk -1)(goto-last-change -1))))
   (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/config/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
@@ -609,13 +610,12 @@ before packages are loaded."
   (xged/kb-nmv "mc" 'calculator)
   (xged/kb-nmv "mf" 'describe-function)
   (xged/kb-nmv "mv" 'describe-variable)
-  (xged/kb-nmv "mb" 'describe-bindings) (xged/kb-i "C-b" 'describe-bindings)
+  (xged/kb-nmv "mb" 'describe-bindings) (xged/kb-i "M-b" 'describe-bindings)
   (xged/kb-nmv "mL" 'ivy-spacemacs-help-layers)  ; layers
   (xged/kb-nmv "mp" 'ivy-spacemacs-help)  ; packages
   (xged/kb-nmv "md" 'spacemacs/jump-to-definition)
-  (bind-key* "M-k" 'describe-key)
-  (bind-key* "M-b" 'describe-bindings)
-  (bind-key* "M-m" 'xged/local-map-name)
+  (bind-key* "M-k" 'describe-key) (bind-key* "C-M-k" 'describe-key)
+  (bind-key* "M-m" 'xged/local-map-name) (bind-key* "C-M-m" 'xged/local-map-name)
 
   ;; Key bindings: Edit
   (xged/kb-nm "i" 'evil-insert)  ; default
@@ -668,7 +668,7 @@ before packages are loaded."
   (xged/kb-nm "sS" 'magit-stage)  ;file
   (xged/kb-nm "su" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-nm "sd" 'git-gutter+-revert-hunk)
-  (xged/kb-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
+  (xged/kb-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (shell-command-to-string "git rev-list --all --count")))))
   (xged/kb-nm "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
   (xged/kb-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (xged/kb-nm "sq" 'magit-abort-dwim)
@@ -695,17 +695,17 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "K") 'evil-previous-line)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
-  ;; (evil-define-key 'insert python-mode-map (kbd "\"") (kbd "\'")) (evil-define-key 'insert python-mode-map (kbd "\'") (kbd "\""))
   (evil-define-key 'normal python-mode-map (kbd ",") (lambda () (interactive) (save-buffer) (spacemacs/python-execute-file nil)))
     (advice-add 'inferior-python-mode :after #'evil-escape)
     (advice-add 'inferior-python-mode :after #'spacemacs/toggle-truncate-lines-off)
   (evil-define-key 'normal inferior-python-mode-map (kbd "RET") 'evil-next-line)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
-  (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick)
-  (evil-define-key 'normal magit-log-select-mode-map (kbd "<") 'magit-log-select-quit)
-  (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish)
-  (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
+  (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick) (evil-define-key 'normal magit-log-select-mode-map (kbd "<") 'magit-log-select-quit)
+  (evil-define-key 'normal git-rebase-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal git-rebase-mode-map (kbd "<") 'with-editor-cancel)
+  (evil-define-key 'normal git-rebase-mode-map (kbd "<return>") 'evil-next-line)
+  (evil-define-key 'normal git-rebase-mode-map (kbd "SPC") 'git-rebase-show-commit)
+  (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
   (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
   (define-key evil-iedit-state-map (kbd "s") 'evil-iedit-state/substitute)
 
@@ -735,14 +735,14 @@ before packages are loaded."
   (setq-default shell-default-shell 'eshell)
   (setq-default magit-commit-show-diff nil)
   (setq-default magit-no-confirm t)
+  (setq-default magit-refs-show-commit-count t)
   (add-hook 'evil-normal-state-entry-hook 'company-abort)
   (setq-default evil-escape-key-sequence nil)
   (key-chord-mode 1)
   (setq-default key-chord-two-keys-delay 0.05)
   (setq-default flycheck-idle-change-delay 1)
-  (add-hook 'evil-insert-state-entry-hook (lambda () (spacemacs/toggle-syntax-checking-off)))
-  (add-hook 'evil-insert-state-exit-hook  (lambda () (spacemacs/toggle-syntax-checking-on)))
-  (setq-default flycheck--automatically-disabled-checkers '(emacs-lisp-checkdoc python-mypy))
+  (setq-default flycheck--automatically-disabled-checkers '(emacs-lisp python-mypy))
+  (setq-default flycheck-indication-mode nil)
   (super-save-mode +1)  ;/
 
   ;; Settings: Theme
