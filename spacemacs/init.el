@@ -553,6 +553,17 @@ before packages are loaded."
   (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (if git-gutter+-diffinfos (git-gutter+-next-hunk -1)(goto-last-change -1))))
   (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/config/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
     (advice-add 'xged/time :before #'xged/save-buffer)
+  (defun xged/python-execute-main (arg)  ; spacemacs/python-execute-file
+    (interactive "P")
+    (let ((universal-argument t)
+          (compile-command (format "%s %s"
+                                  (spacemacs/pyenv-executable-find python-shell-interpreter)
+                                  (shell-quote-argument (file-name-nondirectory "main.py")))))
+      (if arg
+          (call-interactively 'compile)
+        (compile compile-command t)
+        (with-current-buffer (get-buffer "*compilation*")
+          (inferior-python-mode)))))
 
   ;; Key bindings
   (xged/kb-nmv "SPC" nil)
@@ -697,7 +708,7 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "K") 'evil-previous-line)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
-  (evil-define-key 'normal python-mode-map (kbd ",") (lambda () (interactive) (save-buffer) (spacemacs/python-execute-file nil)))
+  (evil-define-key 'normal python-mode-map (kbd ",") (lambda () (interactive) (save-buffer) (condition-case nil (xged/python-execute-main nil)(spacemacs/python-execute-file nil))))
     (advice-add 'inferior-python-mode :after #'evil-escape)
     (advice-add 'inferior-python-mode :after #'spacemacs/toggle-truncate-lines-off)
   (evil-define-key 'normal inferior-python-mode-map (kbd "RET") 'evil-next-line)
