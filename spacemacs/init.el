@@ -568,6 +568,8 @@ before packages are loaded."
   (xged/kb-nmv "SPC x" 'mark-paragraph)
   (xged/kb-nmv "X" 'evil-visual-block)  ;< C-x
   (xged/kb-nmv "w" 'er/mark-outside-pairs)
+  (xged/kb-nmv "SPC l" (lambda () (interactive) (set-mark (line-end-position)) (activate-mark)))
+  (xged/kb-nmv "SPC h" (lambda () (interactive) (set-mark (save-excursion (back-to-indentation) (point))) (activate-mark)(exchange-point-and-mark)))
 
   ;; Key bindings: Navigate
   (xged/kb-nmv "RET" 'evil-next-line)
@@ -673,7 +675,7 @@ before packages are loaded."
   (xged/kb-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (xged/kb-nm "sq" 'magit-abort-dwim)
   (xged/kb-nm "s," 'magit-rebase-continue)
-  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend) (git-gutter+-next-hunk 1)))
+  (xged/kb-nm "se" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-extend)))
   (xged/kb-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
   (xged/kb-nm "sZ" 'magit-stash-worktree)
   (xged/kb-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
@@ -744,6 +746,7 @@ before packages are loaded."
   (setq-default flycheck--automatically-disabled-checkers '(emacs-lisp python-mypy))
   (setq-default flycheck-indication-mode nil)
   (super-save-mode +1)  ;/
+  (setq-default python-sort-imports-on-save t)
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
