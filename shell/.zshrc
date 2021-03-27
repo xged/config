@@ -54,8 +54,14 @@ x-du() {du -m --max-depth=1 $@ | sort -n -r | head -n 30}
 x-perm-dir() {sudo chown xged $@ -R}
 x-kb-off() {sudo modprobe -r atkbd}
 x-lightscolor() {redshift -x; redshift -O 3500}
+x-perf(){
+    sudo cpupower frequency-set -g performance
+    sudo systemctl enable fstrim.timer
+    sudo systemctl start fstrim.timer
+}
 
 alias x="x-kb; mla; x-lightscolor; xmodmap -e \"pointer = 1 3 2\""
+alias xsu='x; x-perf; x-kb-off'
 
 # Archive
 pypu() {pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U}
