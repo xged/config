@@ -758,6 +758,7 @@ before packages are loaded."
   (setq-default flycheck-indication-mode nil)
   (super-save-mode +1)  ;/
   (setq-default python-sort-imports-on-save t)
+  (which-key-mode 0)
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
