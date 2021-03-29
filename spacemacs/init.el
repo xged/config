@@ -726,6 +726,7 @@ before packages are loaded."
   (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
   (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
   (define-key evil-iedit-state-map (kbd "s") 'evil-iedit-state/substitute)
+  (define-key evil-iedit-state-map (kbd ":") 'evil-iedit-state/paste-replace)
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
