@@ -664,7 +664,7 @@ before packages are loaded."
   (xged/kb-nmv "SPC r" 'spacemacs/rename-current-buffer-file)
   (xged/kb-nmv "C-r" 'xged/revert-buffer)
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
-  (xged/kb-nmv "/" 'spacemacs/toggle-truncate-lines)
+  (xged/kb-nmv "/" 'spacemacs/toggle-truncate-lines) (xged/kb-M "/" 'spacemacs/toggle-truncate-lines)
   (xged/kb-nmv "M-q" (lambda () (interactive) (configuration-layer/update-packages) (shell-command "git -C ~/.emacs.d pull --rebase") (spacemacs/restart-emacs-resume-layouts)))
   (xged/kb-nmv "t" 'xged/time)
   (xged/kb-nmv "M-i" 'ispell-word)
