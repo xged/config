@@ -63,7 +63,6 @@ def addMinutes(minutes, day=None, week=None, year=None):
     data = read()
     data["work_hours"][year][week][day-1] += minutes/60
     write(data)
-    print(data["work_hours"])
 
 def weekAvgs():
     with open(fp, "rb") as f:
