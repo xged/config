@@ -41,7 +41,7 @@ def read():
 
 def pread():
     data = read()
-    del data["timestamps"]
+    data['timestamps'] = data['timestamps'][-10:]
     return data
 
 def write(data):
