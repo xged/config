@@ -727,6 +727,8 @@ before packages are loaded."
   (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
   (define-key evil-iedit-state-map (kbd "s") 'evil-iedit-state/substitute)
   (define-key evil-iedit-state-map (kbd ":") 'evil-iedit-state/paste-replace)
+  (evil-define-key 'insert python-mode-map (kbd "<key-chord> ,f") (lambda () (interactive) (insert " = "))) (evil-define-key 'insert python-mode-map (kbd "<key-chord> f,") (lambda () (interactive) (insert " = ")))
+  (evil-define-key 'normal python-mode-map (kbd "<key-chord> ,f") (lambda () (interactive) (insert " = "))) (evil-define-key 'normal python-mode-map (kbd "<key-chord> f,") (lambda () (interactive) (insert " = ")))
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
