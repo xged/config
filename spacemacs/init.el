@@ -589,8 +589,8 @@ before packages are loaded."
   (xged/kb-nmv "c" (lambda () (interactive) (swiper) (setq this-command 'evil-ex-search-next)))
   (xged/kb-nmv "SPC c" (lambda () (interactive) (swiper-all) (setq this-command 'evil-ex-search-next)))
   (xged/kb-nm "n" 'xged/next) (xged/kb-nm "N" 'xged/previous)
-  (xged/kb-nmv "SPC n" 'evil-ex-search-next) (xged/kb-nmv "SPC N" 'evil-ex-search-previous)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward) (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
+  (xged/kb-nmv "SPC n" 'evil-ex-search-next) (xged/kb-nmv "SPC N" 'evil-ex-search-previous)
   (xged/kb-nmv "SPC RET" 'flycheck-next-error) (xged/kb-nmv "SPC k" 'flycheck-previous-error)
 
   ;; Key bindings: Manage (Project)
