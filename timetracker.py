@@ -4,7 +4,7 @@ from copy import deepcopy as cp
 from datetime import datetime
 
 fp = '/home/xged/src/config/.timetracker.pickle'
-datainit: dict = {"tracking_start": None, "day_start": None, "work_hours": {}, "timestamps": []}
+datainit: dict = {"tracking_start":None, "day_start":None, "work_hours":{}, "timestamps":[]}
 DAY_END = 23
 PREDICTION_BUFFER = 1
 
@@ -16,15 +16,15 @@ def main():
         if data["tracking_start"] is None:
             data["tracking_start"] = currentTime
             print("Started Tracking..")
-        if data["work_hours"].setdefault(year, {}).setdefault(week, [0, 0, 0, 0, 0, 0, 0])[day-1] == 0:
+        if data["work_hours"].setdefault(year, {}).setdefault(week, [0, 0, 0, 0, 0, 0, 0])[day-1]==0:
             data["day_start"] = cp(currentTime)
             print('Day start:', data['day_start'])
         else:
-            currentWork = (currentTime - data["tracking_start"]).total_seconds()/3600
+            currentWork = (currentTime-data["tracking_start"]).total_seconds()/3600
             data["work_hours"][year][week][day-1] += currentWork
-            hoursPassed = (currentTime - data["day_start"]).total_seconds()/3600 + PREDICTION_BUFFER
-            dayLength = DAY_END - data["day_start"].hour - data["day_start"].minute/60 + PREDICTION_BUFFER
-            dayPrediction = dayLength * (data["work_hours"][year][week][day-1]) / hoursPassed
+            hoursPassed = (currentTime-data["day_start"]).total_seconds()/3600+PREDICTION_BUFFER
+            dayLength = DAY_END-data["day_start"].hour-data["day_start"].minute/60+PREDICTION_BUFFER
+            dayPrediction = dayLength * (data["work_hours"][year][week][day-1])/hoursPassed
             if day == 1: weekAvg = (sum(data["work_hours"][year][week-1]))/7
             else: weekAvg = (sum(data["work_hours"][year][week][:day-1]))/(day-1)
             weekprediction = (sum(data["work_hours"][year][week][:day-1])+dayPrediction)/day
