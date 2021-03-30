@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 
 fp = '/home/xged/src/config/.timetracker.pickle'
 datainit: dict = {"tracking_start": None, "day_start": None, "work_hours": {}, "timestamps": []}
-DAYEND = 22
-PREDICTIONBUFFER = 1
+DAY_END = 23
+PREDICTION_BUFFER = 1
 
 def main():
     currentTime = datetime.now()
@@ -21,8 +21,8 @@ def main():
         else:
             currentWork = (currentTime - data["tracking_start"]).total_seconds()/3600
             data["work_hours"][year][week][day-1] += currentWork
-            hoursPassed = (currentTime - data["day_start"]).total_seconds()/3600 + PREDICTIONBUFFER
-            dayLength = DAYEND - data["day_start"].hour - data["day_start"].minute/60 + PREDICTIONBUFFER
+            hoursPassed = (currentTime - data["day_start"]).total_seconds()/3600 + PREDICTION_BUFFER
+            dayLength = DAY_END - data["day_start"].hour - data["day_start"].minute/60 + PREDICTION_BUFFER
             dayPrediction = dayLength * (data["work_hours"][year][week][day-1]) / hoursPassed
             if day == 1: weekAvg = (sum(data["work_hours"][year][week-1]))/7
             else: weekAvg = (sum(data["work_hours"][year][week][:day-1]))/(day-1)
