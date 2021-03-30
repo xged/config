@@ -729,6 +729,7 @@ before packages are loaded."
   (define-key evil-iedit-state-map (kbd ":") 'evil-iedit-state/paste-replace)
   (evil-define-key 'insert python-mode-map (kbd "<key-chord> ,f") (lambda () (interactive) (insert " = "))) (evil-define-key 'insert python-mode-map (kbd "<key-chord> f,") (lambda () (interactive) (insert " = ")))
   (evil-define-key 'normal python-mode-map (kbd "<key-chord> ,f") (lambda () (interactive) (insert " = "))) (evil-define-key 'normal python-mode-map (kbd "<key-chord> f,") (lambda () (interactive) (insert " = ")))
+  (evil-define-key 'insert python-mode-map (kbd ",") (lambda () (interactive) (insert ", ")))
 
   ;; Settings
   (setq-default evil-move-cursor-back nil)
