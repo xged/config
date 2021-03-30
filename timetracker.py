@@ -1,7 +1,7 @@
 import os
 import pickle
 from copy import deepcopy as cp
-from datetime import datetime, timedelta
+from datetime import datetime
 
 fp = '/home/xged/src/config/.timetracker.pickle'
 datainit: dict = {"tracking_start": None, "day_start": None, "work_hours": {}, "timestamps": []}
