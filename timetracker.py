@@ -72,6 +72,6 @@ def weekAvgs():
 
 if not os.path.exists(fp):
     write(datainit)
-    print(datainit)
+    print('Created', fp, ':', datainit)
 
 if __name__ == "__main__": main()
