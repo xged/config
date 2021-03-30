@@ -18,6 +18,7 @@ def main():
             print("Started Tracking..")
         if data["work_hours"].setdefault(year, {}).setdefault(week, [0, 0, 0, 0, 0, 0, 0])[day-1]==0:
             data["day_start"] = cp(currentTime)
+            data['timestamps'] = data['timestamps'][-20:]  #/
             print('Day start:', data['day_start'])
         else:
             currentWork = (currentTime-data["tracking_start"]).total_seconds()/3600
@@ -28,7 +29,7 @@ def main():
             if day == 1: weekAvg = (sum(data["work_hours"][year][week-1]))/7
             else: weekAvg = (sum(data["work_hours"][year][week][:day-1]))/(day-1)
             weekprediction = (sum(data["work_hours"][year][week][:day-1])+dayPrediction)/day
-            if currentWork >= 0.1: data["timestamps"].append((data["tracking_start"], currentTime))
+            data["timestamps"].append((data["tracking_start"], currentTime))
             data["tracking_start"] = None
             print(day, f"{currentTime.hour}:{currentTime.minute} \n")
             print(f'{currentWork:.2f}   {data["work_hours"][year][week][day-1]:.2f}   {dayPrediction:.2f}\n')
@@ -38,11 +39,6 @@ def main():
 
 def read():
     with open(fp, "rb") as f: data = pickle.load(f)
-    return data
-
-def pread():
-    data = read()
-    data['timestamps'] = data['timestamps'][-10:]
     return data
 
 def write(data):
