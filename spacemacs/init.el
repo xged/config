@@ -609,7 +609,7 @@ before packages are loaded."
   (xged/kb-nm "SPC s" 'save-buffer)
 
   (xged/kb-nmv "mg" 'evil-goto-first-line)
-  (xged/kb-nmv "mG" 'evil-goto-last-line)
+  (xged/kb-nmv "m <end>" 'evil-goto-line)
   (xged/kb-nmv "mk" 'evil-jump-backward) (xged/kb-nmv "m RET" 'evil-jump-forward)
   (xged/kb-nmv "m." 'goto-last-change)
   (xged/kb-nmv "mh" 'back-to-indentation) (xged/kb-nmv "ml" 'end-of-line) (xged/kb-v "ml" 'evil-last-non-blank)
