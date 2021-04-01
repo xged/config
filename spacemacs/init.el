@@ -723,6 +723,8 @@ before packages are loaded."
   (evil-define-key 'normal git-rebase-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal git-rebase-mode-map (kbd "<") 'with-editor-cancel)
   (evil-define-key 'normal git-rebase-mode-map (kbd "<return>") 'evil-next-line)
   (evil-define-key 'normal git-rebase-mode-map (kbd "SPC") 'git-rebase-show-commit)
+  (evil-define-key 'normal git-rebase-mode-map (kbd "C-<return>") 'git-rebase-move-line-down)
+  (evil-define-key 'normal git-rebase-mode-map (kbd "C-k") 'git-rebase-move-line-up)
   (evil-define-key 'normal text-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal text-mode-map (kbd "<") 'with-editor-cancel)
   (define-key magit-hunk-section-map (kbd "SPC") 'magit-diff-visit-file)
   (define-key evil-iedit-state-map (kbd "s") 'evil-iedit-state/substitute)
