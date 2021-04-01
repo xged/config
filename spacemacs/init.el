@@ -551,7 +551,7 @@ before packages are loaded."
   (defun xged/revert-buffer () (interactive) (progn (xged/save-buffer) (revert-buffer :ignore-auto :noconfirm)))
   (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (git-gutter+-next-hunk 1)))
   (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (git-gutter+-next-hunk -1)))
-  (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/config/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
+  (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/python-scripts/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
     (advice-add 'xged/time :before #'xged/save-buffer)
   (defun xged/python-execute-main (arg)  ; spacemacs/python-execute-file
     (interactive "P")
