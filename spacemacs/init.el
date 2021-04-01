@@ -686,6 +686,8 @@ before packages are loaded."
   (xged/kb-nm "sx" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (xged/kb-nm "s," (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (xged/kb-nm "s." (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "STYLE FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
+  (xged/kb-nm "<key-chord> ,c" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "KEYBIND"(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
+  (xged/kb-nm "<key-chord> c," (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "KEYBIND"(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (xged/kb-nm "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
   (xged/kb-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (xged/kb-nm "sq" 'magit-abort-dwim)
