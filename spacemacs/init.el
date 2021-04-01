@@ -697,7 +697,7 @@ before packages are loaded."
   (xged/kb-nm "sh" 'git-gutter+-show-hunk-inline-at-point)
   (xged/kb-nm "ss" (lambda () (interactive) (git-gutter+-stage-hunks) (git-gutter+-next-hunk 1))) (advice-add 'git-gutter+-stage-hunks :before #'save-buffer)
   (xged/kb-v "SPC s" (lambda () (interactive) (git-gutter+-stage-hunks) (evil-normal-state)))
-  (xged/kb-nm "sa" 'magit-stage)  ; file|all
+  (xged/kb-nm "sa" 'magit-stage)(advice-add 'magit-stage :before #'save-buffer)  ; file|all
   (xged/kb-nm "su" 'git-gutter+-unstage-whole-buffer)
   (xged/kb-nm "sd" 'git-gutter+-revert-hunk)
   (xged/kb-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
