@@ -587,7 +587,8 @@ before packages are loaded."
   (xged/kb-nm "d" 'avy-goto-word-1)
   (xged/kb-nmv "C-<return>" 'xged/forward-paragraph) (xged/kb-nmv "C-k" 'xged/backward-paragraph)
   (xged/kb-nmv "c" (lambda () (interactive) (swiper) (setq this-command 'evil-ex-search-next)))
-  (xged/kb-nmv "SPC c" (lambda () (interactive) (swiper-all) (setq this-command 'evil-ex-search-next)))
+  (xged/kb-nmv "SPC c" 'spacemacs/search-project-auto)  ;; /
+  (xged/kb-nmv "C-c" (lambda () (interactive) (swiper-all) (setq this-command 'evil-ex-search-next)))
   (xged/kb-nm "n" 'xged/next) (xged/kb-nm "N" 'xged/previous)
   (xged/kb-v "n" 'evil-visualstar/begin-search-forward) (xged/kb-v "N" 'evil-visualstar/begin-search-backward)
   (xged/kb-nmv "SPC n" 'evil-ex-search-next) (xged/kb-nmv "SPC N" 'evil-ex-search-previous)
