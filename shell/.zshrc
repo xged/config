@@ -59,6 +59,7 @@ x-perf(){
     sudo systemctl enable fstrim.timer
     sudo systemctl start fstrim.timer
 }
+alias x-emacs-stash='sd emacs; f ~/src/config; git stash; f -; emacs &'
 
 alias x="x-kb; mla; x-lightscolor; xmodmap -e \"pointer = 1 3 2\""
 alias xsu='x; x-perf; x-kb-off'
