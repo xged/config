@@ -719,6 +719,7 @@ before packages are loaded."
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
   (evil-define-key 'normal magit-log-select-mode-map (kbd ",") 'magit-log-select-pick) (evil-define-key 'normal magit-log-select-mode-map (kbd "<") 'magit-log-select-quit)
+  (evil-define-key 'normal magit-log-mode-map (kbd "i") 'magit-rebase-reword-commit)
   (evil-define-key 'normal git-rebase-mode-map (kbd ",") 'with-editor-finish) (evil-define-key 'normal git-rebase-mode-map (kbd "<") 'with-editor-cancel)
   (evil-define-key 'normal git-rebase-mode-map (kbd "<return>") 'evil-next-line)
   (evil-define-key 'normal git-rebase-mode-map (kbd "SPC") 'git-rebase-show-commit)
