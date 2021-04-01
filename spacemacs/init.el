@@ -655,7 +655,7 @@ before packages are loaded."
   (KB-nmv "u" 'evil-undo)
   (KB-nmv "U" 'evil-redo)
   (KB-nmv "\'" 'spacemacs/comment-or-uncomment-lines)
-  (KB-nmv "p" 'sp-splice-sexp)
+  (KB-nm "p" 'sp-splice-sexp)
   (KB-v "p" 'evil-surround-region)
   (KB-nmv "." 'spacemacs/duplicate-line-or-region)
   (KB-nmv "C-." 'evil-repeat)
