@@ -695,7 +695,7 @@ before packages are loaded."
   (xged/kb-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
   (xged/kb-nm "sZ" 'magit-stash-worktree)
   (xged/kb-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
-  (xged/kb-nm "sP" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all) ))
+  (xged/kb-nm "so" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all) ))
   (xged/kb-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
   (xged/kb-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (xged/kb-nm "st" 'spacemacs/time-machine-transient-state/body)
