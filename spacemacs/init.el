@@ -785,7 +785,6 @@ before packages are loaded."
   (setq-default expand-region-fast-keys-enabled nil)
   (setq-default evil-surround-pairs-alist (append '((?f "(" . ")") (?\r "[" . "]") (?d "{" . "}") (?k "<" . ">")) evil-surround-pairs-alist))
   (setq-default term-char-mode-point-at-process-mark nil)
-  (setq-default shell-default-shell 'eshell)
   (setq-default magit-commit-show-diff nil)
   (setq-default magit-no-confirm t)
   (setq-default magit-refs-show-commit-count t)
