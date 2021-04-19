@@ -5,6 +5,7 @@ xged-init-sda() {  # xged-init-sda /dev/sda3
     export ZDOTDIR=$HOME/src/config/shell
     echo 'export ZDOTDIR=$HOME/src/config/shell' >$HOME/.zshenv
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    export HISTSIZE=1000000
 
     sudo mount $1 /mnt
     cp -r /mnt/$HOME/src /mnt/$HOME/.emacs.d /mnt/$HOME/.config /mnt/$HOME/.zsh_history /mnt/$HOME/.xinitrc $HOME

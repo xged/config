@@ -799,6 +799,7 @@ before packages are loaded."
   (super-save-mode +1)  ;/
   (setq-default python-sort-imports-on-save t)
   (which-key-mode 0)
+  (setq-default eshell-history-size (getenv "HISTSIZE"))
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
