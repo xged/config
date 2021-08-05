@@ -807,12 +807,12 @@ before packages are loaded."
   (setq-default git-gutter-fr+-side 'left-fringe)
   ;; Settings: Theme: Colors
   (defvar xged/color-background "black")
-  (defvar xged/color-default    "grey95")
-  (defvar xged/color-string     "#9efa9e")
+  (defvar xged/color-default    "grey75")
+  (defvar xged/color-string     "#68A668")
   (defvar xged/color-keyword    "#f877f8")
   (defvar xged/color-name       "#ffc285")
   (defvar xged/color-type       "#70b8ff")
-  (defvar xged/color-comment    "grey65")
+  (defvar xged/color-comment    "grey40")
   (defvar xged/color-docs       "#00cc99")
   ;; (mapc (lambda (mode) (font-lock-add-keywords mode '(
   ;;    ("\\([!?.,\\+-<>%]\\)" 0 'font-lock-type-face)
