@@ -27,6 +27,7 @@ alias p    yay -S --noconfirm --needed $*
 alias ps   yay --noconfirm --needed $*
 alias pf   yay -S --noconfirm --needed --force $*
 alias pd   yay -Rsc --noconfirm $*
+# sudo pacman -Syy;
 alias pu   yay -Syu --noconfirm $*
 # Session
 alias sd   kill $(pgrep $*); kill $(pgrep $*)
