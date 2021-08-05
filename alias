@@ -48,5 +48,7 @@ alias x-du du -m --max-depth=1 $* | sort -n -r | head -n 30
 alias x-perm-dir sudo chown xged $* -R
 alias x-kb-off sudo modprobe -r atkbd
 alias x-lightscolor redshift -x; redshift -O 3500
+alias x-perf sudo cpupower frequency-set -g performance; sudo systemctl enable fstrim.timer; sudo systemctl start fstrim.timer
 
-alias x x-kb; mla; x-lightscolor; xmodmap -e "pointer = 1 3 2"
+alias x x-kb; xmodmap -e "pointer = 1 3 2"; x-perf; x-kb-off
+alias ml xbacklight -set 70; xrandr --output LVDS1 --brightness .4 --gamma 1:1:.3
