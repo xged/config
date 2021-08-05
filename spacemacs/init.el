@@ -513,6 +513,7 @@ before packages are loaded."
   (require 'company)
   (require 'key-chord)
   (require 'evil-iedit-state)
+  ;; (require 'esh-module)
 
   ;; Functions
   (defun KB-n (key def) (define-key evil-normal-state-map (kbd key) def))
@@ -800,6 +801,7 @@ before packages are loaded."
   (setq-default python-sort-imports-on-save t)
   (which-key-mode 0)
   (setq-default eshell-history-size (getenv "HISTSIZE"))
+  (add-to-list 'eshell-modules-list 'eshell-tramp)
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
