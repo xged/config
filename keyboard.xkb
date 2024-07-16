@@ -1,8 +1,9 @@
+// sudo setxkbmap
 xkb_keymap {
 xkb_keycodes "evdev+aliases(qwerty)" {
     minimum = 8;
     maximum = 255;
-     <ESC> = 37;
+    <ESC> = 37;
     <AE01> = 10;
     <AE02> = 11;
     <AE03> = 12;
@@ -26,9 +27,9 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AD07> = 30;
     <AD08> = 31;
     <AD09> = 32;
-    <AD10> = 33;
-    <AD11> = 34;
-    <AD12> = 35;
+    <AD10> = 34;
+    <AD11> = 35;
+    <AD12> = 22;
     <RTRN> = 44;
     <LCTL> = 66;
     <AC01> = 38;
@@ -55,7 +56,7 @@ xkb_keycodes "evdev+aliases(qwerty)" {
     <AB08> = 59;
     <AB09> = 60;
     <AB10> = 108;
-    <RTSH> = 22;
+    <RTSH> = 33;
     <KPMU> = 63;
     <LALT> = 133;
     <SPCE> = 65;
@@ -1156,7 +1157,7 @@ xkb_symbols "pc+us+inet(evdev)+terminate(ctrl_alt_bksp)" {
     };
     key <AD11> {         [     bracketleft,       braceleft ] };
     key <AD12> {         [    bracketright,      braceright ] };
-    key <RTRN> {         [          Return, Down ] };
+    key <RTRN> {         [          Return ] };
     key <LCTL> {         [       Control_L ] };
     key <AC01> {
         type= "ALPHABETIC",

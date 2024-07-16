@@ -1,3 +1,4 @@
+# source ~/src/config/shell/.zshrc
 export ZSH=/home/xged/src/config/shell/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 # plugins=(git)
@@ -39,6 +40,8 @@ sd()   {kill $(pgrep $@); kill $(pgrep $@)}
 # Node
 n()  {tsc; node $@}
 np() {sudo npm install $1 @types/"$@"}
+# Misc
+y() {cd ~/music; yt-dlp -x --no-playlist $@}
 
 x-unzip() {tar xzf $@}
 git-stats-commits-d() {git log --no-merges --date=short --format='%ad' | sort | uniq -c}
@@ -47,7 +50,7 @@ x-kb() {
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'false'
   xfconf-query -c accessibility -p "/StickyKeys" -nt bool -s 'true'
   xkbcomp $HOME/src/config/keyboard.xkb $DISPLAY -w0  # keymap
-  xset r rate 150 30  # key repeat rate
+  xset r rate 200 30  # key repeat rate
 }
 x-trash() {echo -n Taking out the trash | pv -qL 10 && rm -rf  ~/.local/share/Trash/files}
 x-du() {du -m --max-depth=1 $@ | sort -n -r | head -n 30}
@@ -63,6 +66,7 @@ alias x-emacs-stash='sd emacs; f ~/src/config; git stash; f -; emacs &'
 
 alias x="x-kb; mla; x-lightscolor; xmodmap -e \"pointer = 1 3 2\""
 alias xsu='x; x-perf; x-kb-off'
+alias yt='yt-dlp -S res:1080'
 
 # Archive
 pypu() {pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U}
