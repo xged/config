@@ -46,14 +46,15 @@ This function should only modify configuration layer settings."
      markdown
      org
      shell (shell :variables
-       shell-default-height 100
-       shell-default-full-span nil
-       shell-default-shell 'eshell
-       eshell-aliases-file "/home/xged/src/config/alias"
-       )
+                  shell-default-height 100
+                  shell-default-full-span nil
+                  shell-default-shell 'eshell
+                  eshell-aliases-file "/home/xged/src/config/alias"
+                  )
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
+     desktop
 
      ;; langs
      python (python :variables flycheck-flake8rc "~/src/config/.flake8")
@@ -61,7 +62,6 @@ This function should only modify configuration layer settings."
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
      yaml
 
-     github
      colors
      html
      debug
@@ -227,7 +227,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Iosevka"
                                :size 18
                                :weight normal
                                :width normal)
@@ -505,7 +505,6 @@ before packages are loaded."
   (require 'avy)
   (require 'magit)
   (require 'evil-surround)
-  (require 'git-gutter+)
   (require 'highlight-numbers)
   (require 'expand-region)
   (require 'evil-escape)
@@ -532,9 +531,16 @@ before packages are loaded."
   (defun KB-chord-nv (key def) (KB-chord-n key def) (KB-chord-v key def))
   (defun KB-chord-nmv (key def) (KB-chord-n key def) (KB-chord-m key def) (KB-chord-v key def))
 
+  (defun replace-buffer-with-clipboard ()
+    "Replace the entire content of the current buffer with the clipboard content."
+    (interactive)
+    (let ((clipboard-content (current-kill 0)))
+      (erase-buffer)
+      (insert clipboard-content)))
+
   ;; Commands
   (defun xged/local-map-name () (interactive) (kill-new (symbol-name (catch 'gotit (mapatoms (lambda (sym)
-    (and (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym 'keymap)) (throw 'gotit sym))))))))
+                                                                                               (and (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym 'keymap)) (throw 'gotit sym))))))))
   (defun xged/forward-paragraph () (interactive) (next-line) (forward-paragraph) (next-line) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
@@ -542,31 +548,31 @@ before packages are loaded."
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
   (defun xged/save-buffer () (when (and buffer-file-name (buffer-modified-p (current-buffer)) (file-writable-p buffer-file-name)) (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
-    (unless evil-last-paste (user-error "Previous paste command used a register"))
-    (evil-undo-pop)
-    (goto-char (nth 2 evil-last-paste))
-    (setq this-command (nth 0 evil-last-paste))
-    (let ((kill-ring (list (current-kill (if (and (> count 0) (nth 5 evil-last-paste)) (1+ count) count))))
-          (kill-ring-yank-pointer kill-ring))
-      (when (eq last-command 'evil-visual-paste) (let ((evil-no-display t)) (evil-visual-restore)))
-      (funcall (nth 0 evil-last-paste) (nth 1 evil-last-paste))
-      (when (eq last-command 'evil-visual-paste) (setcdr (nthcdr 4 evil-last-paste) nil))))
+         (unless evil-last-paste (user-error "Previous paste command used a register"))
+         (evil-undo-pop)
+         (goto-char (nth 2 evil-last-paste))
+         (setq this-command (nth 0 evil-last-paste))
+         (let ((kill-ring (list (current-kill (if (and (> count 0) (nth 5 evil-last-paste)) (1+ count) count))))
+               (kill-ring-yank-pointer kill-ring))
+           (when (eq last-command 'evil-visual-paste) (let ((evil-no-display t)) (evil-visual-restore)))
+           (funcall (nth 0 evil-last-paste) (nth 1 evil-last-paste))
+           (when (eq last-command 'evil-visual-paste) (setcdr (nthcdr 4 evil-last-paste) nil))))
   (defun xged/paste () (interactive)
-    (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
-      (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
+         (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
+           (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
   (push "*.\*" spacemacs-useless-buffers-regexp)  ;/
   (push "Notes.yaml" spacemacs-useless-buffers-regexp)  ;/
   (defun xged/revert-buffer () (interactive) (progn (xged/save-buffer) (revert-buffer :ignore-auto :noconfirm)))
-  (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (git-gutter+-next-hunk 1)))
-  (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (git-gutter+-next-hunk -1)))
+  (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (diff-hl-next-hunk)))
+  (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (diff-hl-previous-hunk)))
   (defun xged/time () (interactive) (progn (shell-command "python /home/xged/src/python-scripts/timetracker.py")(if (equal (buffer-name) "*Shell Command Output*") (progn (kill-buffer)) (progn (switch-to-buffer "*Shell Command Output*")(text-scale-increase 10)))))
-    (advice-add 'xged/time :before #'xged/save-buffer)
+  (advice-add 'xged/time :before #'xged/save-buffer)
   (defun xged/python-execute-main (arg)  ; spacemacs/python-execute-file
     (interactive "P")
     (let ((universal-argument t)
           (compile-command (format "%s %s"
-                                  (spacemacs/pyenv-executable-find python-shell-interpreter)
-                                  (shell-quote-argument (file-name-nondirectory "main.py")))))
+                                   (spacemacs/pyenv-executable-find python-shell-interpreter)
+                                   (shell-quote-argument (file-name-nondirectory "main.py")))))
       (if arg
           (call-interactively 'compile)
         (compile compile-command t)
@@ -586,6 +592,7 @@ before packages are loaded."
   (KB-v "e" (lambda () (interactive) (forward-word)))  ;$
   (KB-nmv "x" 'evil-visual-char)
   (KB-nmv "SPC x" 'mark-paragraph)
+  (KB-n "C-x" 'mark-whole-buffer)
   (KB-nmv "X" 'evil-visual-block)  ;< C-x
   (KB-nmv "w" 'er/mark-outside-pairs)
   (KB-nmv "SPC l" (lambda () (interactive) (set-mark (line-end-position)) (activate-mark)))
@@ -642,8 +649,7 @@ before packages are loaded."
   (KB-nm "gc" 'calculator)
   (KB-nm "gf" 'describe-function)
   (KB-nm "gv" 'describe-variable)
-  (KB-nm "gb" 'describe-bindings)
-  (KB-i "M-b" 'describe-bindings)
+  (KB-nm "gb" 'describe-bindings) (KB-i "M-b" 'describe-bindings)
   (KB-nm "gL" 'ivy-spacemacs-help-layers)  ; layers
   (KB-nm "gp" 'ivy-spacemacs-help)  ; packages
   (KB-nm "gd" 'spacemacs/jump-to-definition)
@@ -703,26 +709,26 @@ before packages are loaded."
   (KB-nmv "M-i" 'ispell-word)
 
   ;; Key bindings: Magic: Git
-  (KB-M "RET" 'evil-next-line)
-  (KB-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key magit-file-section-map (kbd "C-<return>") 'magit-section-forward)
-  (KB-M "SPC" 'magit-visit-thing)
-  (KB-nm "s SPC" 'magit-status)
-  (KB-nm "sl" 'magit-log-current)
-  (KB-nm "sh" 'git-gutter+-show-hunk-inline-at-point)
-  (KB-nm "ss" (lambda () (interactive) (git-gutter+-stage-hunks) (git-gutter+-next-hunk 1))) (advice-add 'git-gutter+-stage-hunks :before #'save-buffer)
-  (KB-v "SPC s" (lambda () (interactive) (git-gutter+-stage-hunks) (evil-normal-state)))
-  (KB-nm "sa" 'magit-stage)(advice-add 'magit-stage :before #'save-buffer)  ; file|all
-  (KB-nm "su" 'git-gutter+-unstage-whole-buffer)
-  (KB-nm "sd" 'git-gutter+-revert-hunk)
-  (KB-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
-  (KB-nm "s <return>" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD"))))))))
-  (KB-nm "sx" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
-  (KB-nm "sy" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
-  (KB-nm "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
-  (KB-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
+  ;; (KB-M "RET" 'evil-next-line)
+  ;; (KB-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key  (kbd "C-<return>") 'magit-section-forward)
+  ;; (KB-M "SPC" 'magit-visit-thing)
+  ;;                                       ;(KB-nm "s SPC" ')
+  ;; (KB-nm "sl" 'magit-log-current)
+
+  ;;(KB-nm "sh" 'git-gutter+-show-hunk-inline-at-point)
+  ;;(KB-nm "ss" (lambda () (interactive) (git-gutter+-stage-hunks) (git-gutter+-next-hunk 1))) (advice-add 'git-gutter+-stage-hunks :before #'save-buffer)
+  (KB-nm "sa" 'magit-stage-buffer-file) (advice-add 'magit-stage :before #'save-buffer)
+  ;;(KB-nm "su" 'git-gutter+-unstage-whole-buffer)
+  ;;(KB-nm "sd" 'git-gutter+-revert-hunk)
+  ;;(KB-nm "sc" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create)))
+  ;;(KB-nm "s <return>" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD"))))))))
+  ;;(KB-nm "sx" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
+  ;;(KB-nm "sy" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-create (list "-m" (concat "STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
+  ;;(KB-nm "sf" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-instant-fixup)))
+  ;;(KB-nm "sF" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-commit-fixup)))
   (KB-nm "sq" 'magit-abort-dwim)
   (KB-nm "sQ" 'magit-rebase-continue)
-  (KB-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
+  ;;(KB-nm "sz" (lambda () (interactive) (git-gutter+-stage-hunks) (magit-stash-index "stash")))
   (KB-nm "sZ" 'magit-stash-worktree)
   (KB-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
   (KB-nm "so" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all) ))
@@ -744,8 +750,8 @@ before packages are loaded."
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "o") 'eshell-next-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "s") 'eshell-interrupt-process)))
   (evil-define-key 'normal python-mode-map (kbd ",") (lambda () (interactive) (save-buffer) (condition-case nil (xged/python-execute-main nil)(spacemacs/python-execute-file nil))))
-    (advice-add 'inferior-python-mode :after #'evil-escape)
-    (advice-add 'inferior-python-mode :after #'spacemacs/toggle-truncate-lines-off)
+  (advice-add 'inferior-python-mode :after #'evil-escape)
+  (advice-add 'inferior-python-mode :after #'spacemacs/toggle-truncate-lines-off)
   (evil-define-key 'normal inferior-python-mode-map (kbd "RET") 'evil-next-line)
   (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "<tab>") 'ivy-next-line)
@@ -806,7 +812,7 @@ before packages are loaded."
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
   (global-hl-line-mode -1)
-  (setq-default git-gutter-fr+-side 'left-fringe)
+  ;;d (setq-default git-gutter-fr+-side 'left-fringe)
   ;; Settings: Theme: Colors
   (defvar xged/color-background "black")
   (defvar xged/color-default    "grey75")
@@ -823,15 +829,15 @@ before packages are loaded."
   ;;    )))
 
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
-     ("\\([][(){}=,]\\)" 0 'font-lock-comment-face)
-     ("\\([:;]\\)" 0 'font-lock-keyword-face)
-     ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face)
-     )))
-   '(text-mode python-mode))
+                                                      ("\\([][(){}=,]\\)" 0 'font-lock-comment-face)
+                                                      ("\\([:;]\\)" 0 'font-lock-keyword-face)
+                                                      ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face)
+                                                      )))
+        '(text-mode python-mode))
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
-     ("\\([][(){}]\\)" 0 'font-lock-comment-face)
-     ("\\(['?.]\\)" 0 'font-lock-type-face))))
-   '(emacs-lisp-mode))
+                                                      ("\\([][(){}]\\)" 0 'font-lock-comment-face)
+                                                      ("\\(['?.]\\)" 0 'font-lock-type-face))))
+        '(emacs-lisp-mode))
   (set-face-attribute 'default                      nil :foreground xged/color-default :background xged/color-background)
   (set-face-attribute 'font-lock-builtin-face       nil :foreground xged/color-type)
   (set-face-attribute 'font-lock-comment-face       nil :foreground xged/color-comment)
@@ -871,7 +877,7 @@ before packages are loaded."
   (defun always-true (&rest _args) t)
   (setq display-buffer-base-action '(display-buffer-same-window))
   (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
-   '(always-true display-buffer-same-window) 'append))
+                                                     '(always-true display-buffer-same-window) 'append))
 
   )
 
@@ -882,18 +888,18 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(package-selected-packages
-   '(discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(evil-want-Y-yank-to-eol nil)
+   '(package-selected-packages
+     '(todoist discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
