@@ -531,7 +531,7 @@ before packages are loaded."
   (defun KB-chord-nv (key def) (KB-chord-n key def) (KB-chord-v key def))
   (defun KB-chord-nmv (key def) (KB-chord-n key def) (KB-chord-m key def) (KB-chord-v key def))
 
-  (defun replace-buffer-with-clipboard ()
+  (defun xged/replace-buffer-with-clipboard ()
     "Replace the entire content of the current buffer with the clipboard content."
     (interactive)
     (let ((clipboard-content (current-kill 0)))
@@ -662,7 +662,7 @@ before packages are loaded."
   (KB-n "<end>" 'newline-and-indent)
   (KB-v "d" 'evil-delete)
   (KB-nmv ":" 'xged/paste)
-  (KB-n "SPC :" 'replace-buffer-with-clipboard)
+  (KB-n "SPC :" 'xged/replace-buffer-with-clipboard)
   (KB-nm "C-:" 'counsel-yank-pop)
   ;; (KB-v "SPC :" 'counsel-yank-pop)
   (KB-nmv "u" 'evil-undo)
