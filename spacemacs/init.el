@@ -711,7 +711,7 @@ before packages are loaded."
   (KB-nmv "." 'spacemacs/duplicate-line-or-region)
   (KB-nmv "C-." 'evil-repeat)
   (KB-v "x" 'evil-exchange)
-  (KB-nm "y" (lambda () (interactive) (insert " ")))
+  ;; (KB-nm "y" (lambda () (interactive) (insert " ")))
   (KB-nm "<" 'evil-shift-left-line)
   (KB-nm ">" 'evil-shift-right-line)
   (KB-v "<" 'evil-shift-left)
