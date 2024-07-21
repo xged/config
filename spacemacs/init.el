@@ -538,6 +538,19 @@ before packages are loaded."
       (erase-buffer)
       (insert clipboard-content)))
 
+  (defun diff-hl-next-hunk (&optional backward)
+    "Go to the beginning of the next hunk in the current buffer. If there are no further hunks, cycle to the first hunk."
+    (interactive)
+    (let ((overlay (diff-hl-search-next-hunk backward)))
+      (if overlay
+          (goto-char (overlay-start overlay))
+        (progn
+          (goto-char (if backward (point-max) (point-min)))
+          (setq overlay (diff-hl-search-next-hunk backward))
+          (if overlay
+              (goto-char (overlay-start overlay))
+            (user-error "No hunks found in the buffer"))))))
+
   ;; Commands
   (defun xged/local-map-name () (interactive) (kill-new (symbol-name (catch 'gotit (mapatoms (lambda (sym)
                                                                                                (and (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym 'keymap)) (throw 'gotit sym))))))))
