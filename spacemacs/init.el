@@ -837,6 +837,7 @@ before packages are loaded."
   (which-key-mode 0)
   (setq-default eshell-history-size (getenv "HISTSIZE"))
   (add-to-list 'eshell-modules-list 'eshell-tramp)
+  (setq-default diff-hl-show-staged-changes nil)
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
