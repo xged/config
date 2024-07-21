@@ -592,6 +592,20 @@ before packages are loaded."
         (with-current-buffer (get-buffer "*compilation*")
           (inferior-python-mode)))))
 
+  (defun xged/open-eshell ()
+    "Open a new eshell or switch to the existing one without changing its directory."
+    (interactive)
+    (centered-cursor-mode -1)
+    (setq truncate-lines nil)
+    (let* ((current-dir default-directory)
+           (eshell-buffer "*eshell*"))
+      (if (get-buffer eshell-buffer)
+          (progn
+            (switch-to-buffer eshell-buffer)
+            (when (not (string-equal current-dir default-directory))
+              (cd current-dir)))
+        (eshell))))
+
   ;; Key bindings
   (KB-nmv "SPC" nil)
   (KB-nmv "s" nil)
@@ -626,7 +640,7 @@ before packages are loaded."
   (KB-nmv "m" 'evil-jump-backward)
   (KB-nmv "M" 'evil-jump-forward)
   (KB-nmv "SPC k" 'goto-last-change)
-  (KB-nmv "SPC s" (lambda () (interactive) (spacemacs/default-pop-shell) (centered-cursor-mode -1) (setq truncate-lines nil)))
+  (KB-nmv "SPC s" 'xged/open-eshell)
   (KB-nmv "SPC t" (lambda () (interactive) (find-file "/home/xged/src/private/notes.yaml")))
   (KB-nmv "SPC e" 'spacemacs/find-dotfile)
   (KB-nmv "SPC RET" (lambda () (interactive) (flycheck-next-error 1 t)))
