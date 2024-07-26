@@ -74,7 +74,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(super-save key-chord)
+   dotspacemacs-additional-packages '(key-chord)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -829,12 +829,26 @@ before packages are loaded."
   (setq-default flycheck-idle-change-delay 1)
   (setq-default flycheck--automatically-disabled-checkers '(emacs-lisp python-mypy))
   (setq-default flycheck-indication-mode nil)
-  (super-save-mode +1)  ;/
   (setq-default python-sort-imports-on-save t)
   (which-key-mode 0)
   (setq-default eshell-history-size (getenv "HISTSIZE"))
   (add-to-list 'eshell-modules-list 'eshell-tramp)
   (setq-default diff-hl-show-staged-changes nil)
+
+  ;; Settings: Hooks
+  ;; Auto-save when exiting insert mode
+  (add-hook 'evil-insert-state-exit-hook
+            (lambda ()
+              (when (and (buffer-file-name) (buffer-modified-p))
+                (save-buffer))))
+  ;; Auto-save after pasting
+  (add-hook 'evil-yank-post-hook
+            (lambda ()
+              (when (and (buffer-file-name) (buffer-modified-p))
+                (save-buffer))))
+  (advice-add 'evil-delete :after (lambda (&rest _) (save-buffer)))
+  (advice-add 'evil-delete-char :after (lambda (&rest _) (save-buffer)))
+  (advice-add 'evil-delete-line :after (lambda (&rest _) (save-buffer)))
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
