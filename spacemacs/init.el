@@ -80,7 +80,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(highlight-parentheses rainbow-delimiters hl-line dired)  ;/ hl-line
+   dotspacemacs-excluded-packages '(highlight-parentheses rainbow-delimiters hl-line dired savehist)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
