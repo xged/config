@@ -745,6 +745,7 @@ before packages are loaded."
   (KB-nm "s <return>" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD"))))))))
   (KB-nm "sx" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (concat "FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (KB-nm "sy" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (concat "STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
+  (KB-nm "sY" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (concat "SEMI-STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (KB-nm "sf" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-instant-fixup)))
   (KB-nm "sF" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-fixup)))
   (KB-nm "sq" 'magit-abort-dwim)
