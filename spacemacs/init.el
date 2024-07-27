@@ -688,8 +688,8 @@ before packages are loaded."
   (KB-nm "gd" 'spacemacs/jump-to-definition)
   (KB-nmv "gs" 'xged/open-eshell)
   (KB-nmv "ge" 'spacemacs/find-dotfile)
-  (bind-key* "M-k" 'describe-key) (bind-key* "C-M-k" 'describe-key)
-  (bind-key* "M-m" 'xged/local-map-name) (bind-key* "C-M-m" 'xged/local-map-name)
+  (bind-key* "M-k" 'describe-key)
+  (bind-key* "M-h" 'xged/local-map-name)
 
   ;; Key bindings: Edit
   (KB-nm "i" 'evil-insert)
