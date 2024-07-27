@@ -638,9 +638,7 @@ before packages are loaded."
   (KB-nmv "m" 'evil-jump-backward)
   (KB-nmv "M" 'evil-jump-forward)
   (KB-nmv "SPC k" 'goto-last-change)
-  (KB-nmv "SPC s" 'xged/open-eshell)
   (KB-nmv "SPC t" (lambda () (interactive) (find-file "/home/xged/src/private/notes.yaml")))
-  (KB-nmv "SPC e" 'spacemacs/find-dotfile)
   (KB-nmv "SPC RET" (lambda () (interactive) (flycheck-next-error 1 t)))
   (KB-nmv "SPC S-RET" (lambda () (interactive) (flycheck-next-error -1 t)))
   (KB-nmv "SPC n" 'evil-ex-search-next)
@@ -677,6 +675,8 @@ before packages are loaded."
   (KB-nm "gL" 'ivy-spacemacs-help-layers)  ; layers
   (KB-nm "gp" 'ivy-spacemacs-help)  ; packages
   (KB-nm "gd" 'spacemacs/jump-to-definition)
+  (KB-nmv "gs" 'xged/open-eshell)
+  (KB-nmv "ge" 'spacemacs/find-dotfile)
   (bind-key* "M-k" 'describe-key) (bind-key* "C-M-k" 'describe-key)
   (bind-key* "M-m" 'xged/local-map-name) (bind-key* "C-M-m" 'xged/local-map-name)
 
