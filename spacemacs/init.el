@@ -669,6 +669,10 @@ before packages are loaded."
   (KB-nm "C-f" 'counsel-locate)
   (KB-nm "SPC q" 'spacemacs/restart-emacs-resume-layouts) (advice-add 'spacemacs/restart-emacs-resume-layouts :before #'xged/save-buffer)
   (KB-nm "C-q" 'spacemacs/kill-emacs) (advice-add 'kill-emacs :before #'xged/save-buffer)
+  (KB-nm "SPC SPC" 'counsel-M-x)
+  (KB-nm "S-SPC" 'ivy-resume)
+  (KB-nm "<backspace>" 'spacemacs/toggle-truncate-lines)
+  (KB-M "<backspace>" 'spacemacs/toggle-truncate-lines)
 
   (KB-nmv "gg" 'evil-goto-first-line)
   (KB-nmv "g <end>" 'evil-goto-line)
