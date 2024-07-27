@@ -552,14 +552,25 @@ before packages are loaded."
             (user-error "No hunks found in the buffer"))))))
 
   ;; Commands
-  (defun xged/local-map-name () (interactive) (kill-new (symbol-name (catch 'gotit (mapatoms (lambda (sym)
-                                                                                               (and (boundp sym) (eq (symbol-value sym) (current-local-map)) (not (eq sym 'keymap)) (throw 'gotit sym))))))))
+  (defun xged/local-map-name ()
+    (interactive)
+    (message (let ((local-map (current-local-map)))
+               (catch 'gotit
+                 (mapatoms #'(lambda (sym)
+                               (when (and (boundp sym)
+                                          (eq (symbol-value sym) local-map)
+                                          (not (eq sym 'keymap)))
+                                 (throw 'gotit (symbol-name sym)))))
+                 (error "Local map name not found")))))
   (defun xged/forward-paragraph () (interactive) (next-line) (forward-paragraph) (next-line) (back-to-indentation))
   (defun xged/backward-paragraph () (interactive) (previous-line) (backward-paragraph) (next-line) (back-to-indentation))
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
-  (defun xged/save-buffer () (when (and buffer-file-name (buffer-modified-p (current-buffer)) (file-writable-p buffer-file-name)) (save-buffer)))
+  (defun xged/save-buffer (&rest _args)
+    "Save the current buffer if it's a file buffer and writable."
+    (when (and buffer-file-name (file-writable-p buffer-file-name))
+      (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
          (unless evil-last-paste (user-error "Previous paste command used a register"))
          (evil-undo-pop)
@@ -681,31 +692,29 @@ before packages are loaded."
   (bind-key* "M-m" 'xged/local-map-name) (bind-key* "C-M-m" 'xged/local-map-name)
 
   ;; Key bindings: Edit
-  (KB-nm "i" 'evil-insert)  ; default
+  (KB-nm "i" 'evil-insert)
   (KB-v "i" 'evil-change)
   (KB-i "RET" 'evil-escape)
   (KB-n "<end>" 'newline-and-indent)
   (KB-v "d" 'evil-delete)
   (KB-nmv ":" 'xged/paste)
   (KB-n "SPC :" 'xged/replace-buffer-with-clipboard)
-  (KB-nm "C-:" 'counsel-yank-pop)
-  ;; (KB-v "SPC :" 'counsel-yank-pop)
   (KB-nmv "u" 'evil-undo)
   (KB-nmv "U" 'evil-redo)
   (KB-nmv "\'" 'spacemacs/comment-or-uncomment-lines)
   (KB-nm "p" 'sp-splice-sexp)
-  (KB-v "p" (lambda (beg end) (interactive  "r") (save-excursion (goto-char end) (insert "\'") (goto-char beg) (insert "\'"))))
-  (KB-v "P" (lambda (beg end) (interactive  "r") (save-excursion (goto-char end) (insert "\"") (goto-char beg) (insert "\""))))
+  (KB-v "p" (lambda (beg end) (interactive "r") (save-excursion (goto-char end) (insert "\'") (goto-char beg) (insert "\'"))))
+  (KB-v "P" (lambda (beg end) (interactive "r") (save-excursion (goto-char end) (insert "\"") (goto-char beg) (insert "\""))))
   (KB-v "SPC p" 'evil-surround-region)
   (KB-chord-i "kf" (lambda () (interactive) (insert "()") (backward-char)))
   (KB-chord-n "kf" (lambda () (interactive) (insert "()")))
-  (KB-chord-v "kf" (lambda (beg end) (interactive  "r") (save-excursion (goto-char end) (insert ")") (goto-char beg) (insert "("))))
+  (KB-chord-v "kf" (lambda (beg end) (interactive "r") (save-excursion (goto-char end) (insert ")") (goto-char beg) (insert "("))))
   (KB-chord-i "kd" (lambda () (interactive) (insert "[]") (backward-char)))
   (KB-chord-n "kd" (lambda () (interactive) (insert "[]")))
-  (KB-chord-v "kd" (lambda (beg end) (interactive  "r") (save-excursion (goto-char end) (insert "]") (goto-char beg) (insert "["))))
+  (KB-chord-v "kd" (lambda (beg end) (interactive "r") (save-excursion (goto-char end) (insert "]") (goto-char beg) (insert "["))))
   (KB-chord-i "ks" (lambda () (interactive) (insert "{}") (backward-char)))
   (KB-chord-n "ks" (lambda () (interactive) (insert "{}")))
-  (KB-chord-v "ks" (lambda (beg end) (interactive  "r") (save-excursion (goto-char end) (insert "}") (goto-char beg) (insert "{"))))
+  (KB-chord-v "ks" (lambda (beg end) (interactive "r") (save-excursion (goto-char end) (insert "}") (goto-char beg) (insert "{"))))
   (KB-nmv "." 'spacemacs/duplicate-line-or-region)
   (KB-nmv "C-." 'evil-repeat)
   (KB-v "x" 'evil-exchange)
@@ -713,13 +722,11 @@ before packages are loaded."
   (KB-nm ">" 'evil-shift-right-line)
   (KB-v "<" 'evil-shift-left)
   (KB-v ">" 'evil-shift-right)
-  (KB-nmv "SPC i" 'evil-invert-char)  ;| upcase-dwim
+  (KB-nmv "SPC i" 'evil-invert-char)
   (KB-nm "v" 'xged/insert-line-below)
   (KB-nm "V" 'xged/insert-line-above)
   (KB-nmv "SPC D" 'comment-kill)
   (KB-nmv "j" 'evil-join)
-
-  ;; Key bindings: Magic
   (KB-nm "SPC SPC" 'counsel-M-x)
   (KB-nm "S-SPC" 'ivy-resume)
   (KB-nmv "r" 'evil-iedit-state/iedit-mode) ; replace-regexp
@@ -729,6 +736,27 @@ before packages are loaded."
   (KB-nm "<backspace>" 'spacemacs/toggle-truncate-lines)
   (KB-M "<backspace>" 'spacemacs/toggle-truncate-lines)
   (KB-nmv "M-i" 'ispell-word)
+
+  ;; Auto-save after edit commands that i use
+  (advice-add 'insert :after 'xged/save-buffer)
+  (advice-add 'evil-delete :after 'xged/save-buffer)
+  (advice-add 'xged/paste :after 'xged/save-buffer)
+  (advice-add 'xged/replace-buffer-with-clipboard :after 'xged/save-buffer)
+  (advice-add 'evil-undo :after 'xged/save-buffer)
+  (advice-add 'evil-redo :after 'xged/save-buffer)
+  (advice-add 'spacemacs/comment-or-uncomment-lines :after 'xged/save-buffer)
+  (advice-add 'sp-splice-sexp :after 'xged/save-buffer)
+  (advice-add 'evil-iedit-state/iedit-mode :after 'xged/save-buffer)
+  (advice-add 'spacemacs/rename-current-buffer-file :after 'xged/save-buffer)
+  (advice-add 'ispell-word :after 'xged/save-buffer)
+  (advice-add 'spacemacs/duplicate-line-or-region :after 'xged/save-buffer)
+  (advice-add 'xged/insert-line-below :after 'xged/save-buffer)
+  (advice-add 'xged/insert-line-above :after 'xged/save-buffer)
+  (advice-add 'evil-join :after 'xged/save-buffer)
+
+  ;; Auto-save after exiting evil states
+  (add-hook 'evil-insert-state-exit-hook 'xged/save-buffer)
+  (add-hook 'evil-visual-state-exit-hook 'xged/save-buffer)
 
   ;; Key bindings: Magic: Git
   (KB-M "RET" 'evil-next-line)
@@ -741,6 +769,7 @@ before packages are loaded."
   (KB-nm "su" 'magit-unstage-buffer-file)
   (KB-nm "sd" 'diff-hl-revert-hunk)
   (KB-nm "sc" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create)))
+  (KB-M "d" 'magit-diff-reverse-)
   (KB-nm "s <return>" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD"))))))))
   (KB-nm "sx" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (concat "FIX "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
   (KB-nm "sy" (lambda () (interactive) (diff-hl-stage-current-hunk) (magit-commit-create (list "-m" (concat "STYLE "(number-to-string (1+ (string-to-number (shell-command-to-string "git rev-list --count HEAD")))))))))
@@ -829,21 +858,6 @@ before packages are loaded."
   (setq-default eshell-history-size (getenv "HISTSIZE"))
   (add-to-list 'eshell-modules-list 'eshell-tramp)
   (setq-default diff-hl-show-staged-changes nil)
-
-  ;; Settings: Hooks
-  ;; Auto-save when exiting insert mode
-  (add-hook 'evil-insert-state-exit-hook
-            (lambda ()
-              (when (and (buffer-file-name) (buffer-modified-p))
-                (save-buffer))))
-  ;; Auto-save after pasting
-  (add-hook 'evil-yank-post-hook
-            (lambda ()
-              (when (and (buffer-file-name) (buffer-modified-p))
-                (save-buffer))))
-  (advice-add 'evil-delete :after (lambda (&rest _) (save-buffer)))
-  (advice-add 'evil-delete-char :after (lambda (&rest _) (save-buffer)))
-  (advice-add 'evil-delete-line :after (lambda (&rest _) (save-buffer)))
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
