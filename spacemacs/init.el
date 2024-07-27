@@ -583,8 +583,10 @@ before packages are loaded."
   (defun xged/paste () (interactive)
          (if (memq last-command '(evil-paste-after evil-paste-before evil-visual-paste xged/paste)) (xged/paste-pop 1)
            (if (eq (evil-visual-type) 'line) (evil-paste-after 1) (evil-paste-before 1))))
-  (push "*.\*" spacemacs-useless-buffers-regexp)  ;/
-  (push "Notes.yaml" spacemacs-useless-buffers-regexp)  ;/
+  (push "*.\*" spacemacs-useless-buffers-regexp)
+  (push "TODO.yaml" spacemacs-useless-buffers-regexp)
+  (push "init.el" spacemacs-useless-buffers-regexp)
+  (setq-default ivy-ignore-buffers '("\\` " "\\`\\*tramp/" "TODO.yaml" "init.el" ".zshrc"))
   (defun xged/revert-buffer () (interactive) (progn (xged/save-buffer) (revert-buffer :ignore-auto :noconfirm)))
   (defun xged/next () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-next) (setq this-command 'evil-ex-search-next)) (diff-hl-next-hunk)))
   (defun xged/previous () (interactive) (if (memq last-command '(evil-ex-search-next evil-ex-search-previous evil-visualstar/begin-search-forward 'evil-visualstar/begin-search-backward)) (progn (evil-ex-search-previous) (setq this-command 'evil-ex-search-previous)) (diff-hl-previous-hunk)))
@@ -648,7 +650,6 @@ before packages are loaded."
   (KB-nmv "m" 'evil-jump-backward)
   (KB-nmv "M" 'evil-jump-forward)
   (KB-nmv "SPC k" 'goto-last-change)
-  (KB-nmv "SPC t" (lambda () (interactive) (find-file "/home/xged/src/private/notes.yaml")))
   (KB-nmv "SPC RET" (lambda () (interactive) (flycheck-next-error 1 t)))
   (KB-nmv "SPC S-RET" (lambda () (interactive) (flycheck-next-error -1 t)))
   (KB-nmv "SPC n" 'evil-ex-search-next)
@@ -681,6 +682,7 @@ before packages are loaded."
   (KB-nmv "gx" 'evil-visual-restore)
   (KB-nm "gS" 'spacemacs/switch-to-scratch-buffer)
   (KB-nm "gz" (lambda () (interactive) (find-file "/home/xged/src/config/zsh/.zshrc")))
+  (KB-nm "gt" (lambda () (interactive) (find-file "/home/xged/src/personal/TODO.yaml")))
   (KB-nm "gm" 'spacemacs/switch-to-messages-buffer)
   (KB-nm "gc" 'calculator)
   (KB-nm "gf" 'describe-function)
