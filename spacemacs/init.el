@@ -623,7 +623,7 @@ before packages are loaded."
   ;; Key bindings: Select
   (KB-nmv "f" 'er/expand-region)
   (KB-v "F" 'er/contract-region)
-  (KB-nmv "a" 'evil-visual-line)
+  (KB-nmv "d" 'evil-visual-line)
   (KB-nm "e" (lambda () (interactive) (evil-visual-char) (forward-char) (forward-word) (backward-char)))  ;$
   (KB-v "e" (lambda () (interactive) (forward-word)))  ;$
   (KB-nmv "x" 'evil-visual-char)
@@ -636,7 +636,7 @@ before packages are loaded."
 
   ;; Key bindings: Navigate
   (KB-nmv "RET" 'evil-next-line)
-  (KB-nm "d" 'avy-goto-word-1)
+  (KB-nm "a" 'avy-goto-word-1)
   (KB-nmv "C-<return>" 'xged/forward-paragraph)
   (KB-nmv "C-k" 'xged/backward-paragraph)
   (KB-nmv "c" (lambda () (interactive) (swiper) (setq this-command 'evil-ex-search-next)))
