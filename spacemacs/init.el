@@ -512,7 +512,6 @@ before packages are loaded."
   (require 'company)
   (require 'key-chord)
   (require 'evil-iedit-state)
-  ;; (require 'esh-module)
 
   ;; Functions
   (defun KB-n (key def) (define-key evil-normal-state-map (kbd key) def))
