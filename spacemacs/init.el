@@ -777,11 +777,11 @@ before packages are loaded."
   (KB-nm "sf" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-instant-fixup)))
   (KB-nm "sF" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-fixup)))
   (KB-nm "sz" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-stash-index "stash")))
+  (KB-nm "sZ" 'magit-stash-worktree)
+  (KB-nm "so" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all)))
   (KB-nm "sq" 'magit-abort-dwim)
   (KB-nm "sQ" 'magit-rebase-continue)
-  (KB-nm "sZ" 'magit-stash-worktree)
   (KB-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
-  (KB-nm "so" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all)))
   (KB-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
   (KB-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (KB-nm "st" 'spacemacs/time-machine-transient-state/body)
