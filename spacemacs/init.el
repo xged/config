@@ -55,16 +55,15 @@ This function should only modify configuration layer settings."
      syntax-checking
      version-control
      desktop
+     colors
+     html
+     debug
 
      ;; langs
      python (python :variables flycheck-flake8rc "~/src/config/.flake8")
      typescript
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
      yaml
-
-     colors
-     html
-     debug
      )
 
    ;; List of additional packages that will be installed without being
