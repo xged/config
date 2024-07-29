@@ -776,7 +776,6 @@ before packages are loaded."
                         (shell-command-to-string "git rev-list --count HEAD"))))))))
   (KB-nm "sx" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-create (list "-m" "FIX"))))
   (KB-nm "sy" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-create (list "-m" "STYLE"))))
-  (KB-nm "sY" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-create (list "-m" "SEMI-STYLE"))))
   (KB-nm "sf" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-instant-fixup)))
   (KB-nm "sF" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-commit-fixup)))
   (KB-nm "sz" (lambda () (interactive) (ignore-errors (diff-hl-stage-current-hunk)) (magit-stash-index "stash")))
