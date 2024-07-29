@@ -789,6 +789,8 @@ before packages are loaded."
   (KB-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (KB-nm "st" 'spacemacs/time-machine-transient-state/body)
   (KB-nm "sr" 'magit-rebase-interactive)
+  ;; must stash beforehand
+  (with-eval-after-load 'magit (define-key magit-log-mode-map (kbd "d") 'magit-revert-and-commit))
 
   ;; Key bindings: Mode-specific
   (evil-define-key 'normal emacs-lisp-mode-map (kbd ",") 'lisp-state-eval-sexp-end-of-line)
