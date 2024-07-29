@@ -836,7 +836,7 @@ before packages are loaded."
   (fset 'evil-visual-update-x-selection 'ignore)
   (setq-default mode-line-format nil)
   (setq-default inhibit-message t)
-  (setq-default auto-window-vscroll nil)  ;%
+  (setq-default auto-window-vscroll nil)
   (set-language-environment 'utf-8) (set-terminal-coding-system 'utf-8) (setq locale-coding-system 'utf-8) (set-default-coding-systems 'utf-8) (set-selection-coding-system 'utf-8) (prefer-coding-system 'utf-8)
   (setq-default undo-tree-enable-undo-in-region t)
   (setq-default avy-keys '(?f ?d ?k ?s ?l ?a ?: ?c ?m ?x ?, ?i ?r ?o ?g ?h ?e ?. ?z ?p ?t ?v ?w ?q ?b ?y ?j ?\" ?/ ?\[ 13))
