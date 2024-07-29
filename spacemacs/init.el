@@ -49,8 +49,8 @@ This function should only modify configuration layer settings."
                   shell-default-height 100
                   shell-default-full-span nil
                   shell-default-shell 'eshell
-                  eshell-aliases-file "/home/xged/src/config/alias"
-                  )
+                  eshell-aliases-file "/home/xged/src/config/alias")
+
      spell-checking (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
@@ -63,8 +63,8 @@ This function should only modify configuration layer settings."
      python (python :variables flycheck-flake8rc "~/src/config/.flake8")
      typescript
      java (java :variables eclim-eclipse-dirs '("~/.eclipse") eclim-executable "~.eclipse/eclim")
-     yaml
-     )
+     yaml)
+
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -481,15 +481,15 @@ See the header of this file for more information."
 This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
+If you are unsure, try setting them in `dotspacemacs/user-config' first.")
+
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -791,7 +791,7 @@ before packages are loaded."
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,t") 'spacemacs/ediff-dotfile-and-template) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> t,") 'spacemacs/ediff-dotfile-and-template)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,d") 'elisp-slime-nav-describe-elisp-thing-at-point) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> d,") 'elisp-slime-nav-describe-elisp-thing-at-point)
   (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> ,l") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2))) (evil-define-key 'normal emacs-lisp-mode-map (kbd "<key-chord> l,") (lambda () (interactive) (insert "(lambda () (interactive) ())") (backward-char 2)))
-  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input) ))))
+  (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'insert eshell-mode-map (kbd "RET") (lambda () (interactive) (evil-normal-state) (eshell-send-input)))))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "RET") 'eshell-send-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "k") 'eshell-previous-matching-input-from-input)))
   (add-hook 'eshell-mode-hook (lambda () (evil-define-key 'normal eshell-mode-map (kbd "K") 'evil-previous-line)))
@@ -879,8 +879,8 @@ before packages are loaded."
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
                                                       ("\\([][(){}=,]\\)" 0 'font-lock-comment-face)
                                                       ("\\([:;]\\)" 0 'font-lock-keyword-face)
-                                                      ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face)
-                                                      )))
+                                                      ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face))))
+
         '(text-mode python-mode))
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
                                                       ("\\([][(){}]\\)" 0 'font-lock-comment-face)
@@ -921,10 +921,10 @@ before packages are loaded."
     (add-to-list 'purpose-special-action-sequences '(pupo/display-condition display-buffer-same-window display-buffer-use-some-window)))
   (defun always-true (&rest _args) t)
   (setq display-buffer-base-action '(display-buffer-same-window))
-  (with-eval-after-load 'window-purpose (add-to-list 'purpose-special-action-sequences
-                                                     '(always-true display-buffer-same-window) 'append))
+  (with-eval-after-load 'window-purpose add-to-list 'purpose-special-action-sequences
+                        '(always-true display-buffer-same-window) 'append))
 
-  )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -941,10 +941,8 @@ This function is called at the very end of Spacemacs initialization."
    '(evil-want-Y-yank-to-eol nil)
    '(package-selected-packages
      '(todoist discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-  )
+  (custom-set-faces))
+;; custom-set-faces was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
