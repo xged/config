@@ -758,6 +758,7 @@ before packages are loaded."
   (KB-M "RET" 'evil-next-line)
   ;; (KB-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key  (kbd "C-<return>") 'magit-section-forward)
   (KB-M "SPC" 'magit-visit-thing)
+  (KB-nm "s SPC" 'magit-status)
   (KB-nm "sl" 'magit-log-current)
   (KB-nm "sh" 'diff-hl-show-hunk)
   (KB-n "ss" 'diff-hl-stage-current-hunk)
@@ -781,7 +782,7 @@ before packages are loaded."
   (KB-nm "so" (lambda () (interactive) (magit-stage-modified) (vc-git-stash-pop (interactive (list (vc-git-stash-read "Pop stash: ")))) (magit-unstage-all)))
   (KB-nm "sq" 'magit-abort-dwim)
   (KB-nm "sQ" 'magit-rebase-continue)
-  (KB-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))  ; save
+  (KB-nm "s C-z" (lambda () (interactive) (magit-snapshot-save t t nil t)))
   (KB-nm "sp" (lambda () (interactive) (magit-push-current-to-pushremote "-f")))
   (KB-nm "sb" 'spacemacs/git-blame-transient-state/body)
   (KB-nm "st" 'spacemacs/time-machine-transient-state/body)
@@ -879,12 +880,10 @@ before packages are loaded."
   ;;    ("\\([=:;]\\)" 0 'font-lock-keyword-face)
   ;;    ;; ("\\([]\\)" 0 'font-lock-variable-name-face)
   ;;    )))
-
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
                                                       ("\\([][(){}=,]\\)" 0 'font-lock-comment-face)
                                                       ("\\([:;]\\)" 0 'font-lock-keyword-face)
                                                       ("\\([!?.\\+-<>*%]\\)" 0 'font-lock-type-face))))
-
         '(text-mode python-mode))
   (mapc (lambda (mode) (font-lock-add-keywords mode '(
                                                       ("\\([][(){}]\\)" 0 'font-lock-comment-face)
