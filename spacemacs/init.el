@@ -629,7 +629,7 @@ before packages are loaded."
   (KB-nmv "x" 'evil-visual-char)
   (KB-nmv "SPC x" 'mark-paragraph)
   (KB-n "C-x" 'mark-whole-buffer)
-  (KB-nmv "X" 'evil-visual-block)  ;< C-x
+  (KB-nmv "X" 'evil-visual-block)
   (KB-nmv "w" 'er/mark-outside-pairs)
   (KB-nmv "SPC l" (lambda () (interactive) (set-mark (line-end-position)) (activate-mark)))
   (KB-nmv "SPC h" (lambda () (interactive) (set-mark (save-excursion (back-to-indentation) (point))) (activate-mark)(exchange-point-and-mark)))
