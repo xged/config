@@ -73,7 +73,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(key-chord)
+   dotspacemacs-additional-packages '(key-chord super-save)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -562,9 +562,6 @@ before packages are loaded."
   (defun xged/insert-line-below () (interactive) (spacemacs/evil-insert-line-below 1) (evil-next-line))
   (defun xged/insert-line-above () (interactive) (spacemacs/evil-insert-line-above 1) (evil-previous-line))
   (defun xged/window-next () (interactive) (other-window 1) (scroll-right))
-  (defun my/save-buffer-if-not-git-tracked (&optional _arg)
-    "Save the current buffer only if it's not tracked by Git."
-    (interactive "P") (unless (and buffer-file-name (diff-hl-file-modified-p)) (save-buffer)))
   (defun xged/paste-pop (count) (interactive "p")
          (unless evil-last-paste (user-error "Previous paste command used a register"))
          (evil-undo-pop)
@@ -733,27 +730,6 @@ before packages are loaded."
   (evil-define-key 'visual evil-surround-mode-map (kbd "s") 'evil-yank)
   (KB-nmv "M-i" 'ispell-word)
 
-  ;; Auto-save after edit commands that i use
-  (advice-add 'insert :after 'xged/save-buffer)
-  (advice-add 'evil-delete :after 'xged/save-buffer)
-  (advice-add 'xged/paste :after 'xged/save-buffer)
-  (advice-add 'xged/replace-buffer-with-clipboard :after 'xged/save-buffer)
-  ;; (advice-add 'evil-undo :after 'xged/save-buffer)
-  (advice-add 'evil-redo :after 'xged/save-buffer)
-  (advice-add 'spacemacs/comment-or-uncomment-lines :after 'xged/save-buffer)
-  (advice-add 'sp-splice-sexp :after 'xged/save-buffer)
-  (advice-add 'evil-iedit-state/iedit-mode :after 'xged/save-buffer)
-  (advice-add 'spacemacs/rename-current-buffer-file :after 'xged/save-buffer)
-  (advice-add 'ispell-word :after 'xged/save-buffer)
-  (advice-add 'spacemacs/duplicate-line-or-region :after 'xged/save-buffer)
-  (advice-add 'xged/insert-line-below :after 'xged/save-buffer)
-  (advice-add 'xged/insert-line-above :after 'xged/save-buffer)
-  (advice-add 'evil-join :after 'xged/save-buffer)
-
-  ;; Auto-save after exiting evil states
-  (add-hook 'evil-insert-state-exit-hook 'xged/save-buffer)
-  (add-hook 'evil-visual-state-exit-hook 'xged/save-buffer)
-
   ;; Key bindings: Magic: Git
   (KB-M "RET" 'evil-next-line)
   ;; (KB-M "C-<return>" 'magit-go-forward) (define-key magit-hunk-section-map (kbd "C-<return>") 'magit-section-forward) (define-key  (kbd "C-<return>") 'magit-section-forward)
@@ -861,6 +837,12 @@ before packages are loaded."
   (setq-default eshell-history-size (getenv "HISTSIZE"))
   (add-to-list 'eshell-modules-list 'eshell-tramp)
   (setq-default diff-hl-show-staged-changes nil)
+  (use-package super-save
+    :ensure t
+    :config
+    (super-save-mode +1)
+    (setq-default super-save-auto-save-when-idle t) ; Auto-save when idle
+    (setq-default super-save-idle-duration 2))      ; Save after x seconds of idle time
 
   ;; Settings: Theme
   (show-smartparens-global-mode -1)
@@ -943,8 +925,14 @@ This function is called at the very end of Spacemacs initialization."
    ;; If there is more than one, they won't work right.
    '(evil-want-Y-yank-to-eol nil)
    '(package-selected-packages
-     '(todoist discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
-  (custom-set-faces))
+     '(super-save todoist discover-my-major makey leetcode graphql aio bug-hunter key-chord selectric-mode lsp-treemacs bui lsp-ivy flycheck-ocaml merlin flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby ccls bundler inf-ruby alchemist elixir-mode tern ivy-rtags google-c-style flycheck-rtags disaster cpp-auto-include company-rtags rtags company-c-headers clang-format org-plus-contrib doom-modeline yasnippet-snippets yapfify xterm-color ws-butler writeroom-mode winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-evil toc-org tide tagedit symon string-inflection spaceline-all-the-icons smex smeargle slim-mode shrink-path shell-pop scss-mode sass-mode restart-emacs request ranger rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets org-brain open-junk-file nameless mvn multi-term move-text mmm-mode meghanada maven-test-mode markdown-toc magithub magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc ivy-yasnippet ivy-xref ivy-purpose ivy-hydra indent-guide importmagic impatient-mode hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-templates gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md fuzzy forge font-lock+ flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav eldoc-eval editorconfig dumb-jump dotenv-mode diminish diff-hl define-word darktooth-theme cython-mode counsel-projectile counsel-css company-web company-tern company-statistics company-ghci company-emacs-eclim company-cabal company-anaconda column-enforce-mode color-identifiers-mode cmm-mode clean-aindent-mode centered-cursor-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent ace-link ac-ispell)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
 ;; custom-set-faces was added by Custom.
 ;; If you edit it by hand, you could mess it up, so be careful.
 ;; Your init file should contain only one such instance.
